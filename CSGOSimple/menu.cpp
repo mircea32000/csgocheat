@@ -230,6 +230,8 @@ void RenderEspTab()
             {
                 ImGui::Checkbox("Enabled", g_Options.chams_player_enabled); ImGui::SameLine();
                 ImGui::Checkbox("Team Check", g_Options.chams_player_enemies_only);
+				ImGui::Checkbox("Disable Occlusion", g_Options.chams_disable_occlusion); 
+
                 ImGui::Checkbox("Wireframe", g_Options.chams_player_wireframe);
                 ImGui::Checkbox("Flat", g_Options.chams_player_flat);
                 ImGui::Checkbox("Ignore-Z", g_Options.chams_player_ignorez); ImGui::SameLine();

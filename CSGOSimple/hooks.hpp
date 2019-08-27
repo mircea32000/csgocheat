@@ -16,6 +16,7 @@ struct CMapOverview
 
 namespace index
 {
+	constexpr auto ListLeavesInBox          = 6;
 	constexpr auto EmitSound1               = 5;
 	constexpr auto EmitSound2               = 6;
     constexpr auto EndScene                 = 42;
@@ -48,6 +49,7 @@ namespace Hooks
 	inline vfunc_hook sound_hook;
 	inline vfunc_hook clientmode_hook;
 	inline vfunc_hook filesystem_hook;
+	inline vfunc_hook bsp_query_hook;
 	inline vfunc_hook sv_cheats;
 
     long __stdcall hkEndScene(IDirect3DDevice9* device);
@@ -62,6 +64,8 @@ namespace Hooks
 	void __fastcall hkLockCursor(void* _this);
     int  __fastcall hkDoPostScreenEffects(void* _this, int, int a1);
 	bool __fastcall hkSvCheatsGetBool(void* pConVar, void* edx);
+
+	int __fastcall hkListLeavesInBox(void* bsp, void* edx, Vector& mins, Vector& maxs, unsigned short* pList, int listMax);
 
 	using SendDatagramFn = int(__thiscall*)(INetChannel*, bf_write*);
 	extern int __fastcall SendDatagram(INetChannel* netchan, void*, bf_write* datagram);

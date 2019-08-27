@@ -86,6 +86,7 @@ public:
 		// CHAMS
 		//
 		OPTION(bool, chams_player_enabled, false);
+		OPTION(bool, chams_disable_occlusion, false);
 		OPTION(bool, chams_player_enemies_only, false);
 		OPTION(bool, chams_player_wireframe, false);
 		OPTION(bool, chams_player_flat, false);

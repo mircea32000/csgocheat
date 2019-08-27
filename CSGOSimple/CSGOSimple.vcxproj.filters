@@ -463,5 +463,8 @@
     <ClInclude Include="IFileSystem.h">
       <Filter>Header Files\SDK</Filter>
     </ClInclude>
+    <ClInclude Include="RenderableInfo.h">
+      <Filter>Header Files\SDK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

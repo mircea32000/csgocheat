@@ -149,6 +149,7 @@
     <ClInclude Include="ILocalize.hpp" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="radar.h" />
+    <ClInclude Include="RenderableInfo.h" />
     <ClInclude Include="skinchanger.h" />
     <ClInclude Include="spectators.h" />
     <ClInclude Include="fakelatency.h" />
