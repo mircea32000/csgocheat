@@ -108,7 +108,6 @@ QAngle viewAngle;
 
 ImVec2 CRadar::MapToRadar(const ImVec2& mappos)
 {
-	//CBaseEntity* LocalEntity = g_pEntityList->GetClientEntity(g_pEngine->GetLocalPlayer());
 
 	if (!g_LocalPlayer)
 		return ImVec2(0, 0);
@@ -198,7 +197,7 @@ void CRadar::Render()
 		ImVec2 Offset(2, 2);
 
 		int iLocal = g_EngineClient->GetLocalPlayer();
-		Vector& vLocalOrigin = g_LocalPlayer->m_vecOrigin();//g_GameThread.Players[iLocal].vecOrigin;
+		Vector& vLocalOrigin = g_LocalPlayer->m_vecOrigin();
 
 		//auto& cfg = g_Options.esp_radar;
 
