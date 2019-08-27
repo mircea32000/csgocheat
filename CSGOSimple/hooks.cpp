@@ -303,7 +303,6 @@ namespace Hooks {
 					szLevelName = fileName;
 					szLevelName.erase(szLevelName.begin(), szLevelName.begin() + 19);
 					szLevelName.erase(szLevelName.end() - 10, szLevelName.end());
-					bool bxd = 1;
 				}
 
 				SetMap(&MapOverview, szLevelName.c_str());
