@@ -123,6 +123,7 @@ public:
 	bool IsLoot();
 	bool IsWeapon();
 	bool IsPlantedC4();
+	bool IsC4();
 	bool IsDefuseKit();
 	//bool isSpotted();
 };

@@ -15,6 +15,7 @@ ImFont* g_pSecondFont;
 ImFont* g_pDefaultFontSmall;
 ImFont* g_pIcons;
 ImFont* g_pWeaponIcons;
+ImFont* g_pWeaponIcons24;
 ImDrawListSharedData _data;
 
 std::mutex render_mutex;
@@ -52,6 +53,11 @@ void Render::GetFonts() {
 	g_pWeaponIcons = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(
 		niggafont_compressed_data,
 		niggafont_compressed_size, 14.f);
+
+	g_pWeaponIcons24 = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(
+		niggafont_compressed_data,
+		niggafont_compressed_size, 16.f);
+
 	
 	g_pDefaultFontSmall = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(
 		Fonts::Droid_compressed_data,
