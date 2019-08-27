@@ -251,8 +251,15 @@ void CRadar::Render()
 			{
 				if (vOrigin.IsZero() || !ent->IsAlive() || ent->m_iTeamNum() == 1 /*spectator*/ || ent->IsDormant())
 					continue;
-
-				color = Color::White;
+				//@TODO: color picker
+				if (ent->m_iTeamNum() == g_LocalPlayer->m_iTeamNum())//teammate
+				{
+					color = Color(0,0,255,255);
+				}
+				else //enemy of the states
+				{
+					color = Color(255, 0, 0, 255);
+				}
 
 			}
 
@@ -279,22 +286,17 @@ void CRadar::Render()
 
 			Vector vDelta = (vForward * flFactor);
 
-			ImVec2 vForwardPoint = MapToRadar(WorldToMap(vOrigin + (vDelta * 0.5f)));
-			VectorYawRotate2(MapToRadar(ImVec2(256, 256)), DEG2RAD(180), &vForwardPoint);
+			ImVec2 vPlayerPos = MapToRadar(WorldToMap(vOrigin));
+			VectorYawRotate2(MapToRadar(ImVec2(256, 256)), DEG2RAD(180), &vPlayerPos);
 
-			ImVec2 vLeftPoint = MapToRadar(WorldToMap((vOrigin - (vDelta * 0.5f)) + (vLeft * (flFactor * 0.4f))));
-			VectorYawRotate2(MapToRadar(ImVec2(256, 256)), DEG2RAD(180), &vLeftPoint);
-
-			ImVec2 vRightPoint = MapToRadar(WorldToMap((vOrigin - (vDelta * 0.5f)) + (vRight * (flFactor * 0.4f))));
-			VectorYawRotate2(MapToRadar(ImVec2(256, 256)), DEG2RAD(180), &vRightPoint);
-
-			pDrawList->AddTriangleFilled
+			pDrawList->AddRectFilled
 			(
-				vForwardPoint,
-				vLeftPoint,
-				vRightPoint,
-				color.ToU32()
+				{ vPlayerPos.x - 3.f, vPlayerPos.y - 3.f },
+				{ vPlayerPos.x + 3.f, vPlayerPos.y + 3.f },
+				color.ToU32(),
+				12.f
 			);
+
 		}
 	}
 
