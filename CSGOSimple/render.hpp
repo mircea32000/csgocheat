@@ -20,6 +20,7 @@ extern ImFont* g_pIcons;
 extern ImFont* g_pSecondFont;
 extern ImFont* g_pDefaultFontSmall;
 extern ImFont* g_pWeaponIcons;
+extern ImFont* g_pWeaponIcons24;
 class Vector;
 
 class Render

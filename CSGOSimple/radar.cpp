@@ -3,6 +3,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "options.hpp"
+#include "render.hpp"
 ImVec2 m_MapCenter = ImVec2(512, 512);
 float m_fZoom = 3.f;
 
@@ -199,35 +200,31 @@ void CRadar::Render()
 		int iLocal = g_EngineClient->GetLocalPlayer();
 		Vector& vLocalOrigin = g_LocalPlayer->m_vecOrigin();
 
-		//auto& cfg = g_Options.esp_radar;
-
-		/*if (cfg.bC4 && !g_GameThread.C4.bDormant && g_GameThread.C4.iOwner == -1)
-		{
+		for (auto i = 1; i <= g_EntityList->GetHighestEntityIndex(); ++i) {
 			Color color;
-			if (g_GameThread.C4.bPlanted)
+			auto entity = C_BaseEntity::GetEntityByIndex(i);
+
+			if (!entity)
+				continue;
+
+			if ((entity->IsC4() && !entity->IsDormant() && entity->m_hOwnerEntity().ToInt() == -1) || entity->IsPlantedC4())
 			{
-				if (g_GameThread.C4.flBlowTime > 10.f)
-				{
-					color = cfg.C4Planted;
-				}
-				else if (g_GameThread.C4.flBlowTime > 5.f && g_GameThread.C4.flBlowTime < 10.f)
-				{
-					color = cfg.C410Sec;
-				}
-				else if (g_GameThread.C4.flBlowTime < 5.f)
-				{
-					color = cfg.C45Sec;
-				}
-			}
-			else
-			{
-				color = cfg.C4Dropped;
+				color = Color(25,255,0,255);// nice shade of green
+
+				ImVec2 vMapPos = MapToRadar(WorldToMap(entity->m_vecOrigin()));
+				VectorYawRotate2(MapToRadar(ImVec2(256, 256)), DEG2RAD(180), &vMapPos);
+				auto sz = g_pWeaponIcons24->CalcTextSizeA(16.f, FLT_MAX, 0.0f, "M");
+				ImGui::PushFont(g_pWeaponIcons24);
+				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2 + 1, vMapPos.y - sz.y / 2 + 1), Color::Black.ToU32(), "M");
+				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2 - 1, vMapPos.y - sz.y / 2 - 1), Color::Black.ToU32(), "M");//lets just hope theres not any memory leak here
+				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2 + 1, vMapPos.y - sz.y / 2 - 1), Color::Black.ToU32(), "M");
+				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2 - 1, vMapPos.y - sz.y / 2 + 1), Color::Black.ToU32(), "M");
+				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2, vMapPos.y - sz.y / 2), color.ToU32(), "M");
+
+				ImGui::PopFont();
 			}
 
-			ImVec2 vMapPos = MapToRadar(WorldToMap(g_GameThread.C4.vecOrigin));
-			VectorYawRotate2(MapToRadar(ImVec2(256, 256)), DEG2RAD(180), &vMapPos);
-			pDrawList->AddRectFilled({ vMapPos.x - 2.f, vMapPos.y - 2.f }, { vMapPos.x + 2.f, vMapPos.y + 2.f }, color.U32());
-		}*/
+		}
 
 		for (int i = 1; i <= g_EngineClient->GetMaxClients(); i++)
 		{
@@ -236,6 +233,8 @@ void CRadar::Render()
 
 			if (!ent)
 				continue;
+
+			auto class_id = ent->GetClientClass()->m_ClassID;
 
 			Vector& vOrigin = ent->m_vecOrigin();
 			const Vector& vAngles = ent->m_vecAngles();

@@ -36,6 +36,11 @@ bool C_BaseEntity::IsPlantedC4()
 	return GetClientClass()->m_ClassID == ClassId_CPlantedC4;
 }
 
+bool C_BaseEntity::IsC4()
+{
+	return GetClientClass()->m_ClassID == ClassId_CC4;
+}
+
 bool C_BaseEntity::IsDefuseKit()
 {
 	return GetClientClass()->m_ClassID == ClassId_CBaseAnimating;
