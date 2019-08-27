@@ -5280,7 +5280,7 @@ bool ImGui::BeginTransparent(const char* name, bool* p_open, ImGuiWindowFlags fl
 
 			if (!(flags & ImGuiWindowFlags_NoTitleBar))
 			{
-				window->DrawList->AddRect(title_bar_rect.GetTL() - ImVec2(style.WindowPadThickness + 1, 1), ImVec2(title_bar_rect.GetBR().x, bottombar.Max.y) + ImVec2(style.WindowPadThickness, 0) + ImVec2(1, 2), GetColorU32(ImVec4(0, 0, 0, 1)), window_rounding, ImDrawCornerFlags_TopLeft | ImDrawCornerFlags_TopRight);
+				window->DrawList->AddRect(title_bar_rect.GetTL() - ImVec2(style.WindowPadThickness + 1, 2), ImVec2(title_bar_rect.GetBR().x, bottombar.Max.y - 1) + ImVec2(style.WindowPadThickness, 0) + ImVec2(1, 2), GetColorU32(ImVec4(0, 0, 0, 1)), window_rounding, ImDrawCornerFlags_TopLeft | ImDrawCornerFlags_TopRight | ImDrawCornerFlags_BotLeft | ImDrawCornerFlags_BotRight);
 				window->DrawList->AddRectFilled(title_bar_rect.GetTL() - ImVec2(style.WindowPadThickness, 0), title_bar_rect.GetBR() + ImVec2(style.WindowPadThickness, 0), title_bar_col, window_rounding, ImDrawCornerFlags_TopLeft | ImDrawCornerFlags_TopRight);
 				window->DrawList->AddRectFilled(leftbar.Min, leftbar.Max, title_bar_col);
 				window->DrawList->AddRectFilled(rightbar.Min, rightbar.Max, title_bar_col);
@@ -5955,7 +5955,7 @@ bool ImGui::Begin(const char* name, bool blackbackground, bool* p_open, ImGuiWin
 		
 			if (!(flags & ImGuiWindowFlags_NoTitleBar))
 			{
-				    window->DrawList->AddRect(title_bar_rect.GetTL() - ImVec2(style.WindowPadThickness + 1, 1), ImVec2(title_bar_rect.GetBR().x, bottombar.Max.y) + ImVec2(style.WindowPadThickness, 0) + ImVec2(1, 2), GetColorU32(ImVec4(0, 0, 0, 1)), window_rounding, ImDrawCornerFlags_TopLeft | ImDrawCornerFlags_TopRight);
+				    window->DrawList->AddRect(title_bar_rect.GetTL() - ImVec2(style.WindowPadThickness + 1, 1), ImVec2(title_bar_rect.GetBR().x, bottombar.Max.y) + ImVec2(style.WindowPadThickness, - 1) + ImVec2(1, 2), GetColorU32(ImVec4(0, 0, 0, 1)), window_rounding, ImDrawCornerFlags_TopLeft | ImDrawCornerFlags_TopRight | ImDrawCornerFlags_BotLeft | ImDrawCornerFlags_BotRight);
 					window->DrawList->AddRectFilled(title_bar_rect.GetTL() - ImVec2(style.WindowPadThickness, 0), title_bar_rect.GetBR() + ImVec2(style.WindowPadThickness, 0), title_bar_col, window_rounding, ImDrawCornerFlags_TopLeft | ImDrawCornerFlags_TopRight);
 					window->DrawList->AddRectFilled(leftbar.Min, leftbar.Max, title_bar_col);
 					window->DrawList->AddRectFilled(rightbar.Min, rightbar.Max, title_bar_col);
@@ -5978,7 +5978,7 @@ bool ImGui::Begin(const char* name, bool blackbackground, bool* p_open, ImGuiWin
             if (window->ScrollbarX)
                 Scrollbar(ImGuiAxis_X);
             if (window->ScrollbarY)
-                Scrollbar(ImGuiAxis_Y);
+                Scrollbar(ImGuiAxis_Y); 
 
             // Render resize grips (after their input handling so we don't have a frame of latency)
             if (!(flags & ImGuiWindowFlags_NoResize))
