@@ -11,7 +11,7 @@ struct CMapOverview
 	float m_flPosY;
 	char pad1[12];
 	float m_flScale;
-	char pad_0x00F0[0x350];
+	char pad_0x00F0[0x1061B + 64];
 };
 
 namespace index
