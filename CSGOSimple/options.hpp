@@ -54,7 +54,7 @@ public:
 		OPTION(bool, esp_grenade_prediction, false);
 		OPTION(bool, esp_player_names, false);
 		OPTION(bool, esp_player_health, false);
-		OPTION(bool, esp_player_armour, false);
+		OPTION(bool, esp_player_flags, false);
 		OPTION(bool, esp_player_weapons, false);
 		OPTION(bool, esp_spooky_shit, false);
 		OPTION(bool, esp_bt_dots, false);

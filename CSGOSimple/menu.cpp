@@ -151,7 +151,7 @@ void RenderEspTab()
 
             ImGui::Checkbox("Names", g_Options.esp_player_names);
             ImGui::Checkbox("Health", g_Options.esp_player_health);
-            ImGui::Checkbox("Armour", g_Options.esp_player_armour);
+            ImGui::Checkbox("Flags", g_Options.esp_player_flags);
 			ImGui::Checkbox("Backtrack dots", g_Options.esp_bt_dots);
             ImGui::Checkbox("Weapon", g_Options.esp_player_weapons);
 			ImGui::Combo("Type##weapoin", g_Options.esp_weaponname_type, weaponname_types, IM_ARRAYSIZE(weaponname_types));

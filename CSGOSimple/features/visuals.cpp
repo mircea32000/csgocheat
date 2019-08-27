@@ -600,7 +600,7 @@ void Visuals::AddToDrawList() {
 				if (g_Options.esp_spooky_shit)      player.RenderSkeleton();
  				if (g_Options.esp_player_names)     player.RenderName();
 				if (g_Options.esp_player_health)    player.RenderHealth();
-				if (g_Options.esp_player_armour)    player.RenderFlags();
+				if (g_Options.esp_player_flags)    player.RenderFlags();
 			}
 		}
 		else if (g_Options.esp_dropped_weapons && entity->IsWeapon())
