@@ -344,7 +344,7 @@ void Visuals::RenderWeapon(C_BaseCombatWeapon* ent)
 	};
 
 	// We don't want to Render weapons that are being held
-	if (ent->m_hOwnerEntity().IsValid())
+	if (ent->m_vecOrigin().IsZero())
 		return;
 
 	auto bbox = GetBBox(ent);
