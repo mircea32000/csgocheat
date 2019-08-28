@@ -202,6 +202,8 @@ void CRadar::Render()
 
 		for (auto i = 1; i <= g_EntityList->GetHighestEntityIndex(); ++i) {
 			Color color;
+			Color coloricons;
+
 			auto entity = C_BaseEntity::GetEntityByIndex(i);
 
 			if (!entity)
@@ -213,17 +215,47 @@ void CRadar::Render()
 
 				ImVec2 vMapPos = MapToRadar(WorldToMap(entity->m_vecOrigin()));
 				VectorYawRotate2(MapToRadar(ImVec2(256, 256)), DEG2RAD(180), &vMapPos);
-				auto sz = g_pWeaponIcons24->CalcTextSizeA(16.f, FLT_MAX, 0.0f, "M");
+				auto text_size_bigicons = g_pWeaponIcons24->CalcTextSizeA(16.f, FLT_MAX, 0.0f, "M");
 				ImGui::PushFont(g_pWeaponIcons24);
-				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2 + 1, vMapPos.y - sz.y / 2 + 1), Color::Black.ToU32(), "M");
-				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2 - 1, vMapPos.y - sz.y / 2 - 1), Color::Black.ToU32(), "M");//lets just hope theres not any memory leak here
-				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2 + 1, vMapPos.y - sz.y / 2 - 1), Color::Black.ToU32(), "M");
-				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2 - 1, vMapPos.y - sz.y / 2 + 1), Color::Black.ToU32(), "M");
-				pDrawList->AddText(ImVec2(vMapPos.x - sz.x / 2, vMapPos.y - sz.y / 2), color.ToU32(), "M");
-
+				pDrawList->AddText(ImVec2(vMapPos.x - text_size_bigicons.x / 2 + 1, vMapPos.y - text_size_bigicons.y / 2 + 1), Color::Black.ToU32(), "M");
+				pDrawList->AddText(ImVec2(vMapPos.x - text_size_bigicons.x / 2 - 1, vMapPos.y - text_size_bigicons.y / 2 - 1), Color::Black.ToU32(), "M");//lets just hope theres not any memory leak here
+				pDrawList->AddText(ImVec2(vMapPos.x - text_size_bigicons.x / 2 + 1, vMapPos.y - text_size_bigicons.y / 2 - 1), Color::Black.ToU32(), "M");
+				pDrawList->AddText(ImVec2(vMapPos.x - text_size_bigicons.x / 2 - 1, vMapPos.y - text_size_bigicons.y / 2 + 1), Color::Black.ToU32(), "M");
+				pDrawList->AddText(ImVec2(vMapPos.x - text_size_bigicons.x / 2, vMapPos.y - text_size_bigicons.y / 2), color.ToU32(), "M");
 				ImGui::PopFont();
 			}
 
+			auto weapon = static_cast<C_BaseCombatWeapon*>(entity);
+
+			if (!weapon)
+				continue;
+
+			if (!weapon->IsWeapon())
+             continue;
+
+			if (!weapon->IsC4())
+				continue;
+
+			if (weapon->m_hOwnerEntity().IsValid()) //we dont want weapons that are being held
+				continue;
+
+			coloricons = Color::White;
+
+			std::string weapon_icon;
+			weapon_icon = weapon->GetWeaponIcon();
+
+			auto text_size_smallicons = g_pWeaponIcons->CalcTextSizeA(14.f, FLT_MAX, 0.0f, weapon_icon.c_str());
+
+			ImVec2 vMapPos = MapToRadar(WorldToMap(weapon->m_vecOrigin()));
+			VectorYawRotate2(MapToRadar(ImVec2(256, 256)), DEG2RAD(180), &vMapPos);
+
+			ImGui::PushFont(g_pWeaponIcons);           
+			pDrawList->AddText(ImVec2(vMapPos.x - text_size_smallicons.x / 2 + 1, vMapPos.y - text_size_smallicons.y / 2 + 1), Color::Black.ToU32(), weapon_icon.c_str());
+			pDrawList->AddText(ImVec2(vMapPos.x - text_size_smallicons.x / 2 - 1, vMapPos.y - text_size_smallicons.y / 2 - 1), Color::Black.ToU32(), weapon_icon.c_str());//lets just hope theres not any memory leak here
+			pDrawList->AddText(ImVec2(vMapPos.x - text_size_smallicons.x / 2 + 1, vMapPos.y - text_size_smallicons.y / 2 - 1), Color::Black.ToU32(), weapon_icon.c_str());
+			pDrawList->AddText(ImVec2(vMapPos.x - text_size_smallicons.x / 2 - 1, vMapPos.y - text_size_smallicons.y / 2 + 1), Color::Black.ToU32(), weapon_icon.c_str());
+			pDrawList->AddText(ImVec2(vMapPos.x - text_size_smallicons.x / 2, vMapPos.y - text_size_smallicons.y / 2), coloricons.ToU32(), weapon_icon.c_str());
+			ImGui::PopFont();
 		}
 
 		for (int i = 1; i <= g_EngineClient->GetMaxClients(); i++)
