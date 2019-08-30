@@ -55,28 +55,31 @@ void TimeWarp::UpdateRecords(int i)
 	record.m_vecOrigin = pEntity->m_vecOrigin();
 	pEntity->SetupBones(record.m_Matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, g_GlobalVars->curtime); //memory leak? guess we'll find out
 
-	m_vecRecords.push_back(std::move(record));
+	m_RecordMap[i].m_vecRecords.emplace_back(std::move(record));
+
 }
 
 void TimeWarp::DeleteInvalidRecords()
 {
 	for (int i = 1; i <= g_EngineClient->GetMaxClients(); i++)
 	{
-		int iSize = m_vecRecords.size();
+		m_RecordMap[i].m_Mutex.lock();
 
-		m_vecRecords.erase
+		m_RecordMap[i].m_vecRecords.erase
 		(
 			std::remove_if
 			(
-				m_vecRecords.begin(),
-				m_vecRecords.end(),
+				m_RecordMap[i].m_vecRecords.begin(),
+				m_RecordMap[i].m_vecRecords.end(),
 				[&](LagRecord_Struct& record) -> bool
 				{
 					return !IsTimeValid(record.m_fSimtime);
 				}
 			),
-			m_vecRecords.end()
+			m_RecordMap[i].m_vecRecords.end()
 		 );
+
+		m_RecordMap[i].m_Mutex.unlock();
 	}
 }
 
@@ -100,7 +103,6 @@ void TimeWarp::StoreRecords(CUserCmd* cmd)
 {
 	if (!g_Options.misc_backtrack) return;
 
-	int bestTargetIndex = -1;
 	float bestFov = FLT_MAX;
 
 	if (!g_LocalPlayer->IsAlive())
@@ -114,7 +116,14 @@ void TimeWarp::StoreRecords(CUserCmd* cmd)
 		if (pEntity == g_LocalPlayer) continue;
 		if (pEntity->IsDormant()) continue;
 		if (!pEntity->IsAlive()) continue;
-		if (pEntity->m_iTeamNum() == g_LocalPlayer->m_iTeamNum()) continue;
+		if (pEntity->m_iTeamNum() == g_LocalPlayer->m_iTeamNum())
+		{
+			m_RecordMap[i].m_Mutex.lock();
+			m_RecordMap[i].m_vecRecords.clear();
+			m_RecordMap[i].m_Mutex.unlock();
+
+			continue;
+		}
 		Vector HitboxPos = pEntity->GetHitboxPos(0);
 
 		UpdateRecords(i);
@@ -146,7 +155,7 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 		float tempFloat = FLT_MAX;
 		Vector ViewDir;
 		Math::AngleVectors(cmd->viewangles + (g_LocalPlayer->m_aimPunchAngle() * 2.f), ViewDir);
-		for (const auto& records : m_vecRecords)
+		for (const auto& records : m_RecordMap[bestTargetIndex].m_vecRecords)
 		{
 			float tempFOVDistance = Math::DistancePointToLine(records.m_vecHitboxPos, g_LocalPlayer->GetEyePos(), ViewDir);
 			if (tempFloat > tempFOVDistance && records.m_fSimtime > g_LocalPlayer->m_flSimulationTime() - 1)
