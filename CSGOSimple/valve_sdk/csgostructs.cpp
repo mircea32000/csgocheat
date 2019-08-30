@@ -173,6 +173,12 @@ CUtlVector<IRefCounted*>& C_BaseCombatWeapon::m_CustomMaterials()
 	return *(CUtlVector<IRefCounted*>*)((uintptr_t)this + inReload);
 }
 
+CUtlVector<IRefCounted*>& CEconItemView::m_VisualsDataProcessors()
+{
+	static auto m_varVisualsDataProcessors = *(uint32_t*)(Utils::PatternScan(GetModuleHandleW(L"client_panorama.dll"), "81 C7 ? ? ? ? 8B 4F 0C 8B 57 04 89 4C") + 2);
+	return *(CUtlVector<IRefCounted*>*)((uintptr_t)this + m_varVisualsDataProcessors);
+}
+
 bool* C_BaseCombatWeapon::m_bCustomMaterialInitialized()
 {
 	static auto currentCommand = *(uint32_t*)(Utils::PatternScan(GetModuleHandleW(L"client_panorama.dll"), "C6 86 ? ? ? ? ? FF 50 04") + 2);
