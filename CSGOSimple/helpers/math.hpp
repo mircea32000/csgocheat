@@ -20,6 +20,18 @@ namespace Math
 		i >>= 1;
 		return *(float*)&i;
 	}
+	inline float DistancePointToLine(Vector Point, Vector LineOrigin, Vector Dir)
+	{
+		auto PointDir = Point - LineOrigin;
+
+		auto TempOffset = PointDir.Dot(Dir) / (Dir.x * Dir.x + Dir.y * Dir.y + Dir.z * Dir.z);
+		if (TempOffset < 0.000001f)
+			return FLT_MAX;
+
+		auto PerpendicularPoint = LineOrigin + (Dir * TempOffset);
+
+		return (Point - PerpendicularPoint).Length();
+	}
 	float VectorDistance(const Vector& v1, const Vector& v2);
 	QAngle CalcAngle(const Vector& src, const Vector& dst);
 	float GetFOV(const QAngle& viewAngle, const QAngle& aimAngle);

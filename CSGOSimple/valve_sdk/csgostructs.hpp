@@ -62,6 +62,25 @@ public:
 	uint8_t pad_009C[16];    //0x009C
 };
 
+class CEconItemView
+{
+public:
+	char pad_0000[4]; //0x0000
+	CUtlVector<IRefCounted*> m_CustomMaterials; //0x0004
+	//dont need any more padding
+	//81 C7 ? ? ? ? 8B 4F 0C 8B 57 04 89 4C + 2
+	//string ref: Original material not found! Name: %s \n \n
+	CUtlVector<IRefCounted*>& m_VisualsDataProcessors();// = Utils::PatternScan(GetModuleHandle("client_panorama.dll"), ("55 8B EC 83 E4 F8 51 53 56 8B D9 8B 0D")
+
+};
+
+class C_AttributeManager
+{
+public:
+	char pad_0000[64]; //0x0000
+	CEconItemView m_Item; //0x0040
+};
+
 class C_EconItemView
 {
 private:

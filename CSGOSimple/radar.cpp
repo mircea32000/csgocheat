@@ -225,7 +225,7 @@ void CRadar::Render()
 				ImGui::PopFont();
 			}
 
-			auto weapon = static_cast<C_BaseCombatWeapon*>(entity);
+		/*	auto weapon = static_cast<C_BaseCombatWeapon*>(entity);
 
 			if (!weapon)
 				continue;
@@ -256,6 +256,7 @@ void CRadar::Render()
 			pDrawList->AddText(ImVec2(vMapPos.x - text_size_smallicons.x / 2 - 1, vMapPos.y - text_size_smallicons.y / 2 + 1), Color::Black.ToU32(), weapon_icon.c_str());
 			pDrawList->AddText(ImVec2(vMapPos.x - text_size_smallicons.x / 2, vMapPos.y - text_size_smallicons.y / 2), coloricons.ToU32(), weapon_icon.c_str());
 			ImGui::PopFont();
+			*/
 		}
 
 		for (int i = 1; i <= g_EngineClient->GetMaxClients(); i++)
