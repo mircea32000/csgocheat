@@ -49,13 +49,14 @@ void TimeWarp::UpdateRecords(int i)
 	C_BasePlayer* pEntity = (C_BasePlayer*)g_EntityList->GetClientEntity(i);
 	LagRecord_Struct record;
 
+
 	record.m_fSimtime = pEntity->m_flSimulationTime();
 	record.m_vecHitboxPos = pEntity->GetHitboxPos(0);
 	record.m_vecHeadPos = pEntity->GetBonePos(8);
 	record.m_vecOrigin = pEntity->m_vecOrigin();
 	pEntity->SetupBones(record.m_Matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, g_GlobalVars->curtime); //memory leak? guess we'll find out
 
-	m_RecordMap[i].m_vecRecords.emplace_back(std::move(record));
+	m_Records[i].m_vecRecords.emplace_back(std::move(record));
 
 }
 
@@ -63,26 +64,33 @@ void TimeWarp::DeleteInvalidRecords()
 {
 	for (int i = 1; i <= g_EngineClient->GetMaxClients(); i++)
 	{
-		m_RecordMap[i].m_Mutex.lock();
+		m_Records[i].m_Mutex.lock();
 
-		m_RecordMap[i].m_vecRecords.erase
+		int iSize = m_Records[i].m_vecRecords.size();
+
+		m_Records[i].m_vecRecords.erase
 		(
 			std::remove_if
 			(
-				m_RecordMap[i].m_vecRecords.begin(),
-				m_RecordMap[i].m_vecRecords.end(),
+				m_Records[i].m_vecRecords.begin(),
+				m_Records[i].m_vecRecords.end(),
 				[&](LagRecord_Struct& record) -> bool
 				{
+					int iDelta = std::addressof(record) - std::addressof(m_Records[i].m_vecRecords[0]) + 1;
+					if (iDelta == iSize)
+					{
+						return false;
+					}
+
 					return !IsTimeValid(record.m_fSimtime);
 				}
 			),
-			m_RecordMap[i].m_vecRecords.end()
+			m_Records[i].m_vecRecords.end()
 		 );
 
-		m_RecordMap[i].m_Mutex.unlock();
+		m_Records[i].m_Mutex.unlock();
 	}
 }
-
 
 bool TimeWarp::IsTimeValid(float flTime)
 {
@@ -96,7 +104,7 @@ bool TimeWarp::IsTimeValid(float flTime)
 
 	float deltaTime = correct - (g_GlobalVars->curtime - flTime);
 
-	return (std::abs(deltaTime));
+	return (std::abs(deltaTime) <= 0.2f);
 }
 
 void TimeWarp::StoreRecords(CUserCmd* cmd)
@@ -118,9 +126,9 @@ void TimeWarp::StoreRecords(CUserCmd* cmd)
 		if (!pEntity->IsAlive()) continue;
 		if (pEntity->m_iTeamNum() == g_LocalPlayer->m_iTeamNum())
 		{
-			m_RecordMap[i].m_Mutex.lock();
-			m_RecordMap[i].m_vecRecords.clear();
-			m_RecordMap[i].m_Mutex.unlock();
+			m_Records[i].m_Mutex.lock();
+			m_Records[i].m_vecRecords.clear();
+			m_Records[i].m_Mutex.unlock();
 
 			continue;
 		}
@@ -155,7 +163,7 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 		float tempFloat = FLT_MAX;
 		Vector ViewDir;
 		Math::AngleVectors(cmd->viewangles + (g_LocalPlayer->m_aimPunchAngle() * 2.f), ViewDir);
-		for (const auto& records : m_RecordMap[bestTargetIndex].m_vecRecords)
+		for (const auto& records : m_Records[bestTargetIndex].m_vecRecords)
 		{
 			float tempFOVDistance = Math::DistancePointToLine(records.m_vecHitboxPos, g_LocalPlayer->GetEyePos(), ViewDir);
 			if (tempFloat > tempFOVDistance && records.m_fSimtime > g_LocalPlayer->m_flSimulationTime() - 1)

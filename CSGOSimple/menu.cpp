@@ -376,6 +376,8 @@ void RenderConfigTab()
 	//static int pk = 0;
 	//static int paintkit = 0;
 
+	
+#ifdef NDEBUG
 	ImGui::BeginGroupBox("##nikgga_content", ImVec2(300, 175));
 	{
 		for (const auto& items : CParser::Get().m_mItems)
@@ -416,7 +418,9 @@ void RenderConfigTab()
 		}
 	}
 	ImGui::EndGroupBox();
+#else
 
+#endif
 }
 
 void Menu::Initialize()

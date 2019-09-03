@@ -158,6 +158,7 @@ namespace Hooks {
 		if (g_Options.misc_bhop)
 			BunnyHop::OnCreateMove(cmd);
 
+		//TimeWarp::Get().Update(cmd);
 		TimeWarp::Get().DeleteInvalidRecords();
 		TimeWarp::Get().StoreRecords(cmd);
 		TimeWarp::Get().DoBackTrack(cmd);
@@ -402,6 +403,7 @@ namespace Hooks {
 
 		if (stage == ClientFrameStage_t::FRAME_RENDER_START)
 		{
+#ifdef NDEBUG
 			static bool bOnce = false;
 			if (!bOnce)
 			{
@@ -410,12 +412,15 @@ namespace Hooks {
 				CParser::Get().ParseStickers();
 				bOnce = true;
 			}
+#else
+			// debug code
+#endif
+			
 		}
 		if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START)
 		{
 			CSkinChanger::Get().Do();
 		}
-
 		ofunc(g_CHLClient, edx, stage);
 	}
 	//--------------------------------------------------------------------------------

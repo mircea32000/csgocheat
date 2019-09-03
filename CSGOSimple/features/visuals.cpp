@@ -146,12 +146,9 @@ bool Visuals::Player::Begin(C_BasePlayer* pl)
 //--------------------------------------------------------------------------------
 void Visuals::Player::RenderBTDots()
 {
-	/*if (validRecords.at(ctx.pl->EntIndex()).empty())
-		return;
-
-	for (auto& record : validRecords.at(ctx.pl->EntIndex()))
+	for (auto& record : TimeWarp::Get().m_Records[ctx.pl->EntIndex()].m_vecRecords)
 	{
-		Vector thisTick = record.hitboxPos;
+		Vector thisTick = record.m_vecHeadPos;
 
 		Vector screenThisTick;
 
@@ -159,7 +156,7 @@ void Visuals::Player::RenderBTDots()
 		{
 			Render::Get().RenderBoxFilled(screenThisTick.x, screenThisTick.y, screenThisTick.x + 3, screenThisTick.y + 3, Color(255, 255, 255, 200));
 		}
-	}*/
+	}
 }
 //--------------------------------------------------------------------------------
 void Visuals::Player::RenderBox() 
@@ -600,7 +597,8 @@ void Visuals::AddToDrawList() {
 				if (g_Options.esp_spooky_shit)      player.RenderSkeleton();
  				if (g_Options.esp_player_names)     player.RenderName();
 				if (g_Options.esp_player_health)    player.RenderHealth();
-				if (g_Options.esp_player_flags)    player.RenderFlags();
+				if (g_Options.esp_player_flags)     player.RenderFlags();
+				if (g_Options.esp_bt_dots)          player.RenderBTDots();
 			}
 		}
 		else if (g_Options.esp_dropped_weapons && entity->IsWeapon())

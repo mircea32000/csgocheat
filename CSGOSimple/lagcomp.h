@@ -9,7 +9,7 @@ struct LagRecord_Struct
 	Vector			m_vecOrigin;
 	Vector          m_vecHeadPos;
 	Vector          m_vecHitboxPos;
-	matrix3x4_t		m_Matrix[256];
+    matrix3x4_t	m_Matrix[128];
 	float           m_fSimtime;
 };
 
@@ -26,8 +26,8 @@ public:
 	void DoBackTrack(CUserCmd* cmd);
 	bool IsTimeValid(float flTime);
 	void DeleteInvalidRecords();
+	std::array<EntityRecord_Struct, 129> m_Records;
 private:
-	std::map<int, EntityRecord_Struct> m_RecordMap;
 	void UpdateRecords(int i);
 	int bestTargetIndex = -1;
 };
