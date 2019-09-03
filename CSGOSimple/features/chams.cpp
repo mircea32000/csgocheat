@@ -5,7 +5,7 @@
 #include "../options.hpp"
 #include "../hooks.hpp"
 #include "../helpers/input.hpp"
-
+#include "../lagcomp.h"
 
 Chams::Chams()
 {
@@ -203,6 +203,21 @@ void Chams::OnDrawModelExecute(
 		// Draw player Chams.
 		// 
 		auto ent = C_BasePlayer::GetPlayerByIndex(info.entity_index);
+
+		if (ent && ent->IsAlive() && ent->IsPlayer() && !ent->IsDormant() && g_Options.misc_backtrack && g_Options.esp_bt_dots) {
+			for (auto& records : TimeWarp::Get().m_Records[ent->EntIndex()].m_vecRecords) //RANGE BASED LOOPS FTW!!!!!!!!!!!
+			{
+				if (records.m_fSimtime && records.m_fSimtime + 1 > g_LocalPlayer->m_flSimulationTime())
+				{
+					static IMaterial* mat = materialRegular;
+					mat->ColorModulate(1.f, 1.f, 1.f);
+					mat->AlphaModulate(1.f);
+					g_MdlRender->ForcedMaterialOverride(mat);
+					fnDME(g_MdlRender, 0, ctx, state, info, records.m_Matrix);
+					g_MdlRender->ForcedMaterialOverride(nullptr);
+				}
+			}
+		}
 
 		if (ent && g_LocalPlayer && ent->IsAlive()) {
 			const auto enemy = ent->m_iTeamNum() != g_LocalPlayer->m_iTeamNum();
