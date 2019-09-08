@@ -121,10 +121,17 @@ float Render::RenderText(const std::string& text, ImVec2 pos, float size, Color 
 		pos.x -= textSize.x / 2.0f;
 
 	if (outline) {
-		draw_list->AddText(pFont, size, ImVec2(pos.x + 1, pos.y + 1), GetU32(Color(0, 0, 0, color.a())), text.c_str());
 		draw_list->AddText(pFont, size, ImVec2(pos.x - 1, pos.y - 1), GetU32(Color(0, 0, 0, color.a())), text.c_str());
-		draw_list->AddText(pFont, size, ImVec2(pos.x + 1, pos.y - 1), GetU32(Color(0, 0, 0, color.a())), text.c_str());
+		draw_list->AddText(pFont, size, ImVec2(pos.x + 1, pos.y + 1), GetU32(Color(0, 0, 0, color.a())), text.c_str());
+
 		draw_list->AddText(pFont, size, ImVec2(pos.x - 1, pos.y + 1), GetU32(Color(0, 0, 0, color.a())), text.c_str());
+		draw_list->AddText(pFont, size, ImVec2(pos.x + 1, pos.y - 1), GetU32(Color(0, 0, 0, color.a())), text.c_str());
+
+		draw_list->AddText(pFont, size, ImVec2(pos.x, pos.y - 1), GetU32(Color(0, 0, 0, color.a())), text.c_str());
+		draw_list->AddText(pFont, size, ImVec2(pos.x, pos.y + 1), GetU32(Color(0, 0, 0, color.a())), text.c_str());
+
+		draw_list->AddText(pFont, size, ImVec2(pos.x - 1, pos.y), GetU32(Color(0, 0, 0, color.a())), text.c_str());
+		draw_list->AddText(pFont, size, ImVec2(pos.x + 1, pos.y), GetU32(Color(0, 0, 0, color.a())), text.c_str());
 	}
 
 	draw_list->AddText(pFont, size, pos, GetU32(color), text.c_str());

@@ -30,6 +30,15 @@
     <Filter Include="Header Files\fonts">
       <UniqueIdentifier>{69d9715e-6194-4271-9c84-4b80235b0dba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\features\Misc">
+      <UniqueIdentifier>{f3c306da-82ce-4185-8b3f-be4db2b537b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\features\Legit">
+      <UniqueIdentifier>{ae23416b-2ba7-4f7c-b05d-4a76e06ccfd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\features\Visuals">
+      <UniqueIdentifier>{5b045dbd-afc3-474d-b76c-d181d9761415}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Helpers\math.cpp">
@@ -86,15 +95,6 @@
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="features\bhop.cpp">
-      <Filter>Source Files\features</Filter>
-    </ClCompile>
-    <ClCompile Include="features\chams.cpp">
-      <Filter>Source Files\features</Filter>
-    </ClCompile>
-    <ClCompile Include="features\glow.cpp">
-      <Filter>Source Files\features</Filter>
-    </ClCompile>
     <ClCompile Include="valve_sdk\misc\Convar.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
@@ -113,9 +113,6 @@
     <ClCompile Include="ui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="features\visuals.cpp">
-      <Filter>Source Files\features</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\impl\imgui_impl_dx9.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
@@ -125,20 +122,8 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="fakelatency.cpp">
-      <Filter>Source Files\features</Filter>
-    </ClCompile>
-    <ClCompile Include="lagcomp.cpp">
-      <Filter>Source Files\features</Filter>
-    </ClCompile>
     <ClCompile Include="imgui_demo.cpp">
       <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="nade_bullshit.cpp">
-      <Filter>Source Files\features</Filter>
-    </ClCompile>
-    <ClCompile Include="spectators.cpp">
-      <Filter>Source Files\features</Filter>
     </ClCompile>
     <ClCompile Include="CEconItemDefinition.cpp">
       <Filter>Source Files\SDK</Filter>
@@ -146,20 +131,44 @@
     <ClCompile Include="CEconPaintKitDefinition.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
-    <ClCompile Include="parser.cpp">
-      <Filter>Source Files\features</Filter>
-    </ClCompile>
     <ClCompile Include="CEconStickerDefition.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
+    <ClCompile Include="legitbot.cpp">
+      <Filter>Source Files\features\Legit</Filter>
+    </ClCompile>
+    <ClCompile Include="lagcomp.cpp">
+      <Filter>Source Files\features\Legit</Filter>
+    </ClCompile>
+    <ClCompile Include="features\bhop.cpp">
+      <Filter>Source Files\features\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="fakelatency.cpp">
+      <Filter>Source Files\features\Legit</Filter>
+    </ClCompile>
+    <ClCompile Include="features\chams.cpp">
+      <Filter>Source Files\features\Visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="features\glow.cpp">
+      <Filter>Source Files\features\Visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="nade_bullshit.cpp">
+      <Filter>Source Files\features\Visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="parser.cpp">
+      <Filter>Source Files\features\Misc</Filter>
+    </ClCompile>
     <ClCompile Include="skinchanger.cpp">
-      <Filter>Source Files\features</Filter>
+      <Filter>Source Files\features\Visuals</Filter>
     </ClCompile>
     <ClCompile Include="radar.cpp">
-      <Filter>Source Files\features</Filter>
+      <Filter>Source Files\features\Visuals</Filter>
     </ClCompile>
-    <ClCompile Include="legitbot.cpp">
-      <Filter>Source Files\features</Filter>
+    <ClCompile Include="spectators.cpp">
+      <Filter>Source Files\features\Visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="features\visuals.cpp">
+      <Filter>Source Files\features\Visuals</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

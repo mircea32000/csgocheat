@@ -113,7 +113,9 @@ public:
 		OPTION(bool, misc_watermark, true);
 		OPTION(float, misc_thirdperson_dist, 50.f);
 		OPTION(int, viewmodel_fov, 68);
-		OPTION(int, legit_fov, 30);
+		OPTION(int, legit_fov, 1);
+		OPTION(int, legit_hitbox, 0);
+		OPTION(int, legit_smooth, 1);
 		OPTION(float, mat_ambient_light_r, 0.0f);
 		OPTION(float, mat_ambient_light_g, 0.0f);
 		OPTION(float, mat_ambient_light_b, 0.0f);

@@ -45,7 +45,6 @@ namespace Math
 		}
 		vec[2] = 0.f;
 	}
-    void ClampAngles(QAngle& angles);
 	void correct_angles(QAngle& angles);
     void VectorTransform(const Vector& in1, const matrix3x4_t& in2, Vector& out);
 	Vector VectorTransform(Vector in, matrix3x4_t matrix);
@@ -61,15 +60,6 @@ namespace Math
 		dot = std::clamp(dot, -1.f, 1.f);
 
 		return RAD2DEG(acos(dot));
-	}
-	inline float GetFov(const QAngle& viewAngle, const QAngle& aimAngle)
-	{
-		Vector ang, aim;
-
-		AngleVectors(viewAngle, aim);
-		AngleVectors(aimAngle, ang);
-
-		return RAD2DEG(acos(aim.Dot(ang) / aim.LengthSqr()));
 	}
     void VectorAngles(const Vector& forward, QAngle& angles);
     bool WorldToScreen(const Vector& in, Vector& out);
