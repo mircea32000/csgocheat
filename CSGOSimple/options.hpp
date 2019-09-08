@@ -94,6 +94,7 @@ public:
 		OPTION(bool, chams_player_glass, false);
 		OPTION(bool, chams_player_metalic, false);
 		OPTION(bool, chams_arms_enabled, false);
+		OPTION(bool, chams_backtrack_rainbow, false);
 		OPTION(bool, chams_arms_wireframe, false);
 		OPTION(bool, chams_arms_flat, false);
 		OPTION(bool, chams_arms_ignorez, false);
@@ -112,7 +113,7 @@ public:
 		OPTION(bool, misc_watermark, true);
 		OPTION(float, misc_thirdperson_dist, 50.f);
 		OPTION(int, viewmodel_fov, 68);
-
+		OPTION(int, legit_fov, 30);
 		OPTION(float, mat_ambient_light_r, 0.0f);
 		OPTION(float, mat_ambient_light_g, 0.0f);
 		OPTION(float, mat_ambient_light_b, 0.0f);

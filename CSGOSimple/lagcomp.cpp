@@ -2,23 +2,10 @@
 #include <minmax.h>
 #include "helpers/math.hpp"
 #include "options.hpp"
-
+#include <algorithm>
 #define TICK_INTERVAL			(g_GlobalVars->interval_per_tick)
 #define TICKS_TO_TIME(t) ( g_GlobalVars->interval_per_tick * (t) )
 #define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
-
-
-template<class T, class U>
-T clamp(T in, U low, U high)
-{
-	if (in <= low)
-		return low;
-
-	if (in >= high)
-		return high;
-
-	return in;
-}
 
 float GetLerpTime()
 {
@@ -39,7 +26,7 @@ float GetLerpTime()
 	ConVar* c_max_ratio = g_CVar->FindVar("sv_client_max_interp_ratio");
 
 	if (c_min_ratio && c_max_ratio && c_min_ratio->GetFloat() != 1)
-		ratio = clamp(ratio, c_min_ratio->GetFloat(), c_max_ratio->GetFloat());
+		ratio = std::clamp(ratio, c_min_ratio->GetFloat(), c_max_ratio->GetFloat());
 
 	return max(lerp, (ratio / ud_rate));
 }

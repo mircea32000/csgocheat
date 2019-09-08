@@ -153,6 +153,7 @@ void RenderEspTab()
             ImGui::Checkbox("Health", g_Options.esp_player_health);
             ImGui::Checkbox("Flags", g_Options.esp_player_flags);
 			ImGui::Checkbox("Backtrack dots", g_Options.esp_bt_dots);
+			ImGui::Checkbox("Rainbow##chams", g_Options.chams_backtrack_rainbow);
             ImGui::Checkbox("Weapon", g_Options.esp_player_weapons);
 			ImGui::Combo("Type##weapoin", g_Options.esp_weaponname_type, weaponname_types, IM_ARRAYSIZE(weaponname_types));
 			ImGui::Checkbox("Skeleton", g_Options.esp_spooky_shit);
@@ -326,25 +327,9 @@ void RenderMiscTab()
 
 void RenderEmptyTab()
 {
-	auto& style = ImGui::GetStyle();
-	float group_w = ImGui::GetCurrentWindow()->Size.x - style.WindowPadding.x * 2;
-
-	bool placeholder_true = true;
-
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-	ImGui::ToggleButton("AIM", &placeholder_true, ImVec2{ group_w, 25.0f });
-	ImGui::PopStyleVar();
-
 	ImGui::BeginGroupBox("##body_content");
 	{
-		auto message = "There's nothing here. Add something you want!";
-
-		 auto pos = ImGui::GetCurrentWindow()->Pos;
-		 auto wsize = ImGui::GetCurrentWindow()->Size;
-
-		 pos = pos + wsize / 2.0f;
-
-		 ImGui::RenderText(pos - ImGui::CalcTextSize(message) / 2.0f, message);
+		ImGui::SliderInt("FOV:", g_Options.legit_fov, 0, 30);
 	}
 	ImGui::EndGroupBox();
 }

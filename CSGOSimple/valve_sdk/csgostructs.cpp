@@ -419,7 +419,12 @@ std::string C_BaseCombatWeapon::GetWeaponIcon()
 }
 Vector C_BasePlayer::GetEyePos()
 {
-	return m_vecOrigin() + m_vecViewOffset();
+	if (!this)
+		return Vector(0, 0, 0);
+
+	Vector result;
+	CallVFunction<void(__thiscall*)(void*, Vector&)>(this, 281)(this, result);
+	return result;
 }
 
 player_info_t C_BasePlayer::GetPlayerInfo()

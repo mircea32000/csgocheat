@@ -34,6 +34,17 @@ void Color::SetColor(int _r, int _g, int _b, int _a)
     _CColor[3] = (unsigned char)_a;
 }
 
+Color Color::blend(const Color& first, const Color& second, float t)
+{
+	Color caca(
+		sqrt((1.f - t) * pow(first.r(), 2) + t * pow(second.r(), 2)),
+		sqrt((1.f - t) * pow(first.g(), 2) + t * pow(second.g(), 2)),
+		sqrt((1.f - t) * pow(first.b(), 2) + t * pow(second.b(), 2)),
+		(1.f - t) * first.a() + t * second.a()
+    );
+	return caca;
+}
+
 ImVec4 Color::ToVec4()
 {
 	return ImVec4(r() / 255.f, g() / 255.f, b() / 255.f, a() / 255.f);

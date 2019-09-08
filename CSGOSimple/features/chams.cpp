@@ -207,10 +207,23 @@ void Chams::OnDrawModelExecute(
 		if (ent && ent->IsAlive() && ent->IsPlayer() && !ent->IsDormant() && g_Options.misc_backtrack && g_Options.esp_bt_dots) {
 			for (auto& records : TimeWarp::Get().m_Records[ent->EntIndex()].m_vecRecords) //RANGE BASED LOOPS FTW!!!!!!!!!!!
 			{
+				float record_time = std::abs(g_GlobalVars->curtime - records.m_fSimtime) * 5.f;
 				if (records.m_fSimtime && records.m_fSimtime + 1 > g_LocalPlayer->m_flSimulationTime())
 				{
+					
+					Color color;
+
+					if (g_Options.chams_backtrack_rainbow)
+					{
+						color.blend(Color(255, 0, 0, 255), Color(255, 255, 255, 255), record_time);
+					}
+					else
+					{
+						color = Color::White;
+					}
+
 					static IMaterial* mat = materialRegular;
-					mat->ColorModulate(1.f, 1.f, 1.f);
+					mat->ColorModulate(color.r() / 255.f, color.g() / 255.f, color.b() / 255.f);
 					mat->AlphaModulate(1.f);
 					g_MdlRender->ForcedMaterialOverride(mat);
 					fnDME(g_MdlRender, 0, ctx, state, info, records.m_Matrix);
