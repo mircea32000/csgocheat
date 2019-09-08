@@ -327,9 +327,13 @@ void RenderMiscTab()
 
 void RenderEmptyTab()
 {
-	ImGui::BeginGroupBox("##body_content");
+	ImGui::BeginGroupBox("Aimbot");
 	{
+		const char* aim_hitbox[] = { "Head", "Neck", "Pelvis", "Stomach", "Chest", "Closest" };
+
+		ImGui::Combo("Hitbox##hitboxlegitaim", g_Options.legit_hitbox, aim_hitbox, IM_ARRAYSIZE(aim_hitbox));
 		ImGui::SliderInt("FOV:", g_Options.legit_fov, 0, 30);
+		ImGui::SliderInt("Smooth:", g_Options.legit_smooth, 1, 100);
 	}
 	ImGui::EndGroupBox();
 }

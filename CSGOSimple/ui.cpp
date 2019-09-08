@@ -3,7 +3,7 @@
 #include <deque>
 #include <algorithm>
 #include <vector>
-
+#include "render.hpp"
 //template <class T>
 //bool ComboForSkins(const char* label, std::vector current_item, bool(*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count, int popup_max_height_in_items = -1) {
 //	
@@ -78,6 +78,7 @@ bool ImGui::BeginGroupBox(const char* name, const ImVec2& size_arg)
 	if (size.y <= 0.0f) {
 		size.y = ImMax(content_avail.y, 4.0f) - fabsf(size.y);
 	}
+	auto PosY = window->DC.CursorPos.y;
 
 	ImGui::SetNextWindowSize(size);
 	bool ret;
@@ -92,12 +93,28 @@ bool ImGui::BeginGroupBox(const char* name, const ImVec2& size_arg)
 
 	if (text_size.x > 1.0f) {
 		window->DrawList->PushClipRectFullScreen();
-		//window->DrawList->AddRectFilled(window->DC.CursorPos - ImVec2{ 4, 0 }, window->DC.CursorPos + (text_size + ImVec2{ 4, 0 }), GetColorU32(ImGuiCol_ChildWindowBg));
-		//RenderTextClipped(pos, pos + text_size, name, NULL, NULL, GetColorU32(ImGuiCol_Text));
-		window->DrawList->PopClipRect();
+		ImVec2 a = window->DC.CursorPos - ImVec2{ 0, 0 }, b = window->DC.CursorPos + (text_size + ImVec2{ 8, 0 });
+		a.y = PosY;
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 } - ImVec2{ 1.f, 1.f }, GetColorU32(ImVec4(0.082, 0.082, 0.082, 1)), name);
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 } + ImVec2{ 1.f, 1.f }, GetColorU32(ImVec4(0.082, 0.082, 0.082, 1)), name);
+		
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 } - ImVec2{ 1.f, -1.f }, GetColorU32(ImVec4(0.082, 0.082, 0.082, 1)), name);
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 } + ImVec2{ 1.f, -1.f }, GetColorU32(ImVec4(0.082, 0.082, 0.082, 1)), name);
+		
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 } - ImVec2{ 0.f, 1.f }, GetColorU32(ImVec4(0.082, 0.082, 0.082, 1)), name);
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 } + ImVec2{ 0.f, 1.f }, GetColorU32(ImVec4(0.082, 0.082, 0.082, 1)), name);
+
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 } - ImVec2{ 1.f, 0.f }, GetColorU32(ImVec4(0.082, 0.082, 0.082, 1)), name);
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 } + ImVec2{ 1.f, 0.f }, GetColorU32(ImVec4(0.082, 0.082, 0.082, 1)), name);
+
+		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 }, GetColorU32(ImVec4(1, 1, 1, 1)), name);
+
+	//	window->DrawList->PopClipRect();
 	}
 	//if (!(window->Flags & ImGuiWindowFlags_ShowBorders))
 	//	ImGui::GetCurrentWindow()->Flags &= ~ImGuiWindowFlags_ShowBorders;
+
+	return ret;
 
 	return ret;
 }
