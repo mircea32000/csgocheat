@@ -9,6 +9,7 @@
 #include "helpers/utils.hpp"
 #include "features/bhop.hpp"
 #include "features/chams.hpp"
+#include "legitbot.h"
 #include "skinchanger.h"
 #include "features/visuals.hpp"
 #include "parser.h"
@@ -158,11 +159,12 @@ namespace Hooks {
 		if (g_Options.misc_bhop)
 			BunnyHop::OnCreateMove(cmd);
 
-		//TimeWarp::Get().Update(cmd);
 		TimeWarp::Get().DeleteInvalidRecords();
 		TimeWarp::Get().StoreRecords(cmd);
 		TimeWarp::Get().DoBackTrack(cmd);
 
+		Legit::Aimbot::Do(cmd);
+		
 		CNadePred::Get().trace(cmd);
 
 		static uintptr_t pSavedNetChannel = NULL;

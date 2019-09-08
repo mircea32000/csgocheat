@@ -33,6 +33,7 @@ public:
 	void    SetRawColor(int color32);
 	int     GetRawColor() const;
 	void    SetColor(int _r, int _g, int _b, int _a = 0);
+	Color blend(const Color& first, const Color& second, float t);
 	ImVec4  ToVec4();
 	ImU32   ToU32();
 	void    SetColor(float _r, float _g, float _b, float _a = 0);

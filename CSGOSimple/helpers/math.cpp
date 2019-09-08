@@ -1,5 +1,5 @@
 #include "Math.hpp"
-
+#include <algorithm>
 namespace Math
 {
 	//--------------------------------------------------------------------------------
@@ -44,6 +44,20 @@ namespace Math
 
         angles.roll = 0;
     }
+	void correct_angles(QAngle& angles)
+	{
+		for (int axis = 0; axis < 3; axis++)
+		{
+			if (!std::isfinite(angles[axis]))
+			{
+				angles[axis] = 0.f;
+			}
+		}
+
+		angles.pitch = std::clamp(angles.pitch, -89.f, 89.f);
+		angles.yaw = std::clamp(std::remainder(angles.yaw, 360.f), -180.f, 180.f);
+		angles.roll = 0.f;
+	}
     //--------------------------------------------------------------------------------
     void VectorTransform(const Vector& in1, const matrix3x4_t& in2, Vector& out)
     {
