@@ -1,8 +1,9 @@
 #include "hooks.hpp"
 #include <intrin.h>  
-
+#include "OverrideView.hpp"
 #include "render.hpp"
 #include "menu.hpp"
+#include "EnginePrediction.h"
 #include "options.hpp"
 #include "radar.h"
 #include "helpers/input.hpp"
@@ -163,8 +164,12 @@ namespace Hooks {
 		TimeWarp::Get().StoreRecords(cmd);
 		TimeWarp::Get().DoBackTrack(cmd);
 
+		PredictionSystem::Get().Start(cmd, g_LocalPlayer);
+		{
 		Legit::Aimbot::Do(cmd);
-		
+		}
+		PredictionSystem::Get().End(g_LocalPlayer);
+
 		CNadePred::Get().trace(cmd);
 
 		static uintptr_t pSavedNetChannel = NULL;
@@ -432,6 +437,8 @@ namespace Hooks {
 
 		if (g_EngineClient->IsInGame() && vsView)
 			Visuals::Get().ThirdPerson();
+
+		OverrideView::Get().currentFOV = vsView->fov; //for fov changers later
 
 		ofunc(g_ClientMode, edx, vsView);
 	}

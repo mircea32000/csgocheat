@@ -64,28 +64,29 @@ public:
 
 class IPrediction
 {
+	// Construction
 public:
-    bool InPrediction()
-    {
-        typedef bool(__thiscall* oInPrediction)(void*);
-        return CallVFunction<oInPrediction>(this, 14)(this);
-    }
+	bool InPrediction()
+	{
+		typedef bool(__thiscall * oInPrediction)(void*);
+		return CallVFunction<oInPrediction>(this, 14)(this);
+	}
 
-    void RunCommand(C_BasePlayer *player, CUserCmd *ucmd, IMoveHelper *moveHelper)
-    {
-        typedef void(__thiscall* oRunCommand)(void*, C_BasePlayer*, CUserCmd*, IMoveHelper*);
-        return CallVFunction<oRunCommand>(this, 19)(this, player, ucmd, moveHelper);
-    }
+	void RunCommand(C_BasePlayer* player, CUserCmd* ucmd, IMoveHelper* moveHelper)
+	{
+		typedef void(__thiscall * oRunCommand)(void*, C_BasePlayer*, CUserCmd*, IMoveHelper*);
+		return CallVFunction<oRunCommand>(this, 19)(this, player, ucmd, moveHelper);
+	}
 
-    void SetupMove(C_BasePlayer *player, CUserCmd *ucmd, IMoveHelper *moveHelper, void* pMoveData)
-    {
-        typedef void(__thiscall* oSetupMove)(void*, C_BasePlayer*, CUserCmd*, IMoveHelper*, void*);
-        return CallVFunction<oSetupMove>(this, 20)(this, player, ucmd, moveHelper, pMoveData);
-    }
+	void SetupMove(C_BasePlayer* player, CUserCmd* ucmd, IMoveHelper* moveHelper, void* pMoveData)
+	{
+		typedef void(__thiscall * oSetupMove)(void*, C_BasePlayer*, CUserCmd*, IMoveHelper*, void*);
+		return CallVFunction<oSetupMove>(this, 20)(this, player, ucmd, moveHelper, pMoveData);
+	}
 
-    void FinishMove(C_BasePlayer *player, CUserCmd *ucmd, void*pMoveData)
-    {
-        typedef void(__thiscall* oFinishMove)(void*, C_BasePlayer*, CUserCmd*, void*);
-        return CallVFunction<oFinishMove>(this, 21)(this, player, ucmd, pMoveData);
-    }
+	void FinishMove(C_BasePlayer* player, CUserCmd* ucmd, void* pMoveData)
+	{
+		typedef void(__thiscall * oFinishMove)(void*, C_BasePlayer*, CUserCmd*, void*);
+		return CallVFunction<oFinishMove>(this, 21)(this, player, ucmd, pMoveData);
+	}
 };

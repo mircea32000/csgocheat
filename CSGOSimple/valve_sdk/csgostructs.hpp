@@ -305,6 +305,11 @@ public:
 
 	/*gladiator v2*/
 	void InvalidateBoneCache();
+	void SetLocalViewangles(Vector angle);
+	int PhysicsRunThink(int i);
+	void PreThink();
+	void Think();
+	void PostThink();
 	int GetNumAnimOverlays();
 	AnimationLayer *GetAnimOverlays();
 	AnimationLayer *GetAnimOverlay(int i);

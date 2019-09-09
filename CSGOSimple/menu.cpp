@@ -153,7 +153,8 @@ void RenderEspTab()
             ImGui::Checkbox("Health", g_Options.esp_player_health);
             ImGui::Checkbox("Flags", g_Options.esp_player_flags);
 			ImGui::Checkbox("Backtrack dots", g_Options.esp_bt_dots);
-			ImGui::Checkbox("Rainbow##chams", g_Options.chams_backtrack_rainbow);
+			ImGui::Checkbox("Render FOV##aimbot", g_Options.esp_draw_fov);
+			ImGui::Checkbox("Render FOV fill##aimbot", g_Options.esp_fov_filled);
             ImGui::Checkbox("Weapon", g_Options.esp_player_weapons);
 			ImGui::Combo("Type##weapoin", g_Options.esp_weaponname_type, weaponname_types, IM_ARRAYSIZE(weaponname_types));
 			ImGui::Checkbox("Skeleton", g_Options.esp_spooky_shit);
@@ -184,6 +185,8 @@ void RenderEspTab()
             ImGuiEx::ColorEdit3("Planted C4", g_Options.color_esp_c4);
 			ImGuiEx::ColorEdit3("Skeleton##color", g_Options.color_esp_skeleton);
 			ImGuiEx::ColorEdit3("Item Esp", g_Options.color_esp_item);
+			ImGuiEx::ColorEdit3("FOV fill", g_Options.color_fov_filled);
+			ImGuiEx::ColorEdit3("FOV outline", g_Options.color_fov_outline);
             ImGui::PopItemWidth();
 
             ImGui::Columns(1, nullptr, false);
@@ -330,10 +333,18 @@ void RenderEmptyTab()
 	ImGui::BeginGroupBox("Aimbot");
 	{
 		const char* aim_hitbox[] = { "Head", "Neck", "Pelvis", "Stomach", "Chest", "Closest" };
+		const char* aim_smoothing[] = { "Slow at end", "Constant", "Fast at end"};
 
 		ImGui::Combo("Hitbox##hitboxlegitaim", g_Options.legit_hitbox, aim_hitbox, IM_ARRAYSIZE(aim_hitbox));
+		ImGui::Combo("Smoothing type##smoothaim", g_Options.legit_smoothing_method, aim_smoothing, IM_ARRAYSIZE(aim_smoothing));
 		ImGui::SliderInt("FOV:", g_Options.legit_fov, 0, 30);
-		ImGui::SliderInt("Smooth:", g_Options.legit_smooth, 1, 100);
+		ImGui::SliderFloat("Smooth:", g_Options.legit_smooth, 0, 1, "%.3f");
+		ImGui::Checkbox("RCS", g_Options.legit_rcs);
+		ImGui::SliderFloat("X axis:", g_Options.legit_rcs_x, 0, 1, "%.3f");
+		ImGui::SliderFloat("Y axis:", g_Options.legit_rcs_y, 0, 1, "%.3f");
+
+		ImGui::SliderFloat("Shoot Delay:", g_Options.legit_target_delay, 0, 200, "%.3f");
+
 	}
 	ImGui::EndGroupBox();
 }

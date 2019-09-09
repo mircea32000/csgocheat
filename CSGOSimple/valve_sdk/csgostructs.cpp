@@ -584,6 +584,36 @@ void C_BasePlayer::InvalidateBoneCache()
 	*(unsigned int*)((DWORD)this + 0x2690) = (g_iModelBoneCounter - 1); // m_iMostRecentModelBoneCounter = g_iModelBoneCounter - 1;
 }
 
+void C_BasePlayer::SetLocalViewangles(Vector angle)
+{
+	CallVFunc<369, void>(this, &angle);
+}
+
+int C_BasePlayer::PhysicsRunThink(int i)
+{
+	static auto pfnPhysicsRunThink =
+		Utils::PatternScan(GetModuleHandleA("client_panorama.dll"), "55 8B EC 83 EC 10 53 56 57 8B F9 8B 87 ? ? ? ? C1 E8 16");
+
+	using PhysicsRunThink_t = int(__thiscall*)(void*, int);
+
+	return ((PhysicsRunThink_t)(pfnPhysicsRunThink))(this, i);
+}
+
+void C_BasePlayer::PreThink()
+{
+	CallVFunc<314, void>(this);
+}
+
+void C_BasePlayer::Think()
+{
+	CallVFunc<140, void>(this);
+}
+
+void C_BasePlayer::PostThink()
+{
+	CallVFunc<315, int>(this);
+}
+
 int C_BasePlayer::m_nMoveType()
 {
 	return *(int*)((uintptr_t)this + 0x25C);
