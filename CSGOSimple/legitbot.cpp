@@ -1,9 +1,46 @@
 #include "legitbot.h"
 #include "helpers/math.hpp"
 #include "options.hpp"
-
+#include <minmax.h>
+#include "CTimer.h"
+QAngle m_vecAimAngle;
 QAngle m_vecLocalAngle;
 int bestHitbox = -1;
+int bestPlayer = -1;
+
+void PickUserSmothing(int type)
+{
+	if (type == 0)
+	{
+		float smooth = 1 - g_Options.legit_smooth;
+		QAngle m_vecSmoothClamp = (m_vecLocalAngle - m_vecAimAngle);
+		Math::correct_angles(m_vecSmoothClamp);
+
+		m_vecAimAngle = (m_vecLocalAngle - m_vecSmoothClamp * smooth);
+		Math::correct_angles(m_vecAimAngle);
+	}
+	else if (type == 1 /*constant*/ || type == 2 /*algorithmically faster*/)
+	{
+
+		QAngle delta = (m_vecAimAngle - m_vecLocalAngle);
+		Math::correct_angles(delta);
+		QAngle toChange = QAngle();
+
+		float smooth = powf(g_Options.legit_smooth, 0.4f);
+
+		smooth = min(0.99f, smooth);
+
+		float coeff = (1.0f - smooth) / delta.Length() * 4.f;
+
+		if (type == 2 /*algo fast yes*/)
+			coeff = powf(coeff, 2.f) * 10.f;
+
+		coeff = min(1.f, coeff);
+		toChange = delta * coeff;
+
+		m_vecAimAngle = m_vecLocalAngle + toChange;
+	}
+}
 
 void PickUserHitbox(C_BasePlayer* ent, int option)
 {
@@ -13,20 +50,7 @@ void PickUserHitbox(C_BasePlayer* ent, int option)
 	HITBOX_PELVIS,
 	HITBOX_STOMACH,
 	HITBOX_LOWER_CHEST,
-	HITBOX_CHEST,
-	HITBOX_UPPER_CHEST,
-	HITBOX_RIGHT_THIGH,
-	HITBOX_LEFT_THIGH,
-	HITBOX_RIGHT_CALF,
-	HITBOX_LEFT_CALF,
-	HITBOX_RIGHT_FOOT,
-	HITBOX_LEFT_FOOT,
-	HITBOX_RIGHT_HAND,
-	HITBOX_LEFT_HAND,
-	HITBOX_RIGHT_UPPER_ARM,
-	HITBOX_RIGHT_FOREARM,
-	HITBOX_LEFT_UPPER_ARM,
-	HITBOX_LEFT_FOREARM,
+	HITBOX_CHEST
 	};
 
 	Vector m_vecLocalEyes = g_LocalPlayer->GetEyePos();
@@ -71,6 +95,22 @@ void PickUserHitbox(C_BasePlayer* ent, int option)
 	}
 }
 
+void RCS(QAngle& angle, CUserCmd* cmd)
+{
+	QAngle CurrentPunch = g_LocalPlayer->m_aimPunchAngle();
+	QAngle LastPunch;
+
+	if (!(cmd->buttons & IN_ATTACK))
+		return;
+
+	if (bestPlayer > -1)
+	{
+		//angle.pitch -= CurrentPunch.pitch * g_Options.legit_rcs_x;
+		//angle.yaw -= CurrentPunch.yaw * g_Options.legit_rcs_y;
+		angle -= CurrentPunch * 2;
+	}
+}
+
 void Legit::Aimbot::Do(CUserCmd* cmd)
 {
 	if (!g_LocalPlayer)
@@ -89,9 +129,6 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 	if (!weapon->IsGun()) //@TODO : taser check
 		return;
 
-	int bestPlayer = -1;
-	int oldbestplayer = 0;
-
 	for (int i = 1; i < g_EngineClient->GetMaxClients(); i++)
 	{
 		C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(i);
@@ -108,12 +145,11 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		if (ent->m_iTeamNum() == g_LocalPlayer->m_iTeamNum()) //@TODO : friendlies checkbox
 			continue;
 
-		g_EngineClient->GetViewAngles(m_vecLocalAngle);//gets localplayer viewangles
-		Vector m_vecLocalEyes = g_LocalPlayer->GetEyePos();//gets localplayer eye angles
-		Vector m_vecPlayerEyes = ent->GetEyePos(); //gets nigger eye angles
+		g_EngineClient->GetViewAngles(m_vecLocalAngle);
+		Vector m_vecLocalEyes = g_LocalPlayer->GetEyePos();
+		Vector m_vecPlayerEyes = ent->GetEyePos(); 
 
 		PickUserHitbox(ent, g_Options.legit_hitbox);
-
 
 		if (!g_LocalPlayer->CanSeePlayer(ent, ent->GetHitboxPos(bestHitbox)))
 			continue;
@@ -125,10 +161,10 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 
 		bestFOV = g_Options.legit_fov;
 
-		if (fov < bestFOV)//if the fov smaller than flt_max
+		if (fov < bestFOV)
 		{
-			bestFOV = fov; //our best fov is the current fov
-			bestPlayer = i; //save the player so we can aim at him later
+			bestFOV = fov; 
+			bestPlayer = i; 
 		}
 
 	}
@@ -136,21 +172,41 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 	{
     	C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(bestPlayer);
 
-		QAngle m_vecAimAngle = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
-		if (GetAsyncKeyState(VK_LBUTTON))
+		float fov = Math::get_fov(m_vecLocalAngle, g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
+
+		if (fov > g_Options.legit_fov)
+			return;
+
+		m_vecAimAngle = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
+
+		//m_vecAimAngle -= g_LocalPlayer->m_aimPunchAngle();
+
+		PickUserSmothing(g_Options.legit_smoothing_method);
+	//	RCS(m_vecAimAngle, cmd);
+	//
+
+		Math::correct_angles(m_vecAimAngle);
+		if (GetAsyncKeyState(VK_LBUTTON)) //aim at nigga
 		{
-			QAngle m_vecSmoothClamp = (m_vecLocalAngle - m_vecAimAngle);
-			Math::correct_angles(m_vecSmoothClamp);
-		
-			m_vecAimAngle = (m_vecLocalAngle - m_vecSmoothClamp / g_Options.legit_smooth);
 			Math::correct_angles(m_vecAimAngle);
-
-			m_vecAimAngle -= g_LocalPlayer->m_aimPunchAngle() * 2.f;
-			Math::correct_angles(m_vecAimAngle);
-
 			g_EngineClient->SetViewAngles(m_vecAimAngle);
-		}
-		oldbestplayer = bestPlayer;
 
+			if (!CTimer::Get().delay(g_Options.legit_target_delay) &&
+				cmd->buttons & IN_ATTACK &&
+				g_LocalPlayer->m_iShotsFired() == 0 &&
+				weapon->m_Item().m_iItemDefinitionIndex() != WEAPON_REVOLVER)
+			{
+				cmd->buttons &= ~IN_ATTACK;
+			}
+			else
+			{
+				CTimer::Get().reset();
+			}
+
+		}
+	}
+	else
+	{
+		CTimer::Get().reset();
 	}
 }

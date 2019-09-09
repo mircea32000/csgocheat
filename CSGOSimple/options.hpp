@@ -51,6 +51,8 @@ public:
 		OPTION(int, esp_box_type, 0);
 		OPTION(int, esp_weaponname_type, 0);
 		OPTION(bool, esp_player_boxes, false);
+		OPTION(bool, esp_draw_fov, false);
+		OPTION(bool, esp_fov_filled, false);
 		OPTION(bool, esp_grenade_prediction, false);
 		OPTION(bool, esp_player_names, false);
 		OPTION(bool, esp_player_health, false);
@@ -114,8 +116,13 @@ public:
 		OPTION(float, misc_thirdperson_dist, 50.f);
 		OPTION(int, viewmodel_fov, 68);
 		OPTION(int, legit_fov, 1);
+		OPTION(bool, legit_rcs, true);
+		OPTION(float, legit_rcs_x, 2);
+		OPTION(float, legit_rcs_y, 2);
+		OPTION(float, legit_target_delay, 0);
 		OPTION(int, legit_hitbox, 0);
-		OPTION(int, legit_smooth, 1);
+		OPTION(int, legit_smoothing_method, 0);
+		OPTION(float, legit_smooth, 1.f);
 		OPTION(float, mat_ambient_light_r, 0.0f);
 		OPTION(float, mat_ambient_light_g, 0.0f);
 		OPTION(float, mat_ambient_light_b, 0.0f);
@@ -124,6 +131,8 @@ public:
 		// COLORS
 		// 
 		OPTION(Color, color_chams_gloss, Color(0, 128, 255));
+		OPTION(Color, color_fov_outline, Color(0, 128, 255));
+		OPTION(Color, color_fov_filled, Color(0, 128, 255));
 		OPTION(Color, color_esp_ally_visible, Color(0, 128, 255));
 		OPTION(Color, color_esp_enemy_visible, Color(255, 0, 0));
 		OPTION(Color, color_esp_ally_occluded, Color(0, 128, 255));

@@ -100,6 +100,8 @@
     <ClCompile Include="CEconItemDefinition.cpp" />
     <ClCompile Include="CEconPaintKitDefinition.cpp" />
     <ClCompile Include="CEconStickerDefition.cpp" />
+    <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="EnginePrediction.cpp" />
     <ClCompile Include="legitbot.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="radar.cpp" />
@@ -146,9 +148,12 @@
     <ClInclude Include="CEconPaintKitDefinition.h" />
     <ClInclude Include="CEconStickerDefition.h" />
     <ClInclude Include="config.hpp" />
+    <ClInclude Include="CTimer.h" />
+    <ClInclude Include="EnginePrediction.h" />
     <ClInclude Include="IFileSystem.h" />
     <ClInclude Include="ILocalize.hpp" />
     <ClInclude Include="legitbot.h" />
+    <ClInclude Include="OverrideView.hpp" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="radar.h" />
     <ClInclude Include="RenderableInfo.h" />

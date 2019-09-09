@@ -170,6 +170,12 @@
     <ClCompile Include="features\visuals.cpp">
       <Filter>Source Files\features\Visuals</Filter>
     </ClCompile>
+    <ClCompile Include="EnginePrediction.cpp">
+      <Filter>Source Files\features\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimer.cpp">
+      <Filter>Source Files\features\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="valve_sdk\misc\BaseHandle.hpp">
@@ -480,6 +486,15 @@
     </ClInclude>
     <ClInclude Include="legitbot.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OverrideView.hpp">
+      <Filter>Header Files\SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="EnginePrediction.h">
+      <Filter>Header Files\features</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h">
+      <Filter>Header Files\features</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

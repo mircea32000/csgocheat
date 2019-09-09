@@ -1,7 +1,7 @@
 ﻿#include <algorithm>
 
 #include "visuals.hpp"
-
+#include "../OverrideView.hpp"
 #include "../options.hpp"
 #include "../helpers/math.hpp"
 #include "../helpers/utils.hpp"
@@ -297,6 +297,23 @@ void Visuals::Player::RenderSnapline()
 
 	Render::Get().RenderLine(screen_w / 2.f, (float)screen_h,
 		ctx.feet_pos.x, ctx.feet_pos.y, ctx.clr);
+}
+//--------------------------------------------------------------------------------
+void Visuals::RenderFOV()
+{
+	int w, h;
+	g_EngineClient->GetScreenSize(w, h);
+
+	float radius = 0;
+	float aimbotFov = g_Options.legit_fov;
+	float fov = OverrideView::Get().currentFOV;
+	radius = tanf(DEG2RAD(aimbotFov) / 2) / tanf(DEG2RAD(fov) / 2) * w;
+
+	if (g_Options.esp_fov_filled)
+		Render::Get().RenderCircleFilled(w / 2, h / 2, radius, 40, g_Options.color_fov_filled);
+	else
+		Render::Get().RenderCircle(w / 2, h / 2, radius, 40, g_Options.color_fov_outline);
+
 }
 //--------------------------------------------------------------------------------
 void Visuals::RenderCrosshair()
@@ -614,6 +631,9 @@ void Visuals::AddToDrawList() {
 
 	if (g_Options.esp_crosshair)
 		RenderCrosshair();
+
+	if (g_Options.esp_draw_fov)
+		RenderFOV();
 
 	if (g_Options.esp_removescope && (g_LocalPlayer && g_LocalPlayer->m_hActiveWeapon().Get() && g_LocalPlayer->m_hActiveWeapon().Get()->IsSniper() && g_LocalPlayer->m_bIsScoped()))
 		RenderScope();

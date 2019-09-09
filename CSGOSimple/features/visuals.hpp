@@ -49,6 +49,7 @@ public:
 
 	};
 	void RenderCrosshair();
+	void RenderFOV();
 	void RenderScope();
 	void RenderWeapon(C_BaseCombatWeapon* ent);
 	void RenderDefuseKit(C_BaseEntity* ent);
