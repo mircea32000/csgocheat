@@ -105,9 +105,9 @@ void RCS(QAngle& angle, CUserCmd* cmd)
 
 	if (bestPlayer > -1)
 	{
-		//angle.pitch -= CurrentPunch.pitch * g_Options.legit_rcs_x;
-		//angle.yaw -= CurrentPunch.yaw * g_Options.legit_rcs_y;
-		angle -= CurrentPunch * 2;
+		angle.pitch -= CurrentPunch.pitch * g_Options.legit_rcs_x;
+		angle.yaw -= CurrentPunch.yaw * g_Options.legit_rcs_y;
+		//angle -= CurrentPunch * 2;
 	}
 }
 
@@ -179,16 +179,13 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 
 		m_vecAimAngle = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 
-		//m_vecAimAngle -= g_LocalPlayer->m_aimPunchAngle();
-
 		PickUserSmothing(g_Options.legit_smoothing_method);
-	//	RCS(m_vecAimAngle, cmd);
-	//
+	
+		RCS(m_vecAimAngle, cmd);
 
 		Math::correct_angles(m_vecAimAngle);
 		if (GetAsyncKeyState(VK_LBUTTON)) //aim at nigga
 		{
-			Math::correct_angles(m_vecAimAngle);
 			g_EngineClient->SetViewAngles(m_vecAimAngle);
 
 			if (!CTimer::Get().delay(g_Options.legit_target_delay) &&
@@ -196,13 +193,12 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 				g_LocalPlayer->m_iShotsFired() == 0 &&
 				weapon->m_Item().m_iItemDefinitionIndex() != WEAPON_REVOLVER)
 			{
-				cmd->buttons &= ~IN_ATTACK;
+				cmd->buttons &= ~IN_ATTACK;	
 			}
 			else
 			{
 				CTimer::Get().reset();
 			}
-
 		}
 	}
 	else
