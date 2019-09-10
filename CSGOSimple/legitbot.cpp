@@ -10,6 +10,8 @@ int bestPlayer = -1;
 
 void PickUserSmothing(int type)
 {
+
+
 	if (type == 0)
 	{
 		float smooth = 1 - g_Options.legit_smooth;
@@ -98,16 +100,24 @@ void PickUserHitbox(C_BasePlayer* ent, int option)
 void RCS(QAngle& angle, CUserCmd* cmd)
 {
 	QAngle CurrentPunch = g_LocalPlayer->m_aimPunchAngle();
-	QAngle LastPunch;
-
 	if (!(cmd->buttons & IN_ATTACK))
 		return;
 
 	if (bestPlayer > -1)
 	{
+		C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(bestPlayer);
+
+		float fov = Math::get_fov(m_vecLocalAngle, g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
+
+		if (fov > g_Options.legit_fov)
+			return;
+
+		Math::correct_angles(CurrentPunch);
 		angle.pitch -= CurrentPunch.pitch * g_Options.legit_rcs_x;
+		Math::correct_angles(angle);
 		angle.yaw -= CurrentPunch.yaw * g_Options.legit_rcs_y;
-		//angle -= CurrentPunch * 2;
+		Math::correct_angles(angle);
+
 	}
 }
 
@@ -170,30 +180,40 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 	}
 	if (bestPlayer > -1)
 	{
-    	C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(bestPlayer);
+		C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(bestPlayer);
 
 		float fov = Math::get_fov(m_vecLocalAngle, g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 
-		if (fov > g_Options.legit_fov)
-			return;
+		//if (fov > g_Options.legit_fov)
+		//	return;
 
 		m_vecAimAngle = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 
 		PickUserSmothing(g_Options.legit_smoothing_method);
-	
+
 		RCS(m_vecAimAngle, cmd);
 
 		Math::correct_angles(m_vecAimAngle);
 		if (GetAsyncKeyState(VK_LBUTTON)) //aim at nigga
 		{
+
 			g_EngineClient->SetViewAngles(m_vecAimAngle);
+			std::string str, str1, str2, str3;
+			str = "X: " + std::to_string(m_vecAimAngle.pitch);
+			str1 = " | Y: " + std::to_string(m_vecAimAngle.yaw);
+			str2 = " | Z: " + std::to_string(m_vecAimAngle.roll);
+			str3 = str + str1 + str2 + "\n";
+
+			Utils::ConsolePrint(str3.c_str());
+			Utils::ConsolePrint("X: %d", m_vecAimAngle.pitch, +" | Y: %d", m_vecAimAngle.yaw, +" | Z: %d", m_vecAimAngle.roll, "\n");
+
 
 			if (!CTimer::Get().delay(g_Options.legit_target_delay) &&
 				cmd->buttons & IN_ATTACK &&
 				g_LocalPlayer->m_iShotsFired() == 0 &&
 				weapon->m_Item().m_iItemDefinitionIndex() != WEAPON_REVOLVER)
 			{
-				cmd->buttons &= ~IN_ATTACK;	
+				cmd->buttons &= ~IN_ATTACK;
 			}
 			else
 			{
