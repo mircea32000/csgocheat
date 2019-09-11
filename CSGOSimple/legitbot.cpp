@@ -84,7 +84,7 @@ void PickUserHitbox(C_BasePlayer* ent, int option)
 			if (!ent->GetHitboxPos(hitbox, temp))
 				continue;
 
-			float fov = Math::get_fov(m_vecLocalAngle, m_vecLocalEyes, temp);
+			float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), m_vecLocalEyes, temp);
 			if (fov < niggabestfov)
 			{
 				niggabestfov = fov;
@@ -107,7 +107,7 @@ void RCS(QAngle& angle, CUserCmd* cmd)
 	{
 		C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(bestPlayer);
 
-		float fov = Math::get_fov(m_vecLocalAngle, g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
+		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 
 		if (fov > g_Options.legit_fov)
 			return;
@@ -164,7 +164,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		if (!g_LocalPlayer->CanSeePlayer(ent, ent->GetHitboxPos(bestHitbox)))
 			continue;
 
-		float fov = Math::get_fov(m_vecLocalAngle, m_vecLocalEyes, ent->GetHitboxPos(bestHitbox));
+		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), m_vecLocalEyes, ent->GetHitboxPos(bestHitbox));
 
 		if (fov > g_Options.legit_fov)
 			continue;
@@ -182,7 +182,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 	{
 		C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(bestPlayer);
 
-		float fov = Math::get_fov(m_vecLocalAngle, g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
+		//float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 
 		//if (fov > g_Options.legit_fov)
 		//	return;
