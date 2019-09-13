@@ -2,7 +2,7 @@
 #define NOMINMAX
 #include <Windows.h>
 #include <chrono>
-
+#include "render.hpp"
 #include "valve_sdk/csgostructs.hpp"
 #include "helpers/input.hpp"
 #include "options.hpp"
@@ -152,9 +152,8 @@ void RenderEspTab()
             ImGui::Checkbox("Names", g_Options.esp_player_names);
             ImGui::Checkbox("Health", g_Options.esp_player_health);
             ImGui::Checkbox("Flags", g_Options.esp_player_flags);
-			ImGui::Checkbox("Backtrack dots", g_Options.esp_bt_dots);
-			ImGui::Checkbox("Render FOV##aimbot", g_Options.esp_draw_fov);
-			ImGui::Checkbox("Render FOV fill##aimbot", g_Options.esp_fov_filled);
+			//ImGui::Checkbox("Render FOV##aimbot", g_Options.esp_draw_fov);
+			//ImGui::Checkbox("Render FOV fill##aimbot", g_Options.esp_fov_filled);
             ImGui::Checkbox("Weapon", g_Options.esp_player_weapons);
 			ImGui::Combo("Type##weapoin", g_Options.esp_weaponname_type, weaponname_types, IM_ARRAYSIZE(weaponname_types));
 			ImGui::Checkbox("Skeleton", g_Options.esp_spooky_shit);
@@ -295,8 +294,7 @@ void RenderMiscTab()
 		ImGui::SetColumnOffset(3, group_w);
 
 		ImGui::Checkbox("Bunny hop", g_Options.misc_bhop);
-		ImGui::Checkbox("Fake latency", g_Options.fake_latency);
-		ImGui::Checkbox("Backtrack", g_Options.misc_backtrack);
+
 		ImGui::Checkbox("Third Person", g_Options.misc_thirdperson);
 		if (g_Options.misc_thirdperson)
 			ImGui::SliderFloat("Distance", g_Options.misc_thirdperson_dist, 0.f, 150.f);
@@ -328,25 +326,160 @@ void RenderMiscTab()
 	ImGui::EndGroupBox();
 }
 
+static std::map<int, const char*> k_weapon_names =
+{
+{ 7, "AK-47" },
+{ 8, "AUG" },
+{ 9, "AWP" },
+{ 63, "CZ75 Auto" },
+{ 1, "Desert Eagle" },
+{ 2, "Dual Berettas" },
+{ 10, "FAMAS" },
+{ 3, "Five-SeveN" },
+{ 11, "G3SG1" },
+{ 13, "Galil AR" },
+{ 4, "Glock-18" },
+{ 14, "M249" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 60, "M4A1-S" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 16, "M4A4" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 17, "MAC-10" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 27, "MAG-7" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 33, "MP7" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 33, "MP5" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 34, "MP9" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 28, "Negev" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 35, "Nova" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 32, "P2000" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 36, "P250" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 19, "P90" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 23, "MP5" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 26, "PP-Bizon" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 64, "R8 Revolver" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 29, "Sawed-Off" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 38, "SCAR-20" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 40, "SSG 08" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 39, "SG 553" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 30, "Tec-9" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 24, "UMP-45" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 61, "USP-S" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+{ 25, "XM1014" },//////////////////////////////////////////////////////REMOVE AFTER TESTING
+};//////////////////////////////////////////////////////REMOVE AFTER TESTING
+
 void RenderEmptyTab()
 {
-	ImGui::BeginGroupBox("Aimbot");
+	static int weapon_index = 7;
+
+	ImGui::BeginGroupBox("Weapons", ImVec2(175, 400));
 	{
-		const char* aim_hitbox[] = { "Head", "Neck", "Pelvis", "Stomach", "Chest", "Closest" };
-		const char* aim_smoothing[] = { "Slow at end", "Constant", "Fast at end"};
-
-		ImGui::Combo("Hitbox##hitboxlegitaim", g_Options.legit_hitbox, aim_hitbox, IM_ARRAYSIZE(aim_hitbox));
-		ImGui::Combo("Smoothing type##smoothaim", g_Options.legit_smoothing_method, aim_smoothing, IM_ARRAYSIZE(aim_smoothing));
-		ImGui::SliderInt("FOV:", g_Options.legit_fov, 0, 30);
-		ImGui::SliderFloat("Smooth:", g_Options.legit_smooth, 0, 1, "%.3f");
-		ImGui::Checkbox("RCS", g_Options.legit_rcs);
-		ImGui::SliderFloat("X axis:", g_Options.legit_rcs_x, 0, 1, "%.3f");
-		ImGui::SliderFloat("Y axis:", g_Options.legit_rcs_y, 0, 1, "%.3f");
-
-		ImGui::SliderFloat("Shoot Delay:", g_Options.legit_target_delay, 0, 200, "%.3f");
-
+		for (auto weapons : k_weapon_names)
+		{
+			if (ImGui::Selectable(weapons.second, weapon_index == weapons.first))
+				weapon_index = weapons.first;
+		}
 	}
 	ImGui::EndGroupBox();
+
+	ImGui::SameLine();
+
+	float width = (ImGui::GetContentRegionAvailWidth()) - (ImGui::GetStyle().ItemSpacing.x - ImGui::GetStyle().ItemSpacing.x);
+
+	ImGui::BeginGroup();
+	{
+		auto& settings = g_Options.m_mapAim[weapon_index];
+		ImGui::BeginGroupBox("Aimbot", ImVec2(275, 320));
+		{
+			const char* aim_hitbox[] = { "Head", "Neck", "Pelvis", "Stomach", "Chest", "Closest" };
+			const char* aim_smoothing[] = { "Slow at end", "Constant", "Fast at end" };
+
+			ImGui::Checkbox("Enabled", &settings.m_bEnabled);
+			ImGui::Combo("Hitbox", &settings.m_iHitbox, aim_hitbox, IM_ARRAYSIZE(aim_hitbox));
+			ImGui::Combo("Smooth type", &settings.m_iSmoothingMethod, aim_smoothing, IM_ARRAYSIZE(aim_smoothing));
+			ImGui::SliderInt("FOV:", &settings.m_iFOV, 0, 30);
+			ImGui::SliderFloat("Smooth:", &settings.m_fSmooth, 0, 1, "%.3f");
+			ImGui::Checkbox("RCS", &settings.m_bRCS);
+
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
+			ImGui::PushFont(g_pDefaultFontSmall);
+			ImGui::Text("RCS stands for recoil control system.");
+			ImGui::PopFont();
+			ImGui::PopStyleColor();
+
+			ImGui::SliderFloat("X axis:", &settings.m_fRCSX, 0, 1, "%.3f");
+			ImGui::SliderFloat("Y axis:", &settings.m_fRCSY, 0, 1, "%.3f");
+			ImGui::Text("Shoot delay");
+
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
+			ImGui::PushFont(g_pDefaultFontSmall);
+			ImGui::Text("As long as you hold left-click");
+			ImGui::Text("this delay will shoot when the timer");
+			ImGui::Text("ends or we're on target.");//bruh
+			ImGui::PopFont();
+			ImGui::PopStyleColor();
+
+			ImGui::SliderFloat("##delay", &settings.m_fDelay, 0, 200, "%.3f");
+
+		}
+		ImGui::EndGroupBox();
+
+		ImGui::BeginGroupBox("Other", ImVec2(275, 69));//hehe
+		{
+			ImGui::Checkbox("Backtrack", g_Options.misc_backtrack);
+			ImGui::Checkbox("Extend backtrack window", g_Options.fake_latency);
+
+		}
+		ImGui::EndGroupBox();
+	}
+	ImGui::EndGroup();
+
+	ImGui::SameLine();
+
+	ImGui::BeginGroup();
+	{
+		ImGui::BeginGroupBox("Filters", ImVec2(199, 235));
+		{
+			ImGui::Checkbox("Attack enemies", g_Options.legit_rcs);
+			ImGui::Checkbox("Attack friendlies", g_Options.legit_rcs);
+			ImGui::Checkbox("Target backtrack", g_Options.legit_rcs);
+			ImGui::Checkbox("Ignore jumping", g_Options.legit_rcs);
+			ImGui::Checkbox("Through smoke", g_Options.legit_rcs);
+			ImGui::Text("Flash Tolerance");
+
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
+			ImGui::PushFont(g_pDefaultFontSmall);
+			ImGui::Text("Aimbot doesn't aim at target if the");
+			ImGui::Text("tolerance is smaller than the flash");
+			ImGui::Text("effect.");//bruh
+			ImGui::PopFont();
+			ImGui::PopStyleColor();
+
+			ImGui::SliderFloat("##tolerance", g_Options.legit_smooth, 0, 100, "%.3f");
+
+		}
+		ImGui::EndGroupBox();
+
+		ImGui::BeginGroupBox("Visuals", ImVec2(199, 153));
+		{
+			ImGui::Checkbox("Render FOV##aimbot", g_Options.esp_draw_fov);
+
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
+			ImGui::PushFont(g_pDefaultFontSmall);
+			ImGui::Text("Renders your field of view, a.k.a where");
+			ImGui::Text("within the circle you can shoot.");
+			ImGui::PopFont();
+			ImGui::PopStyleColor();
+
+			if (g_Options.esp_draw_fov)
+			{
+				ImGui::Checkbox("Filled FOV circle##aimbot", g_Options.esp_fov_filled);
+			}
+			ImGui::Checkbox("Backtrack dots", g_Options.esp_bt_dots);
+			ImGui::Checkbox("Backtrack models", g_Options.esp_bt_chams);
+		}
+		ImGui::EndGroupBox();
+
+	}
+	ImGui::EndGroup();
+
 }
 
 ImVec4 GetColorByItemRarity(ItemRarity item)
@@ -498,7 +631,7 @@ void Menu::Render()
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.f);
 
-		ImGui::BeginGroupBoxInvisible("##body", ImVec2(665, sidebar_size.y), false);
+		ImGui::BeginGroupBoxInvisible("##body", ImVec2(665, sidebar_size.y + 85), false);
 		ImGui::PopStyleVar();
         if(pagetab == TAB_ESP) {
             RenderEspTab();

@@ -204,7 +204,7 @@ void Chams::OnDrawModelExecute(
 		// 
 		auto ent = C_BasePlayer::GetPlayerByIndex(info.entity_index);
 
-		if (ent && ent->IsAlive() && ent->IsPlayer() && !ent->IsDormant() && g_Options.misc_backtrack && g_Options.esp_bt_dots) {
+		if (ent && ent->IsAlive() && ent->IsPlayer() && !ent->IsDormant() && g_Options.misc_backtrack && g_Options.esp_bt_chams) {
 			for (auto& records : TimeWarp::Get().m_Records[ent->EntIndex()].m_vecRecords) //RANGE BASED LOOPS FTW!!!!!!!!!!!
 			{
 				float record_time = std::abs(g_GlobalVars->curtime - records.m_fSimtime) * 5.f;
