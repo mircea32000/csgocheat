@@ -1451,7 +1451,7 @@ bool ImGui::BeginCombo(const char* label, const char* preview_value, ImGuiComboF
     RenderNavHighlight(frame_bb, id);
 	if (!(flags & ImGuiComboFlags_NoPreview))
 	{
-		window->DrawList->AddRectFilled(ImVec2(frame_bb.Min.x, frame_bb.Min.y + 3), ImVec2(frame_bb.Max.x, frame_bb.Max.y + 3), GetColorU32(ImVec4(0, 0, 0, 1)), style.FrameRounding, ImDrawCornerFlags_All);
+		window->DrawList->AddRectFilled(ImVec2(frame_bb.Min.x, frame_bb.Min.y + 2), ImVec2(frame_bb.Max.x, frame_bb.Max.y + 2), GetColorU32(ImVec4(0, 0, 0, 1)), style.FrameRounding, ImDrawCornerFlags_All);
 		window->DrawList->AddRectFilled(frame_bb.Min, ImVec2(frame_bb.Max.x - arrow_size, frame_bb.Max.y), frame_col, style.FrameRounding, ImDrawCornerFlags_Left);
 	}
     if (!(flags & ImGuiComboFlags_NoArrowButton))

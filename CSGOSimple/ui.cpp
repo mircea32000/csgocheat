@@ -109,7 +109,7 @@ bool ImGui::BeginGroupBox(const char* name, const ImVec2& size_arg)
 
 		window->DrawList->AddText(g_pDefaultFontSmall, g_pDefaultFontSmall->FontSize, a + ImVec2{ 3, -5 }, GetColorU32(ImVec4(1, 1, 1, 1)), name);
 
-	//	window->DrawList->PopClipRect();
+		window->DrawList->PopClipRect();
 	}
 	//if (!(window->Flags & ImGuiWindowFlags_ShowBorders))
 	//	ImGui::GetCurrentWindow()->Flags &= ~ImGuiWindowFlags_ShowBorders;

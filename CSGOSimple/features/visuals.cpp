@@ -304,8 +304,16 @@ void Visuals::RenderFOV()
 	int w, h;
 	g_EngineClient->GetScreenSize(w, h);
 
+	if (!g_LocalPlayer)
+		return;
+
+	auto weapon = g_LocalPlayer->m_hActiveWeapon().Get();
+	
+	if (!weapon)
+		return;
+
 	float radius = 0;
-	float aimbotFov = g_Options.legit_fov;
+	int aimbotFov = g_Options.m_mapAim[weapon->m_Item().m_iItemDefinitionIndex()].m_iFOV;
 	float fov = OverrideView::Get().currentFOV;
 	radius = tanf(DEG2RAD(aimbotFov) / 2) / tanf(DEG2RAD(fov) / 2) * w;
 

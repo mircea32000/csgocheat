@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 #include "valve_sdk/Misc/Color.hpp"
-
+#include <map>
 #define A( s ) #s
 #define OPTION(type, var, val) Var<type> var = {A(var), val}
 
@@ -25,15 +25,17 @@ public:
 	//operator T*() const { return value; }
 };
 
-struct WeaponItemCfg_t
+struct LegitBotConfig
 {
-	int nFallbackPaintKit = 0;
-	int nFallbackSeed = 0;
-	int nFallbackStatTrak = -1;
-	float flFallbackWear = FLT_MIN;
-	int iEntityQuality = 4;
-	std::string szCustomName = "";
-
+	bool m_bEnabled = false;
+	bool m_bRCS = false;
+	int m_iFOV = 0;
+	int m_iHitbox = 0;
+	int m_iSmoothingMethod = 0;
+	float m_fSmooth = 0.f;
+	float m_fRCSX = 0.f; 
+	float m_fRCSY = 0.f; 
+	float m_fDelay = 0.f; 
 };
 
 class Options
@@ -43,8 +45,6 @@ public:
 		// ESP
 		// 
 
-
-	     //int paintkit[] = {  };
 	    OPTION(bool, esp_outline, true);
 		OPTION(bool, esp_enabled, false);
 		OPTION(bool, esp_enemies_only, false);
@@ -60,6 +60,8 @@ public:
 		OPTION(bool, esp_player_weapons, false);
 		OPTION(bool, esp_spooky_shit, false);
 		OPTION(bool, esp_bt_dots, false);
+		OPTION(bool, esp_bt_chams, false);
+
 		OPTION(bool, esp_spectator_list, false);
 		OPTION(bool, esp_player_snaplines, false);
 		OPTION(bool, esp_crosshair, false);
@@ -160,13 +162,7 @@ public:
 		OPTION(Color, color_chams_arms_occluded, Color(0, 128, 255));
 		OPTION(Color, color_watermark, Color(255, 255, 255)); // no menu config cuz its useless
 
-		std::unordered_map<int, WeaponItemCfg_t> SkinStruct;
-
-		struct
-		{
-			short current_weapon = 0;
-		}Skin;
-
+		std::map <int, LegitBotConfig> m_mapAim;
 };
 
 inline Options g_Options;
