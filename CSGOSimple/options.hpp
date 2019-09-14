@@ -36,6 +36,15 @@ struct LegitBotConfig
 	float m_fRCSX = 0.f; 
 	float m_fRCSY = 0.f; 
 	float m_fDelay = 0.f; 
+
+	//FILTERS
+
+	bool m_bIgnoreSmoke = false;
+	bool m_bIgnoreJumping = false;
+	bool m_bTargetBacktrack = false;
+	bool m_bAttackEnemies = true;
+	bool m_bAttackFriendlies = false;
+	float m_fFlashTolerance = 0.f;
 };
 
 class Options

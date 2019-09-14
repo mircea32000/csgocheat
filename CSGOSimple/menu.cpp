@@ -382,10 +382,10 @@ void RenderEmptyTab()
 	ImGui::SameLine();
 
 	float width = (ImGui::GetContentRegionAvailWidth()) - (ImGui::GetStyle().ItemSpacing.x - ImGui::GetStyle().ItemSpacing.x);
+	auto& settings = g_Options.m_mapAim[weapon_index];
 
 	ImGui::BeginGroup();
 	{
-		auto& settings = g_Options.m_mapAim[weapon_index];
 		ImGui::BeginGroupBox("Aimbot", ImVec2(275, 320));
 		{
 			const char* aim_hitbox[] = { "Head", "Neck", "Pelvis", "Stomach", "Chest", "Closest" };
@@ -404,8 +404,8 @@ void RenderEmptyTab()
 			ImGui::PopFont();
 			ImGui::PopStyleColor();
 
-			ImGui::SliderFloat("X axis:", &settings.m_fRCSX, 0, 1, "%.3f");
-			ImGui::SliderFloat("Y axis:", &settings.m_fRCSY, 0, 1, "%.3f");
+			ImGui::SliderFloat("X axis:", &settings.m_fRCSX, 0, 2, "%.3f");
+			ImGui::SliderFloat("Y axis:", &settings.m_fRCSY, 0, 2, "%.3f");
 			ImGui::Text("Shoot delay");
 
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
@@ -437,11 +437,11 @@ void RenderEmptyTab()
 	{
 		ImGui::BeginGroupBox("Filters", ImVec2(199, 235));
 		{
-			ImGui::Checkbox("Attack enemies", g_Options.legit_rcs);
-			ImGui::Checkbox("Attack friendlies", g_Options.legit_rcs);
-			ImGui::Checkbox("Target backtrack", g_Options.legit_rcs);
-			ImGui::Checkbox("Ignore jumping", g_Options.legit_rcs);
-			ImGui::Checkbox("Through smoke", g_Options.legit_rcs);
+			ImGui::Checkbox("Attack enemies", &settings.m_bAttackEnemies);
+			ImGui::Checkbox("Attack friendlies", &settings.m_bAttackFriendlies);
+			ImGui::Checkbox("Target backtrack", &settings.m_bTargetBacktrack);//currently does nothing :(
+			ImGui::Checkbox("Ignore jumping", &settings.m_bIgnoreJumping);
+			ImGui::Checkbox("Ignore smoke", &settings.m_bIgnoreSmoke);
 			ImGui::Text("Flash Tolerance");
 
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
