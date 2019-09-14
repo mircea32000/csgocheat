@@ -351,6 +351,7 @@ public:
 	Vector        GetBonePos(int bone);
 	bool          CanSeePlayer(C_BasePlayer* player, int hitbox);
 	bool          CanSeePlayer(C_BasePlayer* player, const Vector& pos);
+	bool IsBehindSmoke(Vector vEndPos);
 	void UpdateClientSideAnimation();
 
 	int m_nMoveType();

@@ -49,11 +49,7 @@ void PickUserHitbox(C_BasePlayer* ent, int option)
 {
 	std::vector<int> hitboxes = {
 	HITBOX_HEAD,
-	HITBOX_NECK,
-	HITBOX_PELVIS,
 	HITBOX_STOMACH,
-	HITBOX_LOWER_CHEST,
-	HITBOX_CHEST
 	};
 
 	Vector m_vecLocalEyes = g_LocalPlayer->GetEyePos();
@@ -79,10 +75,26 @@ void PickUserHitbox(C_BasePlayer* ent, int option)
 		break;
 	case 5:
 	{
+
+		using _LineGoesThroughSmoke = bool(__cdecl*) (Vector, Vector);
+
+		static _LineGoesThroughSmoke LineGoesThroughSmokeFn = 0;
+
+		static auto dwFunctionAddress =
+			Utils::PatternScan(GetModuleHandleA("client_panorama.dll"), "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0");
+
+		if (dwFunctionAddress)
+		{
+			LineGoesThroughSmokeFn = (_LineGoesThroughSmoke)dwFunctionAddress;
+		}
+
 		for (auto hitbox : hitboxes)
 		{
 			Vector temp;
 			if (!ent->GetHitboxPos(hitbox, temp))
+				continue;
+
+			if (temp.IsZero())
 				continue;
 
 			float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), m_vecLocalEyes, temp);
@@ -162,9 +174,6 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		if (ent->EntIndex() == g_LocalPlayer->EntIndex())
 			continue;
 
-		if (ent->m_iTeamNum() == g_LocalPlayer->m_iTeamNum()) //@TODO : friendlies checkbox
-			continue;
-
 		g_EngineClient->GetViewAngles(m_vecLocalAngle);
 		Vector m_vecLocalEyes = g_LocalPlayer->GetEyePos();
 		Vector m_vecPlayerEyes = ent->GetEyePos(); 
@@ -177,6 +186,12 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), m_vecLocalEyes, ent->GetHitboxPos(bestHitbox));
 
 		if (fov > settings.m_iFOV)
+			continue;
+
+		if (!settings.m_bAttackEnemies && g_LocalPlayer->m_iTeamNum() != ent->m_iTeamNum())
+			continue;
+
+		if (!settings.m_bAttackFriendlies && g_LocalPlayer->m_iTeamNum() == ent->m_iTeamNum())
 			continue;
 
 		bestFOV = settings.m_iFOV;
@@ -195,6 +210,13 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 
 		if (fov > settings.m_iFOV)
+			return;
+
+		Vector vecTargetHitboxPos = ent->GetHitboxPos(bestHitbox);
+		if (!settings.m_bIgnoreSmoke && g_LocalPlayer->IsBehindSmoke(vecTargetHitboxPos))
+			return;
+
+		if (settings.m_bIgnoreJumping && !(ent->m_fFlags() & FL_ONGROUND))
 			return;
 
 		cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));

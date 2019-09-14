@@ -567,6 +567,51 @@ bool C_BasePlayer::CanSeePlayer(C_BasePlayer* player, const Vector& pos)
 	return tr.hit_entity == player || tr.fraction > 0.97f;
 }
 
+bool C_BasePlayer::IsBehindSmoke(Vector vEndPos = Vector())
+{
+	Vector vStartPos = g_LocalPlayer->GetEyePos();
+
+	using _LineGoesThroughSmoke = bool(__cdecl*) (Vector, Vector);
+
+	static _LineGoesThroughSmoke LineGoesThroughSmokeFn = 0;
+
+	static auto dwFunctionAddress =
+		Utils::PatternScan(GetModuleHandleA("client_panorama.dll"), "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0");
+
+	if (dwFunctionAddress)
+	{
+		LineGoesThroughSmokeFn = (_LineGoesThroughSmoke)dwFunctionAddress;
+	}
+
+	if (vEndPos == Vector())
+	{
+		BYTE bHitBoxCheckVisible[2] = {
+			HITBOX_HEAD,
+			HITBOX_STOMACH
+		};
+
+		for (unsigned char nHit : bHitBoxCheckVisible)
+		{
+			Vector vHitBox = GetHitboxPos(nHit);
+
+			if (vHitBox.IsZero())
+				continue;
+
+			if (LineGoesThroughSmokeFn)
+			{
+				return LineGoesThroughSmokeFn(vStartPos, vHitBox);
+			}
+		}
+	}
+
+	if (LineGoesThroughSmokeFn)
+	{
+		return LineGoesThroughSmokeFn(vStartPos, vEndPos);
+	}
+
+	return false;
+}
+
 void C_BasePlayer::UpdateClientSideAnimation()
 {
 	return CallVFunction<void(__thiscall*)(void*)>(this, 221)(this);
