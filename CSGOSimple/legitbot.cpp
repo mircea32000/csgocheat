@@ -3,11 +3,29 @@
 #include "options.hpp"
 #include <minmax.h>
 #include "CTimer.h"
+#include "lagcomp.h"
+
 QAngle m_vecAimAngle;
 QAngle m_vecLocalAngle;
 int bestHitbox = -1;
 int bestPlayer = -1;
 std::map<int, LegitBotConfig> m_mapConfig;
+
+Vector ClosestRecords(C_BasePlayer* ent)
+{
+	float closestFOV = FLT_MAX;
+
+	for (auto& records : TimeWarp::Get().m_Records[ent->EntIndex()].m_vecRecords)
+	{
+		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_vecHitboxPos);
+
+		if (fov < closestFOV)
+		{
+			closestFOV = fov;
+			return records.m_vecHitboxPos;
+		}
+	}
+}
 
 void PickUserSmothing(int type, CUserCmd* cmd, C_BaseCombatWeapon* weapon)
 {
@@ -45,8 +63,10 @@ void PickUserSmothing(int type, CUserCmd* cmd, C_BaseCombatWeapon* weapon)
 	}
 }
 
-void PickUserHitbox(C_BasePlayer* ent, int option)
+void PickUserHitbox(C_BasePlayer* ent, int option, C_BaseCombatWeapon* weapon)
 {
+	auto& settings = g_Options.m_mapAim[weapon->m_Item().m_iItemDefinitionIndex()];
+
 	std::vector<int> hitboxes = {
 	HITBOX_HEAD,
 	HITBOX_STOMACH,
@@ -59,7 +79,9 @@ void PickUserHitbox(C_BasePlayer* ent, int option)
 	switch (option)
 	{
 	case 0:
+
 		bestHitbox = HITBOX_HEAD;
+
 		break;
 	case 1:
 		bestHitbox = HITBOX_NECK;
@@ -75,19 +97,6 @@ void PickUserHitbox(C_BasePlayer* ent, int option)
 		break;
 	case 5:
 	{
-
-		using _LineGoesThroughSmoke = bool(__cdecl*) (Vector, Vector);
-
-		static _LineGoesThroughSmoke LineGoesThroughSmokeFn = 0;
-
-		static auto dwFunctionAddress =
-			Utils::PatternScan(GetModuleHandleA("client_panorama.dll"), "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0");
-
-		if (dwFunctionAddress)
-		{
-			LineGoesThroughSmokeFn = (_LineGoesThroughSmoke)dwFunctionAddress;
-		}
-
 		for (auto hitbox : hitboxes)
 		{
 			Vector temp;
@@ -178,7 +187,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		Vector m_vecLocalEyes = g_LocalPlayer->GetEyePos();
 		Vector m_vecPlayerEyes = ent->GetEyePos(); 
 
-		PickUserHitbox(ent, settings.m_iHitbox);
+		PickUserHitbox(ent, settings.m_iHitbox, weapon);
 
 		if (!g_LocalPlayer->CanSeePlayer(ent, ent->GetHitboxPos(bestHitbox)))
 			continue;
@@ -209,6 +218,10 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 
 		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 
+
+		if ((settings.m_fFlashTolerance * 2.55f) < g_LocalPlayer->FlashDuration())
+			return;
+
 		if (fov > settings.m_iFOV)
 			return;
 
@@ -219,7 +232,11 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		if (settings.m_bIgnoreJumping && !(ent->m_fFlags() & FL_ONGROUND))
 			return;
 
-		cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
+		if(!settings.m_bTargetBacktrack)
+		cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox)); //CHANGE THIS TO BACKTRACC SHIT
+		else
+			cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ClosestRecords(ent)); //CHANGE THIS TO BACKTRACC SHIT
+
 		if (settings.m_bRCS)
 		{
 			RCS(m_vecAimAngle, cmd);
@@ -228,10 +245,12 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		PickUserSmothing(settings.m_iSmoothingMethod, cmd, weapon);
 
 		Math::correct_angles(cmd->viewangles);
-		if (GetAsyncKeyState(VK_LBUTTON)) //aim at nigga
+		if (GetAsyncKeyState(VK_LBUTTON))
 		{
 
 			g_EngineClient->SetViewAngles(cmd->viewangles);
+#ifdef NDEBUG
+#else
 			std::string str, str1, str2, str3;
 			str = "X: " + std::to_string(cmd->viewangles.pitch);
 			str1 = " | Y: " + std::to_string(cmd->viewangles.yaw);
@@ -240,7 +259,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 
 			Utils::ConsolePrint(str3.c_str());
 			Utils::ConsolePrint("X: %d", m_vecAimAngle.pitch, +" | Y: %d", m_vecAimAngle.yaw, +" | Z: %d", m_vecAimAngle.roll, "\n");
-
+#endif
 
 			if (!CTimer::Get().delay(settings.m_fDelay) &&
 				cmd->buttons & IN_ATTACK &&
