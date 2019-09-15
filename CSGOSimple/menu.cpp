@@ -452,7 +452,7 @@ void RenderEmptyTab()
 			ImGui::PopFont();
 			ImGui::PopStyleColor();
 
-			ImGui::SliderFloat("##tolerance", g_Options.legit_smooth, 0, 100, "%.3f");
+			ImGui::SliderFloat("##tolerance", &settings.m_fFlashTolerance, 0, 100, "%.3f");
 
 		}
 		ImGui::EndGroupBox();

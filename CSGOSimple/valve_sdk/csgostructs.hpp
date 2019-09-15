@@ -240,6 +240,12 @@ public:
 
 class C_BasePlayer : public C_BaseEntity
 {
+private:
+	template<class T>
+	T GetValue(const int offset)
+	{
+		return *reinterpret_cast<T*>(reinterpret_cast<std::uintptr_t>(this) + offset);
+	}
 public:
 	static __forceinline C_BasePlayer* GetPlayerByUserId(int id)
 	{
@@ -281,10 +287,6 @@ public:
 	NETVAR(float, m_flCycle, "DT_BaseAnimating", "m_flCycle");
 	NETVAR(int, m_nSequence, "DT_BaseViewModel", "m_nSequence");
 	NETVAR(float, m_flNextAttack, "DT_BaseCombatCharacter", "m_flNextAttack");
-
-	//NETVAR(int, m_iAccount, "DT_CSPlayer", "m_iAccount");
-
-
 	NETVAR(QAngle, m_angAbsAngles, "DT_BaseEntity", "m_angAbsAngles");
 	NETVAR(Vector, m_angAbsOrigin, "DT_BaseEntity", "m_angAbsOrigin");
 	NETVAR(float, m_flDuckSpeed, "DT_BaseEntity", "m_flDuckSpeed");
@@ -311,6 +313,13 @@ public:
 	void Think();
 	void PostThink();
 	int GetNumAnimOverlays();
+
+	inline float FlashDuration()
+	{
+		static int m_unk = NetvarSys::Get().GetOffset("DT_CSPlayer", "m_flFlashDuration") - 0xC;
+		return GetValue<float>(m_unk);
+	}
+
 	AnimationLayer *GetAnimOverlays();
 	AnimationLayer *GetAnimOverlay(int i);
 	int GetSequenceActivity(int sequence);
