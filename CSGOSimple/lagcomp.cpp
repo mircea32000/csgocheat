@@ -36,10 +36,13 @@ void TimeWarp::UpdateRecords(int i)
 	C_BasePlayer* pEntity = (C_BasePlayer*)g_EntityList->GetClientEntity(i);
 	LagRecord_Struct record;
 
-
 	record.m_fSimtime = pEntity->m_flSimulationTime();
-	record.m_vecHitboxPos = pEntity->GetHitboxPos(0);
-	record.m_vecHeadPos = pEntity->GetBonePos(8);
+	record.m_vecHitboxPos = pEntity->GetHitboxPos(HITBOX_HEAD);
+	record.m_vecHitboxPosNeck = pEntity->GetHitboxPos(HITBOX_NECK);
+	record.m_vecHitboxPosPelvis = pEntity->GetHitboxPos(HITBOX_PELVIS);
+	record.m_vecHitboxPosStomach = pEntity->GetHitboxPos(HITBOX_STOMACH);
+	record.m_vecHitboxPosChest = pEntity->GetHitboxPos(HITBOX_CHEST);
+
 	record.m_vecOrigin = pEntity->m_vecOrigin();
 	pEntity->SetupBones(record.m_Matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, g_GlobalVars->curtime); //memory leak? guess we'll find out
 

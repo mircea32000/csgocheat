@@ -7,8 +7,10 @@
 struct LagRecord_Struct
 {
 	Vector			m_vecOrigin;
-	Vector          m_vecHeadPos;
 	Vector          m_vecHitboxPos;
+	Vector          m_vecHitboxPosNeck;
+	Vector          m_vecHitboxPosPelvis;
+	Vector          m_vecHitboxPosStomach;
     matrix3x4_t	m_Matrix[128];
 	float           m_fSimtime;
 };
