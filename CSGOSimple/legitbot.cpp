@@ -8,7 +8,6 @@
 QAngle m_vecAimAngle;
 Vector m_vecLagCompAngle;
 QAngle m_vecLocalAngle;
-Vector bestHitboxLagComp;
 int bestHitbox = -1;
 int bestPlayer = -1;
 std::map<int, LegitBotConfig> m_mapConfig;
@@ -17,10 +16,10 @@ Vector ClosestRecords(C_BasePlayer* ent)
 {
 	float closestFOV = FLT_MAX;
 
-	float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), bestHitboxLagComp);
-
 	for (auto& records : TimeWarp::Get().m_Records[ent->EntIndex()].m_vecRecords)
 	{
+		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_vecHitboxPos);
+
 		if (fov < closestFOV)
 		{
 			closestFOV = fov;
@@ -66,59 +65,6 @@ void PickUserSmothing(int type, CUserCmd* cmd, C_BaseCombatWeapon* weapon)
 	}
 }
 
-void PickUserHitboxLagComp(C_BasePlayer* ent, int option, C_BaseCombatWeapon* weapon)
-{
-	auto& settings = g_Options.m_mapAim[weapon->m_Item().m_iItemDefinitionIndex()];
-
-	float lagcompbestfov = FLT_MAX;
-	Vector gaycopy;
-
-	for (auto& records : TimeWarp::Get().m_Records[ent->EntIndex()].m_vecRecords)
-	{
-
-		std::vector<Vector> lagcomphitboxes =
-		{
-			records.m_vecHitboxPos,
-			records.m_vecHitboxPosStomach
-		};
-
-		switch (option)
-		{
-		case 0:
-			bestHitboxLagComp = records.m_vecHitboxPos;
-			break;
-		case 1:
-			bestHitboxLagComp = records.m_vecHitboxPosNeck;
-			break;
-		case 2:
-			bestHitboxLagComp = records.m_vecHitboxPosPelvis;
-			break;
-		case 3:
-			bestHitboxLagComp = records.m_vecHitboxPosStomach;
-			break;
-		case 4:
-			bestHitboxLagComp = records.m_vecHitboxPosChest;
-			break;
-		case 5:
-			for (auto& hitboxes : lagcomphitboxes)
-			{
-				if (hitboxes.IsZero())
-					continue;
-
-				float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), hitboxes);
-				if (fov < lagcompbestfov)
-				{
-					lagcompbestfov = fov;
-					gaycopy = hitboxes;
-				}
-				bestHitboxLagComp = gaycopy;
-			}
-
-			break;
-		}
-	}
-}
-
 void PickUserHitbox(C_BasePlayer* ent, int option, C_BaseCombatWeapon* weapon)
 {
 	auto& settings = g_Options.m_mapAim[weapon->m_Item().m_iItemDefinitionIndex()];
@@ -138,6 +84,7 @@ void PickUserHitbox(C_BasePlayer* ent, int option, C_BaseCombatWeapon* weapon)
 	{
 	case 0:
 		bestHitbox = HITBOX_HEAD;
+		break;
 	case 1:
 		bestHitbox = HITBOX_NECK;
 		break;
@@ -247,9 +194,13 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		if (!g_LocalPlayer->CanSeePlayer(ent, ent->GetHitboxPos(bestHitbox)))
 			continue;
 
-		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), m_vecLocalEyes, settings.m_bTargetBacktrack ? m_vecLagCompAngle : ent->GetHitboxPos(bestHitbox));
+		float fov = 0;
+		if (!settings.m_bTargetBacktrack)
+			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
+		if (settings.m_bTargetBacktrack && ClosestRecords(ent).IsValid() && m_vecLagCompAngle.IsValid())
+			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ClosestRecords(ent));
 
-		if (fov > settings.m_iFOV)
+		if (fov != 0 && fov > settings.m_iFOV)
 			continue;
 
 		if (!settings.m_bAttackEnemies && g_LocalPlayer->m_iTeamNum() != ent->m_iTeamNum())
@@ -271,12 +222,16 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 	{
 		C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(bestPlayer);
 
-		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), settings.m_bTargetBacktrack ? m_vecLagCompAngle : ent->GetHitboxPos(bestHitbox));
+		float fov = 0;
+		if(!settings.m_bTargetBacktrack)
+			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
+		if(settings.m_bTargetBacktrack && ClosestRecords(ent).IsValid() && m_vecLagCompAngle.IsValid())
+			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ClosestRecords(ent));
 
 		if ((settings.m_fFlashTolerance * 2.55f) < g_LocalPlayer->FlashDuration())
 			return;
 
-		if (fov > settings.m_iFOV)
+		if (fov != 0 && fov > settings.m_iFOV)
 			return;
 
 		Vector vecTargetHitboxPos = ent->GetHitboxPos(bestHitbox);
@@ -288,7 +243,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 
 		if(!settings.m_bTargetBacktrack)
 		cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox)); //CHANGE THIS TO BACKTRACC SHIT
-		else
+		if(settings.m_bTargetBacktrack && ClosestRecords(ent).IsValid() && m_vecLagCompAngle.IsValid())
 			cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ClosestRecords(ent)); //CHANGE THIS TO BACKTRACC SHIT
 
 		if (settings.m_bRCS)

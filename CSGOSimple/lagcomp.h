@@ -11,6 +11,7 @@ struct LagRecord_Struct
 	Vector          m_vecHitboxPosNeck;
 	Vector          m_vecHitboxPosPelvis;
 	Vector          m_vecHitboxPosStomach;
+	Vector          m_vecHitboxPosChest;
     matrix3x4_t	m_Matrix[128];
 	float           m_fSimtime;
 };

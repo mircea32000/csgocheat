@@ -6,9 +6,9 @@ bool CTimer::delay(DWORD dwMsec)
 		return true;
 
 	if (!dwTime)
-		dwTime = g_GlobalVars->curtime;
+		dwTime = GetTickCount64();
 
-	if (dwTime + dwMsec < g_GlobalVars->curtime)
+	if (dwTime + dwMsec < GetTickCount64())
 	{
 		//dwTime = 0;
 		bEnable = false;
