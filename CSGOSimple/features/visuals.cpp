@@ -144,6 +144,15 @@ bool Visuals::Player::Begin(C_BasePlayer* pl)
 	return true;
 }
 //--------------------------------------------------------------------------------
+Vector CalcHitboxxD(matrix3x4_t matrix[128], const Vector& bbmins, const Vector& bbmaxs, int iBone)
+{
+	Vector min, max;
+	Math::VectorTransform(bbmins, matrix[iBone], min);
+	Math::VectorTransform(bbmaxs, matrix[iBone], max);
+
+	return (min + max) * 0.5f;
+}
+
 void Visuals::Player::RenderBTDots()
 {
 	for (auto& record : TimeWarp::Get().m_Records[ctx.pl->EntIndex()].m_vecRecords)

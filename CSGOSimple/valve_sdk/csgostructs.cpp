@@ -460,6 +460,60 @@ bool C_BasePlayer::HasC4()
 	return fnHasC4(this);
 }
 
+void C_BasePlayer::SetAbsOrigin(const Vector& vOrigin)
+{
+	using SetAbsOrigin_t = void(__thiscall*)(void*, const Vector & origin);
+	static SetAbsOrigin_t SetAbsOriginFn = (SetAbsOrigin_t)(Utils::PatternScan(GetModuleHandleA("client_panorama.dll"), ("55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8 ? ?")));
+	SetAbsOriginFn(this, vOrigin);
+}
+
+mstudiohitboxset_t* C_BasePlayer::GetHitboxHandle(matrix3x4_t matrix[256])
+{
+	static bool* s_bEnableInvalidateBoneCache =
+		(bool*)(*(uintptr_t*)(Utils::PatternScan(GetModuleHandleA("client_panorama.dll"), ("F3 0F 5C C1 C6 05 ? ? ? ? 00")) + 6));
+
+	static auto InvalidateBoneCache = Utils::PatternScan(GetModuleHandleA("client_panorama.dll"), ("80 3D ? ? ? ? 00 74 16 A1 ? ? ? ? 48 C7 81 ? ? 00 00 FF FF 7F FF 89 81 ? ? 00 00 C3"));
+
+	bool bOrig = *s_bEnableInvalidateBoneCache;
+	*s_bEnableInvalidateBoneCache = true;
+	((int* (__thiscall*)(C_BasePlayer*))InvalidateBoneCache)(this);
+	*s_bEnableInvalidateBoneCache = bOrig;
+
+	static auto DidCheckForOcclusion =
+		Utils::PatternScan(GetModuleHandleA("client_panorama.dll"), ("A1 ? ? ? ? 8B B7 30 0A 00 00 89 75 F8 39 70 04"));
+	static ptrdiff_t m_iDidCheckForOcclusion = *(uintptr_t*)(DidCheckForOcclusion + 7);
+	static uintptr_t m_dwOcclusionArray = *(uintptr_t*)(DidCheckForOcclusion + 1);
+
+	static int m_nForceBone = NetvarSys::Get().GetOffset("DT_BaseAnimating", "m_nForceBone");
+	*(int*)(uintptr_t(this) + m_iDidCheckForOcclusion) = reinterpret_cast<int*>(m_dwOcclusionArray)[1];
+
+	bool bIsLocal = EntIndex() == g_EngineClient->GetLocalPlayer();
+
+	//PushAllowBoneSetup(EntIndex());
+
+	Vector vAbsOrigin;
+	vAbsOrigin = m_angAbsOrigin();
+	SetAbsOrigin(m_vecOrigin());
+
+	bool bSetupBones = SetupBones(matrix, 256, BONE_USED_BY_ANYTHING, 0.0);
+
+	SetAbsOrigin(vAbsOrigin);
+
+	if (!bSetupBones)
+		return nullptr;
+	auto model = GetModel();
+	if (!model)
+		return nullptr;
+	studiohdr_t* hdr = g_MdlInfo->GetStudiomodel(model);
+	if (!hdr)
+		return nullptr;
+	mstudiohitboxset_t* set = hdr->GetHitboxSet(0);
+	if (!set)
+		return nullptr;
+
+	return set;
+}
+
 Vector C_BasePlayer::GetHitboxPos(int hitbox_id)
 {
 	matrix3x4_t boneMatrix[MAXSTUDIOBONES];

@@ -34,17 +34,34 @@ float GetLerpTime()
 void TimeWarp::UpdateRecords(int i)
 {
 	C_BasePlayer* pEntity = (C_BasePlayer*)g_EntityList->GetClientEntity(i);
-	LagRecord_Struct record;
 
-	record.m_fSimtime = pEntity->m_flSimulationTime();
-	record.m_vecOrigin = pEntity->m_vecOrigin();
-	for (int i{}; i < HITBOX_MAX; i++)
+	if (!pEntity || i == g_EngineClient->GetLocalPlayer())
 	{
-		record.m_arrHitboxes[i].m_vecHitboxPos = pEntity->GetHitboxPos(i);
+		m_Records[i].m_Mutex.lock();
+		m_Records[i].m_vecRecords.clear();
+		m_Records[i].m_Mutex.unlock();
 	}
-	pEntity->SetupBones(record.m_Matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, g_GlobalVars->curtime); //memory leak? guess we'll find out
+	else
+	{
+		LagRecord_Struct record;
 
-	m_Records[i].m_vecRecords.emplace_back(std::move(record));
+		record.m_fSimtime = pEntity->m_flSimulationTime();
+		record.m_vecOrigin = pEntity->m_vecOrigin();
+		pEntity->SetupBones(record.m_Matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, g_GlobalVars->curtime); //memory leak? guess we'll find out
+         
+		for (int i{}; i < HITBOX_MAX; i++)
+		{
+			record.m_arrHitboxes[i].m_vecHitboxPos = pEntity->GetHitboxPos(i);
+		}
+
+		if (pEntity->IsAlive() && !pEntity->IsDormant())
+		{
+			m_Records[i].m_Mutex.lock();
+			m_Records[i].m_vecRecords.emplace_back(std::move(record));
+			m_Records[i].m_Mutex.unlock();
+		}
+	}
+
 
 }
 
@@ -122,7 +139,7 @@ void TimeWarp::StoreRecords(CUserCmd* cmd)
 		}
 		Vector HitboxPos = pEntity->GetHitboxPos(0);
 
-		UpdateRecords(i);
+		//UpdateRecords(i);
 
 		Vector ViewDir;
 		Math::AngleVectors(cmd->viewangles + (g_LocalPlayer->m_aimPunchAngle() * 2.f), ViewDir);

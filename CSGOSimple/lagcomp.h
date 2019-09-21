@@ -8,8 +8,7 @@
 
 struct HitboxRecord_Struct
 {
-	Vector          m_vecHitboxPos;
-
+	Vector m_vecHitboxPos;
 };
 
 struct LagRecord_Struct
@@ -34,7 +33,8 @@ public:
 	bool IsTimeValid(float flTime);
 	void DeleteInvalidRecords();
 	std::array<EntityRecord_Struct, 129> m_Records;
-private:
 	void UpdateRecords(int i);
+
+private:
 	int bestTargetIndex = -1;
 };
