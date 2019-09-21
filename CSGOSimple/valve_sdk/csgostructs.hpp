@@ -354,6 +354,8 @@ public:
 	bool IsTeammate();
 	bool		  IsFlashed();
 	bool          HasC4();
+	void SetAbsOrigin(const Vector& vOrigin);
+	mstudiohitboxset_t* GetHitboxHandle(matrix3x4_t matrix[256]);
 	Vector        GetHitboxPos(int hitbox_id);
 	mstudiobbox_t * GetHitbox(int hitbox_id);
 	bool          GetHitboxPos(int hitbox, Vector &output);
