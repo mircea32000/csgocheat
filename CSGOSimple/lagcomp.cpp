@@ -37,13 +37,11 @@ void TimeWarp::UpdateRecords(int i)
 	LagRecord_Struct record;
 
 	record.m_fSimtime = pEntity->m_flSimulationTime();
-	record.m_vecHitboxPos = pEntity->GetHitboxPos(HITBOX_HEAD);
-	record.m_vecHitboxPosNeck = pEntity->GetHitboxPos(HITBOX_NECK);
-	record.m_vecHitboxPosPelvis = pEntity->GetHitboxPos(HITBOX_PELVIS);
-	record.m_vecHitboxPosStomach = pEntity->GetHitboxPos(HITBOX_STOMACH);
-	record.m_vecHitboxPosChest = pEntity->GetHitboxPos(HITBOX_CHEST);
-
 	record.m_vecOrigin = pEntity->m_vecOrigin();
+	for (int i{}; i < HITBOX_MAX; i++)
+	{
+		record.m_arrHitboxes[i].m_vecHitboxPos = pEntity->GetHitboxPos(i);
+	}
 	pEntity->SetupBones(record.m_Matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, g_GlobalVars->curtime); //memory leak? guess we'll find out
 
 	m_Records[i].m_vecRecords.emplace_back(std::move(record));
@@ -155,10 +153,10 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 		Math::AngleVectors(cmd->viewangles + (g_LocalPlayer->m_aimPunchAngle() * 2.f), ViewDir);
 		for (const auto& records : m_Records[bestTargetIndex].m_vecRecords)
 		{
-			float tempFOVDistance = Math::DistancePointToLine(records.m_vecHitboxPos, g_LocalPlayer->GetEyePos(), ViewDir);
+			float tempFOVDistance = Math::DistancePointToLine(records.m_arrHitboxes[HITBOX_HEAD].m_vecHitboxPos, g_LocalPlayer->GetEyePos(), ViewDir);
 			if (tempFloat > tempFOVDistance && records.m_fSimtime > g_LocalPlayer->m_flSimulationTime() - 1)
 			{
-				if (g_LocalPlayer->CanSeePlayer(static_cast<C_BasePlayer*>(g_EntityList->GetClientEntity(bestTargetIndex)), records.m_vecHitboxPos))
+				if (g_LocalPlayer->CanSeePlayer(static_cast<C_BasePlayer*>(g_EntityList->GetClientEntity(bestTargetIndex)), records.m_arrHitboxes[HITBOX_HEAD].m_vecHitboxPos))
 				{
 					tempFloat = tempFOVDistance;
 					bestTargetSimTime = records.m_fSimtime;
