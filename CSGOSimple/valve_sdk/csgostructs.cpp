@@ -7,7 +7,7 @@ bool C_BaseEntity::IsPlayer()
 	//index: 152
 	//ref: "effects/nightvision"
 	//sig: 8B 92 ? ? ? ? FF D2 84 C0 0F 45 F7 85 F6
-	return CallVFunction<bool(__thiscall*)(C_BaseEntity*)>(this, 155)(this);
+	return CallVFunction<bool(__thiscall*)(C_BaseEntity*)>(this, 156)(this);
 }
 
 bool C_BaseEntity::IsLoot() {
@@ -27,7 +27,7 @@ bool C_BaseEntity::IsWeapon()
 	//index: 160
 	//ref: "CNewParticleEffect::DrawModel"
 	//sig: 8B 80 ? ? ? ? FF D0 84 C0 74 6F 8B 4D A4
-	return CallVFunction<bool(__thiscall*)(C_BaseEntity*)>(this, 163)(this);
+	return CallVFunction<bool(__thiscall*)(C_BaseEntity*)>(this, 164)(this);
 }
 
 
@@ -48,7 +48,7 @@ bool C_BaseEntity::IsDefuseKit()
 
 CCSWeaponInfo* C_BaseCombatWeapon::GetCSWeaponData()
 {
-	return CallVFunction<CCSWeaponInfo*(__thiscall*)(void*)>(this, 454)(this);
+	return CallVFunction<CCSWeaponInfo*(__thiscall*)(void*)>(this, 455)(this);
 	/*
 	static auto fnGetWpnData
 	= reinterpret_cast<CCSWeaponInfo*(__thiscall*)(void*)>(
@@ -155,17 +155,17 @@ bool C_BaseCombatWeapon::IsReloading()
 
 float C_BaseCombatWeapon::GetInaccuracy()
 {
-	return CallVFunction<float(__thiscall*)(void*)>(this, 476)(this);
+	return CallVFunction<float(__thiscall*)(void*)>(this, 477)(this);
 }
 
 float C_BaseCombatWeapon::GetSpread()
 {
-	return CallVFunction<float(__thiscall*)(void*)>(this, 446)(this);
+	return CallVFunction<float(__thiscall*)(void*)>(this, 447)(this);
 }
 
 void C_BaseCombatWeapon::UpdateAccuracyPenalty()
 {
-	CallVFunction<void(__thiscall*)(void*)>(this, 477)(this);
+	CallVFunction<void(__thiscall*)(void*)>(this, 478)(this);
 }
 
 CUtlVector<IRefCounted*>& C_BaseCombatWeapon::m_CustomMaterials()
@@ -423,7 +423,7 @@ Vector C_BasePlayer::GetEyePos()
 		return Vector(0, 0, 0);
 
 	Vector result;
-	CallVFunction<void(__thiscall*)(void*, Vector&)>(this, 281)(this, result);
+	CallVFunction<void(__thiscall*)(void*, Vector&)>(this, 282)(this, result);
 	return result;
 }
 

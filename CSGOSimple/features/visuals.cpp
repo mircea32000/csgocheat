@@ -148,7 +148,7 @@ void Visuals::Player::RenderBTDots()
 {
 	for (auto& record : TimeWarp::Get().m_Records[ctx.pl->EntIndex()].m_vecRecords)
 	{
-		Vector thisTick = record.m_vecHitboxPos;
+		Vector thisTick = record.m_arrHitboxes[HITBOX_HEAD].m_vecHitboxPos;
 
 		Vector screenThisTick;
 

@@ -12,18 +12,134 @@ int bestHitbox = -1;
 int bestPlayer = -1;
 std::map<int, LegitBotConfig> m_mapConfig;
 
-Vector ClosestRecords(C_BasePlayer* ent)
+Vector LagCompHitbox(C_BasePlayer* ent, int option, C_BaseCombatWeapon* weapon)
 {
-	float closestFOV = FLT_MAX;
+	float LagCompHitboxFOV = FLT_MAX;
+	float hitboxfov = FLT_MAX;
+
+	Vector hitboxCopy;
+
+	auto& settings = g_Options.m_mapAim[weapon->m_Item().m_iItemDefinitionIndex()];
+
+	float fov = -1;
 
 	for (auto& records : TimeWarp::Get().m_Records[ent->EntIndex()].m_vecRecords)
 	{
-		float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_vecHitboxPos);
+		static std::vector<int> m_intHitboxes { HITBOX_HEAD, HITBOX_CHEST };
 
-		if (fov < closestFOV)
+		if (option == 0)
+		{
+			float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_arrHitboxes[HITBOX_HEAD].m_vecHitboxPos);
+			
+			
+			if (fov != -1 && fov > settings.m_iFOV)
+				continue;
+
+			if (fov != -1 && fov < hitboxfov)
+			{
+				hitboxfov = fov;
+				hitboxCopy = records.m_arrHitboxes[HITBOX_HEAD].m_vecHitboxPos;
+			}
+		}
+
+		if (option == 1)
+		{
+			float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_arrHitboxes[HITBOX_NECK].m_vecHitboxPos);
+
+			if (fov != -1 && fov > settings.m_iFOV)
+				continue;
+
+			if (fov != -1 && fov < hitboxfov)
+			{
+				hitboxfov = fov;
+				hitboxCopy = records.m_arrHitboxes[HITBOX_NECK].m_vecHitboxPos;
+			}
+		}
+
+		if (option == 2)
+		{
+			float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_arrHitboxes[HITBOX_PELVIS].m_vecHitboxPos);
+
+			if (fov != -1 && fov > settings.m_iFOV)
+				continue;
+
+			if (fov != -1 && fov < hitboxfov)
+			{
+				hitboxfov = fov;
+				hitboxCopy = records.m_arrHitboxes[HITBOX_PELVIS].m_vecHitboxPos;
+			}
+		}
+
+		if (option == 3)
+		{
+			float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_arrHitboxes[HITBOX_STOMACH].m_vecHitboxPos);
+
+			if (fov != -1 && fov > settings.m_iFOV)
+				continue;
+
+			if (fov != -1 && fov < hitboxfov)
+			{
+				hitboxfov = fov;
+				hitboxCopy = records.m_arrHitboxes[HITBOX_STOMACH].m_vecHitboxPos;
+			}
+		}
+		if (option == 4)
+		{
+			float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_arrHitboxes[HITBOX_CHEST].m_vecHitboxPos);
+
+			if (fov != -1 && fov > settings.m_iFOV)
+				continue;
+
+			if (fov != -1 && fov < hitboxfov)
+			{
+				hitboxfov = fov;
+				hitboxCopy = records.m_arrHitboxes[HITBOX_CHEST].m_vecHitboxPos;
+			}
+		}
+
+		if (option == 5)
+		{
+			for (auto& hitboxes : m_intHitboxes)
+			{
+				if  (records.m_arrHitboxes[hitboxes].m_vecHitboxPos.IsZero())
+					continue;
+
+				float fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), records.m_arrHitboxes[hitboxes].m_vecHitboxPos);
+				
+				if (fov > settings.m_iFOV)
+					continue;
+				
+				if (fov < LagCompHitboxFOV)
+				{
+					LagCompHitboxFOV = fov;
+					hitboxCopy = records.m_arrHitboxes[hitboxes].m_vecHitboxPos;
+				}
+			}
+		}
+	}
+
+	return hitboxCopy;
+
+}
+
+Vector ClosestRecords(C_BasePlayer* ent, C_BaseCombatWeapon* weapon)
+{
+	float closestFOV = FLT_MAX;
+
+	auto& settings = g_Options.m_mapAim[weapon->m_Item().m_iItemDefinitionIndex()];
+
+	float fov = -1;
+	if (LagCompHitbox(ent, settings.m_iHitbox, weapon).IsValid())
+	{
+		fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), LagCompHitbox(ent, settings.m_iHitbox, weapon));
+	}
+
+	if (fov != -1 && fov < settings.m_iFOV)
+	{
+		if (fov != -1 && fov < closestFOV)
 		{
 			closestFOV = fov;
-			m_vecLagCompAngle = records.m_vecHitboxPos;
+			m_vecLagCompAngle = LagCompHitbox(ent, settings.m_iHitbox, weapon);
 		}
 	}
 	return m_vecLagCompAngle;
@@ -65,10 +181,8 @@ void PickUserSmothing(int type, CUserCmd* cmd, C_BaseCombatWeapon* weapon)
 	}
 }
 
-void PickUserHitbox(C_BasePlayer* ent, int option, C_BaseCombatWeapon* weapon)
+void PickUserHitbox(C_BasePlayer* ent, int option)
 {
-	auto& settings = g_Options.m_mapAim[weapon->m_Item().m_iItemDefinitionIndex()];
-
 	std::vector<int> hitboxes = {
 	HITBOX_HEAD,
 	HITBOX_STOMACH,
@@ -189,7 +303,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		Vector m_vecLocalEyes = g_LocalPlayer->GetEyePos();
 		Vector m_vecPlayerEyes = ent->GetEyePos(); 
 
-		PickUserHitbox(ent, settings.m_iHitbox, weapon);
+		PickUserHitbox(ent, settings.m_iHitbox);
 
 		if (!g_LocalPlayer->CanSeePlayer(ent, ent->GetHitboxPos(bestHitbox)))
 			continue;
@@ -197,8 +311,8 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		float fov = 0;
 		if (!settings.m_bTargetBacktrack)
 			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
-		if (settings.m_bTargetBacktrack && ClosestRecords(ent).IsValid() && m_vecLagCompAngle.IsValid())
-			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ClosestRecords(ent));
+		if (settings.m_bTargetBacktrack && ClosestRecords(ent,weapon).IsValid() && m_vecLagCompAngle.IsValid())
+			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ClosestRecords(ent, weapon));
 
 		if (fov != 0 && fov > settings.m_iFOV)
 			continue;
@@ -225,8 +339,8 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		float fov = 0;
 		if(!settings.m_bTargetBacktrack)
 			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
-		if(settings.m_bTargetBacktrack && ClosestRecords(ent).IsValid() && m_vecLagCompAngle.IsValid())
-			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ClosestRecords(ent));
+		if(settings.m_bTargetBacktrack && ClosestRecords(ent, weapon).IsValid() && m_vecLagCompAngle.IsValid())
+			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ClosestRecords(ent, weapon));
 
 		if ((settings.m_fFlashTolerance * 2.55f) < g_LocalPlayer->FlashDuration())
 			return;
@@ -242,9 +356,9 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 			return;
 
 		if(!settings.m_bTargetBacktrack)
-		cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox)); //CHANGE THIS TO BACKTRACC SHIT
-		if(settings.m_bTargetBacktrack && ClosestRecords(ent).IsValid() && m_vecLagCompAngle.IsValid())
-			cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ClosestRecords(ent)); //CHANGE THIS TO BACKTRACC SHIT
+		cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox)); 
+		if(settings.m_bTargetBacktrack && ClosestRecords(ent, weapon).IsValid() && m_vecLagCompAngle.IsValid())
+			cmd->viewangles = Math::CalcAngle(g_LocalPlayer->GetEyePos(), ClosestRecords(ent, weapon));
 
 		if (settings.m_bRCS)
 		{
