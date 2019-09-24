@@ -45,6 +45,24 @@ struct LegitBotConfig
 	bool m_bAttackEnemies = true;
 	bool m_bAttackFriendlies = false;
 	float m_fFlashTolerance = 0.f;
+
+	//TRIGGERBOT
+
+	bool m_bAttackHead = false;
+	bool m_bAttackChest = false;
+	bool m_bAttackStomach = false;
+	bool m_bAttackArms = false;
+	bool m_bAttackLegs = false;
+
+	//TRIGGERBOT FILTERS
+
+	bool  m_bTriggerTargetBacktrack = false;
+	bool  m_bTriggerTargetEnemies = false;
+	bool  m_bTriggerTargetFriendlies = false;
+	bool  m_bTriggerHitchanceToggle = false;
+	float m_fTriggerFlashTolerance = 0.f;
+	float m_fTriggerHitchance = 0.f;
+
 };
 
 class Options

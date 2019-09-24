@@ -368,6 +368,7 @@ static std::map<int, const char*> k_weapon_names =
 void RenderEmptyTab()
 {
 	static int weapon_index = 7;
+	static int selected_aimbot_window = 0;
 
 	ImGui::BeginGroupBox("Weapons", ImVec2(175, 400));
 	{
@@ -386,100 +387,150 @@ void RenderEmptyTab()
 
 	ImGui::BeginGroup();
 	{
-		ImGui::BeginGroupBox("Aimbot", ImVec2(275, 320));
+		ImGui::BeginGroup();
 		{
-			const char* aim_hitbox[] = { "Head", "Neck", "Pelvis", "Stomach", "Chest", "Closest" };
-			const char* aim_smoothing[] = { "Slow at end", "Constant", "Fast at end" };
-
-			ImGui::Checkbox("Enabled", &settings.m_bEnabled);
-			ImGui::Combo("Hitbox", &settings.m_iHitbox, aim_hitbox, IM_ARRAYSIZE(aim_hitbox));
-			ImGui::Combo("Smooth type", &settings.m_iSmoothingMethod, aim_smoothing, IM_ARRAYSIZE(aim_smoothing));
-			ImGui::SliderInt("FOV:", &settings.m_iFOV, 0, 30);
-			ImGui::SliderFloat("Smooth:", &settings.m_fSmooth, 0, 1, "%.3f");
-			ImGui::Checkbox("RCS", &settings.m_bRCS);
-
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
-			ImGui::PushFont(g_pDefaultFontSmall);
-			ImGui::Text("RCS stands for recoil control system.");
-			ImGui::PopFont();
-			ImGui::PopStyleColor();
-
-			ImGui::SliderFloat("X axis:", &settings.m_fRCSX, 0, 2, "%.3f");
-			ImGui::SliderFloat("Y axis:", &settings.m_fRCSY, 0, 2, "%.3f");
-			ImGui::Text("Shoot delay");
-
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
-			ImGui::PushFont(g_pDefaultFontSmall);
-			ImGui::Text("As long as you hold left-click");
-			ImGui::Text("this delay will shoot when the timer");
-			ImGui::Text("ends or we're on target.");//bruh
-			ImGui::PopFont();
-			ImGui::PopStyleColor();
-
-			ImGui::SliderFloat("##delay", &settings.m_fDelay, 0, 200, "%.3f");
-
+			if (ImGui::ButtonCustom("Settings##aimbot", ImVec2(275 / 2, 20), 0, selected_aimbot_window == 0)) selected_aimbot_window = 0;
+			ImGui::SameLine();
+			if (ImGui::ButtonCustom("Triggerbot##aimbot", ImVec2(275 / 2, 20), 0, selected_aimbot_window == 1)) selected_aimbot_window = 1;
 		}
-		ImGui::EndGroupBox();
+		ImGui::EndGroup();
 
-		ImGui::BeginGroupBox("Other", ImVec2(275, 69));//hehe
+		if (selected_aimbot_window == 0)
 		{
-			ImGui::Checkbox("Backtrack", g_Options.misc_backtrack);
-			ImGui::Checkbox("Extend backtrack window", g_Options.fake_latency);
-
-		}
-		ImGui::EndGroupBox();
-	}
-	ImGui::EndGroup();
-
-	ImGui::SameLine();
-
-	ImGui::BeginGroup();
-	{
-		ImGui::BeginGroupBox("Filters", ImVec2(199, 235));
-		{
-			ImGui::Checkbox("Attack enemies", &settings.m_bAttackEnemies);
-			ImGui::Checkbox("Attack friendlies", &settings.m_bAttackFriendlies);
-			ImGui::Checkbox("Target backtrack", &settings.m_bTargetBacktrack);//currently does nothing :(
-			ImGui::Checkbox("Ignore jumping", &settings.m_bIgnoreJumping);
-			ImGui::Checkbox("Ignore smoke", &settings.m_bIgnoreSmoke);
-			ImGui::Text("Flash Tolerance");
-
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
-			ImGui::PushFont(g_pDefaultFontSmall);
-			ImGui::Text("Aimbot doesn't aim at target if the");
-			ImGui::Text("tolerance is smaller than the flash");
-			ImGui::Text("effect.");//bruh
-			ImGui::PopFont();
-			ImGui::PopStyleColor();
-
-			ImGui::SliderFloat("##tolerance", &settings.m_fFlashTolerance, 0, 100, "%.3f");
-
-		}
-		ImGui::EndGroupBox();
-
-		ImGui::BeginGroupBox("Visuals", ImVec2(199, 153));
-		{
-			ImGui::Checkbox("Render FOV##aimbot", g_Options.esp_draw_fov);
-
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
-			ImGui::PushFont(g_pDefaultFontSmall);
-			ImGui::Text("Renders your field of view, a.k.a where");
-			ImGui::Text("within the circle you can shoot.");
-			ImGui::PopFont();
-			ImGui::PopStyleColor();
-
-			if (g_Options.esp_draw_fov)
+			ImGui::BeginGroup();
 			{
-				ImGui::Checkbox("Filled FOV circle##aimbot", g_Options.esp_fov_filled);
-			}
-			ImGui::Checkbox("Backtrack dots", g_Options.esp_bt_dots);
-			ImGui::Checkbox("Backtrack models", g_Options.esp_bt_chams);
-		}
-		ImGui::EndGroupBox();
+				ImGui::BeginGroupBox("Aimbot", ImVec2(275, 320));
+				{
+					const char* aim_hitbox[] = { "Head", "Neck", "Pelvis", "Stomach", "Chest", "Closest" };
+					const char* aim_smoothing[] = { "Slow at end", "Constant", "Fast at end" };
 
+					ImGui::Checkbox("Enabled", &settings.m_bEnabled);
+					ImGui::Combo("Hitbox", &settings.m_iHitbox, aim_hitbox, IM_ARRAYSIZE(aim_hitbox));
+					ImGui::Combo("Smooth type", &settings.m_iSmoothingMethod, aim_smoothing, IM_ARRAYSIZE(aim_smoothing));
+					ImGui::SliderInt("FOV:", &settings.m_iFOV, 0, 30);
+					ImGui::SliderFloat("Smooth:", &settings.m_fSmooth, 0, 1, "%.3f");
+					ImGui::Checkbox("RCS", &settings.m_bRCS);
+
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
+					ImGui::PushFont(g_pDefaultFontSmall);
+					ImGui::Text("RCS stands for recoil control system.");
+					ImGui::PopFont();
+					ImGui::PopStyleColor();
+
+					ImGui::SliderFloat("X axis:", &settings.m_fRCSX, 0, 2, "%.3f");
+					ImGui::SliderFloat("Y axis:", &settings.m_fRCSY, 0, 2, "%.3f");
+					ImGui::Text("Shoot delay");
+
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
+					ImGui::PushFont(g_pDefaultFontSmall);
+					ImGui::Text("As long as you hold left-click");
+					ImGui::Text("this delay will shoot when the timer");
+					ImGui::Text("ends or we're on target.");//bruh
+					ImGui::PopFont();
+					ImGui::PopStyleColor();
+
+					ImGui::SliderFloat("##delay", &settings.m_fDelay, 0, 200, "%.3f");
+
+				}
+				ImGui::EndGroupBox();
+
+				ImGui::BeginGroupBox("Other", ImVec2(275, 69));//hehe
+				{
+					ImGui::Checkbox("Backtrack", g_Options.misc_backtrack);
+					ImGui::Checkbox("Extend backtrack window", g_Options.fake_latency);
+
+				}
+				ImGui::EndGroupBox();
+			}
+			ImGui::EndGroup();
+
+
+			ImGui::SameLine();
+
+			ImGui::BeginGroup();
+			{
+				ImGui::BeginGroupBox("Filters", ImVec2(199, 235));
+				{
+					ImGui::Checkbox("Attack enemies", &settings.m_bAttackEnemies);
+					ImGui::Checkbox("Attack friendlies", &settings.m_bAttackFriendlies);
+					ImGui::Checkbox("Target backtrack", &settings.m_bTargetBacktrack);//currently does nothing :(
+					ImGui::Checkbox("Ignore jumping", &settings.m_bIgnoreJumping);
+					ImGui::Checkbox("Ignore smoke", &settings.m_bIgnoreSmoke);
+					ImGui::Text("Flash Tolerance");
+
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
+					ImGui::PushFont(g_pDefaultFontSmall);
+					ImGui::Text("Aimbot doesn't aim at target if the");
+					ImGui::Text("tolerance is smaller than the flash");
+					ImGui::Text("effect.");//bruh
+					ImGui::PopFont();
+					ImGui::PopStyleColor();
+
+					ImGui::SliderFloat("##tolerance", &settings.m_fFlashTolerance, 0, 100, "%.3f");
+
+				}
+				ImGui::EndGroupBox();
+
+				ImGui::BeginGroupBox("Visuals", ImVec2(199, 153));
+				{
+					ImGui::Checkbox("Render FOV##aimbot", g_Options.esp_draw_fov);
+
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.369f, 0.369f, 0.369f, 1.f));
+					ImGui::PushFont(g_pDefaultFontSmall);
+					ImGui::Text("Renders your field of view, a.k.a where");
+					ImGui::Text("within the circle you can shoot.");
+					ImGui::PopFont();
+					ImGui::PopStyleColor();
+
+					if (g_Options.esp_draw_fov)
+					{
+						ImGui::Checkbox("Filled FOV circle##aimbot", g_Options.esp_fov_filled);
+					}
+					ImGui::Checkbox("Backtrack dots", g_Options.esp_bt_dots);
+					ImGui::Checkbox("Backtrack models", g_Options.esp_bt_chams);
+				}
+				ImGui::EndGroupBox();
+
+			}
+			ImGui::EndGroup();
+		}
+		if (selected_aimbot_window == 1)
+		{
+			ImGui::BeginGroup();
+			{
+				ImGui::BeginGroupBox("Triggerbot##aimbotxd", ImVec2(275, 320));
+				{
+					ImGui::Checkbox("Hitchance", &settings.m_bTriggerHitchanceToggle);
+					ImGui::SliderFloat("Amount:##hitchance", &settings.m_fTriggerHitchance, 1, 100, "%.3f");
+					ImGui::Checkbox("Attack head", &settings.m_bAttackHead);
+					ImGui::Checkbox("Attack chest", &settings.m_bAttackChest);
+					ImGui::Checkbox("Attack stomach", &settings.m_bAttackStomach);
+					ImGui::Checkbox("Attack arms", &settings.m_bAttackArms);
+					ImGui::Checkbox("Attack legs", &settings.m_bAttackLegs);
+				}
+				ImGui::EndGroupBox();
+			}
+			ImGui::EndGroup();
+
+			ImGui::SameLine();
+
+			ImGui::BeginGroup();
+			{
+				ImGui::BeginGroupBox("Filters##fortriggfer", ImVec2(199, 235));
+				{
+					ImGui::Checkbox("Target backtrack##fortrigger", &settings.m_bTriggerTargetBacktrack);
+					ImGui::Checkbox("Target enemies##fortrigger", &settings.m_bTriggerTargetEnemies);
+					ImGui::Checkbox("Target friendlies##fortrigger", &settings.m_bTriggerTargetFriendlies);
+					ImGui::SliderFloat("Flash tolerance##fortrigger", &settings.m_fTriggerFlashTolerance, 0, 100, "%.3f");
+				}
+				ImGui::EndGroupBox();
+			}
+			ImGui::EndGroup();
+		}
 	}
 	ImGui::EndGroup();
 
+	
 }
 
 ImVec4 GetColorByItemRarity(ItemRarity item)

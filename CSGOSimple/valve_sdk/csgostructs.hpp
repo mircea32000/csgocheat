@@ -207,6 +207,7 @@ public:
 	NETVAR(float_t, m_flNextPrimaryAttack, "DT_BaseCombatWeapon", "m_flNextPrimaryAttack");
 	NETVAR(float_t, m_flNextSecondaryAttack, "DT_BaseCombatWeapon", "m_flNextSecondaryAttack");
 	NETVAR(int32_t, m_iClip1, "DT_BaseCombatWeapon", "m_iClip1");
+	NETVAR(float_t, m_fAccuracyPenalty, "DT_WeaponCSBase", "m_fAccuracyPenalty");
 	NETVAR(int32_t, m_iClip2, "DT_BaseCombatWeapon", "m_iClip2");
 	NETVAR(float_t, m_flRecoilIndex, "DT_WeaponCSBase", "m_flRecoilIndex");
 	NETVAR(int32_t, m_iViewModelIndex, "DT_BaseCombatWeapon", "m_iViewModelIndex");

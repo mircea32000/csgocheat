@@ -6,7 +6,7 @@
 #include "../hooks.hpp"
 #include "../helpers/input.hpp"
 #include "../lagcomp.h"
-
+#include "../drawmodelexecute.hpp"
 Chams::Chams()
 {
 	std::ofstream("csgo\\materials\\simple_regular.vmt") << R"#("VertexLitGeneric"
@@ -189,7 +189,7 @@ void Chams::OnDrawModelExecute(
 	const ModelRenderInfo_t& info,
 	matrix3x4_t* matrix)
 {
-	static auto fnDME = Hooks::mdlrender_hook.get_original<decltype(&Hooks::hkDrawModelExecute)>(index::DrawModelExecute);
+	static auto fnDME = Hooks::vfuncs::mdlrender_hook.get_original<decltype(&Hooks::DME::hkDrawModelExecute)>(index::DrawModelExecute);
 
 	const auto mdl = info.pModel;
 
