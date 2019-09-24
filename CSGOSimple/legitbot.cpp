@@ -306,13 +306,13 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		if (!g_LocalPlayer->CanSeePlayer(ent, ent->GetHitboxPos(bestHitbox)))
 			continue;
 
-		float fov = 0;
+		float fov = -1;
 		if (!settings.m_bTargetBacktrack)
 			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 		if (settings.m_bTargetBacktrack && ClosestRecords(ent,weapon).IsValid() && m_vecLagCompAngle.IsValid())
 			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ClosestRecords(ent, weapon));
 
-		if (fov != 0 && fov > settings.m_iFOV)
+		if (fov != -1 && fov > settings.m_iFOV)
 			continue;
 
 		if (!settings.m_bAttackEnemies && g_LocalPlayer->m_iTeamNum() != ent->m_iTeamNum())
@@ -334,7 +334,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 	{
 		C_BasePlayer* ent = (C_BasePlayer*)g_EntityList->GetClientEntity(bestPlayer);
 
-		float fov = 0;
+		float fov = -1;
 		if(!settings.m_bTargetBacktrack)
 			fov = Math::get_fov(m_vecLocalAngle + g_LocalPlayer->m_aimPunchAngle(), g_LocalPlayer->GetEyePos(), ent->GetHitboxPos(bestHitbox));
 		if(settings.m_bTargetBacktrack && ClosestRecords(ent, weapon).IsValid() && m_vecLagCompAngle.IsValid())
@@ -343,7 +343,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 		if ((settings.m_fFlashTolerance * 2.55f) < g_LocalPlayer->FlashDuration())
 			return;
 
-		if (fov != 0 && fov > settings.m_iFOV)
+		if (fov != -1 && fov > settings.m_iFOV)
 			return;
 
 		Vector vecTargetHitboxPos = ent->GetHitboxPos(bestHitbox);
