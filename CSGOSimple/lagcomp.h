@@ -8,7 +8,10 @@
 
 struct HitboxRecord_Struct
 {
-	Vector m_vecHitboxPos;
+	Vector		m_vecMins;
+	Vector		m_vecMaxs;
+	int			m_iBone;
+	float		m_flRadius;
 };
 
 struct LagRecord_Struct

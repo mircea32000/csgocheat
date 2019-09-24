@@ -47,6 +47,7 @@ namespace Math
 	}
 	void correct_angles(QAngle& angles);
     void VectorTransform(const Vector& in1, const matrix3x4_t& in2, Vector& out);
+	Vector CalculateHitboxFromMatrix(matrix3x4_t matrix[128], const Vector& bbmins, const Vector& bbmaxs, int iBone);
 	Vector VectorTransform(Vector in, matrix3x4_t matrix);
     void AngleVectors(const QAngle &angles, Vector& forward);
     void AngleVectors(const QAngle &angles, Vector& forward, Vector& right, Vector& up);

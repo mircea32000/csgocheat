@@ -66,6 +66,16 @@ namespace Math
         out[1] = in1.Dot(in2[1]) + in2[1][3];
         out[2] = in1.Dot(in2[2]) + in2[2][3];
     }
+	//--------------------------------------------------------------------------------
+	Vector CalculateHitboxFromMatrix(matrix3x4_t matrix[128], const Vector& bbmins, const Vector& bbmaxs, int iBone)
+	{
+		Vector min, max;
+		VectorTransform(bbmins, matrix[iBone], min);
+		VectorTransform(bbmaxs, matrix[iBone], max);
+
+		return (min + max) * 0.5f;
+	}
+	//--------------------------------------------------------------------------------
 	Vector VectorTransform(Vector in, matrix3x4_t matrix) {
 		return Vector(in.Dot(matrix[0]) + matrix[0][3], in.Dot(matrix[1]) + matrix[1][3],
 			in.Dot(matrix[2]) + matrix[2][3]);
