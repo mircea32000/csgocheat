@@ -47,16 +47,40 @@ void TimeWarp::UpdateRecords(int i)
 
 		record.m_fSimtime = pEntity->m_flSimulationTime();
 		record.m_vecOrigin = pEntity->m_vecOrigin();
-		pEntity->SetupBones(record.m_Matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, g_GlobalVars->curtime); //memory leak? guess we'll find out
+		pEntity->SetupBones(record.m_Matrix, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, record.m_fSimtime); //memory leak? guess we'll find out
          
+		auto model = pEntity->GetModel();
+		if (!model)
+			return;
+
+		auto hdr = g_MdlInfo->GetStudiomodel(model);
+		if (!hdr)
+			return;
+
+		auto set = hdr->GetHitboxSet(0);
+		if (!set)
+			return;
+
+		bool error = false;
+
 		for (int i{}; i < HITBOX_MAX; i++)
 		{
-			record.m_arrHitboxes[i].m_vecHitboxPos = pEntity->GetHitboxPos(i);
+			auto bbox = set->GetHitbox(i);
+			if (!bbox)
+			{
+				error = true;
+				return;
+			}
+			record.m_arrHitboxes[i].m_iBone = bbox->bone;
+			record.m_arrHitboxes[i].m_vecMins = bbox->bbmin;
+			record.m_arrHitboxes[i].m_vecMaxs = bbox->bbmax;
+			record.m_arrHitboxes[i].m_flRadius = bbox->m_flRadius;
 		}
 
 		if (pEntity->IsAlive() && !pEntity->IsDormant())
 		{
 			m_Records[i].m_Mutex.lock();
+			if(!error)
 			m_Records[i].m_vecRecords.emplace_back(std::move(record));
 			m_Records[i].m_Mutex.unlock();
 		}
@@ -139,11 +163,9 @@ void TimeWarp::StoreRecords(CUserCmd* cmd)
 		}
 		Vector HitboxPos = pEntity->GetHitboxPos(0);
 
-		//UpdateRecords(i);
-
 		Vector ViewDir;
 		Math::AngleVectors(cmd->viewangles + (g_LocalPlayer->m_aimPunchAngle() * 2.f), ViewDir);
-		float FOVDistance = Math::DistancePointToLine(HitboxPos, g_LocalPlayer->GetEyePos(), ViewDir); //yes i can use the hitbox pos from the records but i cant be fucked rn
+		float FOVDistance = Math::DistancePointToLine(HitboxPos, g_LocalPlayer->GetEyePos(), ViewDir);
 
 		if (bestFov > FOVDistance)
 		{
@@ -168,12 +190,17 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 		float tempFloat = FLT_MAX;
 		Vector ViewDir;
 		Math::AngleVectors(cmd->viewangles + (g_LocalPlayer->m_aimPunchAngle() * 2.f), ViewDir);
-		for (const auto& records : m_Records[bestTargetIndex].m_vecRecords)
+		for (auto& records : m_Records[bestTargetIndex].m_vecRecords)
 		{
-			float tempFOVDistance = Math::DistancePointToLine(records.m_arrHitboxes[HITBOX_HEAD].m_vecHitboxPos, g_LocalPlayer->GetEyePos(), ViewDir);
+			auto hitbox = Math::CalculateHitboxFromMatrix(records.m_Matrix,
+				records.m_arrHitboxes[HITBOX_HEAD].m_vecMins,
+				records.m_arrHitboxes[HITBOX_HEAD].m_vecMaxs,
+				records.m_arrHitboxes[HITBOX_HEAD].m_iBone);
+
+			float tempFOVDistance = Math::DistancePointToLine(hitbox, g_LocalPlayer->GetEyePos(), ViewDir);
 			if (tempFloat > tempFOVDistance && records.m_fSimtime > g_LocalPlayer->m_flSimulationTime() - 1)
 			{
-				if (g_LocalPlayer->CanSeePlayer(static_cast<C_BasePlayer*>(g_EntityList->GetClientEntity(bestTargetIndex)), records.m_arrHitboxes[HITBOX_HEAD].m_vecHitboxPos))
+				if (g_LocalPlayer->CanSeePlayer(static_cast<C_BasePlayer*>(g_EntityList->GetClientEntity(bestTargetIndex)), hitbox))
 				{
 					tempFloat = tempFOVDistance;
 					bestTargetSimTime = records.m_fSimtime;

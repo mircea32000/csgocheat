@@ -157,11 +157,14 @@ void Visuals::Player::RenderBTDots()
 {
 	for (auto& record : TimeWarp::Get().m_Records[ctx.pl->EntIndex()].m_vecRecords)
 	{
-		Vector thisTick = record.m_arrHitboxes[HITBOX_HEAD].m_vecHitboxPos;
+		auto hitbox = Math::CalculateHitboxFromMatrix(record.m_Matrix,
+			record.m_arrHitboxes[HITBOX_HEAD].m_vecMins,
+			record.m_arrHitboxes[HITBOX_HEAD].m_vecMaxs,
+			record.m_arrHitboxes[HITBOX_HEAD].m_iBone);
 
 		Vector screenThisTick;
 
-		if (Math::WorldToScreen(thisTick, screenThisTick))
+		if (Math::WorldToScreen(hitbox, screenThisTick))
 		{
 			Render::Get().RenderBoxFilled(screenThisTick.x, screenThisTick.y, screenThisTick.x + 3, screenThisTick.y + 3, Color(255, 255, 255, 200));
 		}
