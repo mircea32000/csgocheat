@@ -1,7 +1,7 @@
 ﻿#include <algorithm>
 
 #include "visuals.hpp"
-#include "../OverrideView.hpp"
+#include "../ovverrideview.hpp"
 #include "../options.hpp"
 #include "../helpers/math.hpp"
 #include "../helpers/utils.hpp"
@@ -323,7 +323,7 @@ void Visuals::RenderFOV()
 
 	float radius = 0;
 	int aimbotFov = g_Options.m_mapAim[weapon->m_Item().m_iItemDefinitionIndex()].m_iFOV;
-	float fov = OverrideView::Get().currentFOV;
+	float fov = Hooks::Overrideview::Components::currentFOV;
 	radius = tanf(DEG2RAD(aimbotFov) / 2) / tanf(DEG2RAD(fov) / 2) * w;
 
 	if (g_Options.esp_fov_filled)

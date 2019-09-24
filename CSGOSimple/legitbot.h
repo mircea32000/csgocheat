@@ -11,4 +11,8 @@ namespace Legit
 	{
 		void Do(CUserCmd* cmd);
 	}
+	namespace TriggerbotBacktrack
+	{
+		void Do(CUserCmd* cmd);
+	}
 }

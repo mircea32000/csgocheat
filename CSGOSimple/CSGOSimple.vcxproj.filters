@@ -39,6 +39,54 @@
     <Filter Include="Source Files\features\Visuals">
       <UniqueIdentifier>{5b045dbd-afc3-474d-b76c-d181d9761415}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooks">
+      <UniqueIdentifier>{0946663e-1b8b-4c47-915e-ded381022a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Createmove">
+      <UniqueIdentifier>{3965871f-8771-40f2-aaf3-186e4adf3f5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\D3DX">
+      <UniqueIdentifier>{6388006c-b58e-43b7-b354-f73283a1780b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\D3DX\EndScene">
+      <UniqueIdentifier>{74834c18-3b60-41a3-a056-645f7da96907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\D3DX\Reset">
+      <UniqueIdentifier>{640d0581-8a16-4c49-a363-a4bae1d7f7d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\FSN">
+      <UniqueIdentifier>{1f13c60e-6e1c-4581-8833-ef3c995afd18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Painttraverse">
+      <UniqueIdentifier>{762cae6c-659f-4b72-ab83-ea32e26fb6ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Emitsound">
+      <UniqueIdentifier>{25d25234-842e-49d0-8845-120c8525cde0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\DME">
+      <UniqueIdentifier>{db218f98-c36e-42fc-ba62-c2463464d011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\OverrideView">
+      <UniqueIdentifier>{27e60a9a-55f6-4e82-95ab-cd0054c6a06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Lockcursor">
+      <UniqueIdentifier>{9aafe81e-1f77-4492-a8a3-79a868a105dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Doposteffects">
+      <UniqueIdentifier>{bb5d6778-c0b2-4fe7-96e0-c4ceec066794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Svcheats">
+      <UniqueIdentifier>{79c439b7-99f2-4afd-b50b-0cf0c0c106b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Listleavesinbox">
+      <UniqueIdentifier>{1974faef-036c-4743-87bb-59c1a0c67972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Filesystem">
+      <UniqueIdentifier>{cc79338d-a14d-4839-b24c-38df5a907289}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks\Senddatagram">
+      <UniqueIdentifier>{22f92650-33aa-4ad5-bf71-34052e6df5ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Helpers\math.cpp">
@@ -175,6 +223,51 @@
     </ClCompile>
     <ClCompile Include="CTimer.cpp">
       <Filter>Source Files\features\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="triggerbot.cpp">
+      <Filter>Source Files\features\Legit</Filter>
+    </ClCompile>
+    <ClCompile Include="createmove.cc">
+      <Filter>Source Files\hooks\Createmove</Filter>
+    </ClCompile>
+    <ClCompile Include="endscene.cc">
+      <Filter>Source Files\hooks\D3DX\EndScene</Filter>
+    </ClCompile>
+    <ClCompile Include="reset.cc">
+      <Filter>Source Files\hooks\D3DX\Reset</Filter>
+    </ClCompile>
+    <ClCompile Include="framestagenotify.cc">
+      <Filter>Source Files\hooks\FSN</Filter>
+    </ClCompile>
+    <ClCompile Include="painttraverse.cc">
+      <Filter>Source Files\hooks\Painttraverse</Filter>
+    </ClCompile>
+    <ClCompile Include="emitsound.cc">
+      <Filter>Source Files\hooks\Emitsound</Filter>
+    </ClCompile>
+    <ClCompile Include="drawmodelexecute.cc">
+      <Filter>Source Files\hooks\DME</Filter>
+    </ClCompile>
+    <ClCompile Include="overrideview.cpp">
+      <Filter>Source Files\hooks\OverrideView</Filter>
+    </ClCompile>
+    <ClCompile Include="lockcursor.cc">
+      <Filter>Source Files\hooks\Lockcursor</Filter>
+    </ClCompile>
+    <ClCompile Include="doposteffects.cc">
+      <Filter>Source Files\hooks\Doposteffects</Filter>
+    </ClCompile>
+    <ClCompile Include="svcheats.cc">
+      <Filter>Source Files\hooks\Svcheats</Filter>
+    </ClCompile>
+    <ClCompile Include="listleavesinbox.cpp">
+      <Filter>Source Files\hooks\Listleavesinbox</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystemhook.cc">
+      <Filter>Source Files\hooks\Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Senddatagram.cpp">
+      <Filter>Source Files\hooks\Senddatagram</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -487,14 +580,53 @@
     <ClInclude Include="legitbot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OverrideView.hpp">
-      <Filter>Header Files\SDK</Filter>
-    </ClInclude>
     <ClInclude Include="EnginePrediction.h">
       <Filter>Header Files\features</Filter>
     </ClInclude>
     <ClInclude Include="CTimer.h">
       <Filter>Header Files\features</Filter>
+    </ClInclude>
+    <ClInclude Include="createmove.hpp">
+      <Filter>Source Files\hooks\Createmove</Filter>
+    </ClInclude>
+    <ClInclude Include="endscene.hpp">
+      <Filter>Source Files\hooks\D3DX\EndScene</Filter>
+    </ClInclude>
+    <ClInclude Include="reset.h">
+      <Filter>Source Files\hooks\D3DX\Reset</Filter>
+    </ClInclude>
+    <ClInclude Include="framestagenotify.h">
+      <Filter>Source Files\hooks\FSN</Filter>
+    </ClInclude>
+    <ClInclude Include="painttraverse.hpp">
+      <Filter>Source Files\hooks\Painttraverse</Filter>
+    </ClInclude>
+    <ClInclude Include="emitsound.hpp">
+      <Filter>Source Files\hooks\Emitsound</Filter>
+    </ClInclude>
+    <ClInclude Include="drawmodelexecute.hpp">
+      <Filter>Source Files\hooks\DME</Filter>
+    </ClInclude>
+    <ClInclude Include="ovverrideview.hpp">
+      <Filter>Source Files\hooks\OverrideView</Filter>
+    </ClInclude>
+    <ClInclude Include="lockcursor.hpp">
+      <Filter>Source Files\hooks\Lockcursor</Filter>
+    </ClInclude>
+    <ClInclude Include="doposteffects.hpp">
+      <Filter>Source Files\hooks\Doposteffects</Filter>
+    </ClInclude>
+    <ClInclude Include="svcheats.hpp">
+      <Filter>Source Files\hooks\Svcheats</Filter>
+    </ClInclude>
+    <ClInclude Include="listleavesinbox.h">
+      <Filter>Source Files\hooks\Listleavesinbox</Filter>
+    </ClInclude>
+    <ClInclude Include="Filesystemhook.hpp">
+      <Filter>Source Files\hooks\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Senddatagram.h">
+      <Filter>Source Files\hooks\Senddatagram</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

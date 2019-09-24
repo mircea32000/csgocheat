@@ -277,9 +277,7 @@ void Legit::Aimbot::Do(CUserCmd* cmd)
 
 	int itemdef = weapon->m_Item().m_iItemDefinitionIndex();
 
-	int itemdefDEBUG = itemdef;
-
-	auto& settings = g_Options.m_mapAim[itemdefDEBUG];
+	auto& settings = g_Options.m_mapAim[itemdef];
 
 	float bestFOV = FLT_MAX;
 
