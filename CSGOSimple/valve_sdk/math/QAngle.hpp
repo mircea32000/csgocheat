@@ -128,6 +128,16 @@ public:
     {
         return (pitch*pitch + yaw*yaw + roll*roll);
     }
+	Vector ToVector()
+	{
+		Vector returnvec;
+
+		returnvec.x = this->pitch;
+		returnvec.y = this->yaw;
+		returnvec.z = this->roll;
+
+		return returnvec;
+	}
     bool IsZero(float tolerance = 0.01f) const
     {
         return (pitch > -tolerance && pitch < tolerance &&
