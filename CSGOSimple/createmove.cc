@@ -34,10 +34,10 @@ namespace Hooks
 			TimeWarp::Get().DeleteInvalidRecords();
 			TimeWarp::Get().StoreRecords(cmd);
 			TimeWarp::Get().DoBackTrack(cmd);
+			Legit::Aimbot::Do(cmd);
 
 			PredictionSystem::Get().Start(cmd, g_LocalPlayer);
 			{
-				Legit::Aimbot::Do(cmd);
 				Legit::Triggerbot::Do(cmd);
 				//Legit::TriggerbotBacktrack::Do(cmd);
 			}

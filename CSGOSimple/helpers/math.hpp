@@ -33,8 +33,8 @@ namespace Math
 
 		return (Point - PerpendicularPoint).Length();
 	}
-	float VectorDistance(const Vector& v1, const Vector& v2);
 	QAngle CalcAngle(const Vector& src, const Vector& dst);
+	float VectorDistance(const Vector& v1, const Vector& v2);
 	float GetFOV(const QAngle& viewAngle, const QAngle& aimAngle);
 	template<class T>
 	void Normalize3(T& vec)
@@ -51,6 +51,7 @@ namespace Math
 	Vector VectorTransform(Vector in, matrix3x4_t matrix);
     void AngleVectors(const QAngle &angles, Vector& forward);
     void AngleVectors(const QAngle &angles, Vector& forward, Vector& right, Vector& up);
+
 	inline float get_fov(const QAngle& view_angles, const Vector& eye_pos, const Vector& target_pos)
 	{
 		Vector cur_view_dir{};
