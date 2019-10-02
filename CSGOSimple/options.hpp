@@ -124,10 +124,14 @@ public:
 		OPTION(bool, chams_player_ignorez, false);
 		OPTION(bool, chams_player_glass, false);
 		OPTION(bool, chams_player_metalic, false);
+		OPTION(bool, chams_player_glow, false);
 		OPTION(bool, chams_arms_enabled, false);
 		OPTION(bool, chams_backtrack_rainbow, false);
 		OPTION(bool, chams_arms_wireframe, false);
 		OPTION(bool, chams_arms_flat, false);
+		OPTION(int , chams_type, 0);
+		OPTION(int, chams_type_weapon, 0);
+		OPTION(int, chams_type_arms, 0);
 		OPTION(bool, chams_arms_ignorez, false);
 		OPTION(bool, chams_arms_glass, false);
 

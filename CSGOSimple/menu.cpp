@@ -110,6 +110,7 @@ void RenderEspTab()
     static char* esp_tab_names[] = { "ESP", "GLOW", "CHAMS" };
 	const char* esp_box_types[] = {  "Full", "Corners", "3D" };
 	const char* weaponname_types[] = { "Name", "Icons" };
+	const char* chams_type[] = { "Normal", "Flat", "Glow", "Metallic", "Glass", "Wireframe" };
 
     static int   active_esp_tab = 0;
 
@@ -231,15 +232,15 @@ void RenderEspTab()
 
             ImGui::BeginGroupBox("Players");
             {
+
+
                 ImGui::Checkbox("Enabled", g_Options.chams_player_enabled); ImGui::SameLine();
                 ImGui::Checkbox("Team Check", g_Options.chams_player_enemies_only);
 				ImGui::Checkbox("Disable Occlusion", g_Options.chams_disable_occlusion); 
+				ImGui::Checkbox("Ignore-Z##player", g_Options.chams_player_ignorez);
 
-                ImGui::Checkbox("Wireframe", g_Options.chams_player_wireframe);
-                ImGui::Checkbox("Flat", g_Options.chams_player_flat);
-                ImGui::Checkbox("Ignore-Z", g_Options.chams_player_ignorez); ImGui::SameLine();
-                ImGui::Checkbox("Glass", g_Options.chams_player_glass);
-				ImGui::Checkbox("Metallic", g_Options.chams_player_metalic);
+				ImGui::Combo("Type##cgams", g_Options.chams_type, chams_type, IM_ARRAYSIZE(chams_type));
+
 				ImGui::Checkbox("Gloss", g_Options.chams_gloss);
                 ImGui::PushItemWidth(110);
                 ImGuiEx::ColorEdit4("Ally (Visible)", g_Options.color_chams_player_ally_visible);
@@ -256,10 +257,8 @@ void RenderEspTab()
             ImGui::BeginGroupBox("Arms");
             {
                 ImGui::Checkbox("Enabled", g_Options.chams_arms_enabled);
-                ImGui::Checkbox("Wireframe", g_Options.chams_arms_wireframe);
-                ImGui::Checkbox("Flat", g_Options.chams_arms_flat);
-                ImGui::Checkbox("Ignore-Z", g_Options.chams_arms_ignorez);
-                ImGui::Checkbox("Glass", g_Options.chams_arms_glass);
+				ImGui::Combo("Type##cgamarmss", g_Options.chams_type_arms, chams_type, IM_ARRAYSIZE(chams_type));
+
                 ImGui::PushItemWidth(110);
                 ImGuiEx::ColorEdit4("Color (Visible)", g_Options.color_chams_arms_visible);
                 ImGuiEx::ColorEdit4("Color (Occluded)", g_Options.color_chams_arms_occluded);
