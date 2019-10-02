@@ -17,6 +17,7 @@ class Chams
     Chams();
     ~Chams();
 
+
 public:
 	void OnDrawModelExecute(
         IMatRenderContext* ctx,
@@ -25,12 +26,15 @@ public:
         matrix3x4_t *pCustomBoneToWorld);
 
 private:
-    void OverrideMaterial(bool ignoreZ, bool flat, bool wireframe, bool glass, bool metallic, const Color& rgba);
+	void OverrideMaterial(bool ignoreZ, int option, const Color& rgba);
 
     IMaterial* materialRegular = nullptr;
     IMaterial* materialRegularIgnoreZ = nullptr;
     IMaterial* materialFlatIgnoreZ = nullptr;
+	IMaterial* materialReflective = nullptr;
+
     IMaterial* materialFlat = nullptr;
 	IMaterial* materialMetall = nullptr;
 	IMaterial* materialMetallnZ = nullptr;
+	IMaterial* materialGlow = nullptr;
 };
