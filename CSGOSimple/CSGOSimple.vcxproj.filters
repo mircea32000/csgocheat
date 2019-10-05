@@ -87,6 +87,9 @@
     <Filter Include="Source Files\hooks\Senddatagram">
       <UniqueIdentifier>{22f92650-33aa-4ad5-bf71-34052e6df5ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooks\SceneEnd">
+      <UniqueIdentifier>{e758d176-62d9-468c-9404-0170f0ee38e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Helpers\math.cpp">
@@ -268,6 +271,12 @@
     </ClCompile>
     <ClCompile Include="Senddatagram.cpp">
       <Filter>Source Files\hooks\Senddatagram</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyValues.cpp">
+      <Filter>Source Files\SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="sceneend.cpp">
+      <Filter>Source Files\hooks\SceneEnd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -627,6 +636,12 @@
     </ClInclude>
     <ClInclude Include="Senddatagram.h">
       <Filter>Source Files\hooks\Senddatagram</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyValues.h">
+      <Filter>Header Files\SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneend.h">
+      <Filter>Source Files\hooks\SceneEnd</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

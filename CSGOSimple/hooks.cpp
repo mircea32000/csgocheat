@@ -15,7 +15,7 @@
 #include "listleavesinbox.h"
 
 #include "features/glow.hpp"
-
+#include "sceneend.h"
 namespace Hooks {
 
 	void Initialize()
@@ -28,6 +28,7 @@ namespace Hooks {
 		vfuncs::mdlrender_hook.setup(g_MdlRender);
 		vfuncs::clientmode_hook.setup(g_ClientMode);
 		vfuncs::filesystem_hook.setup(g_FileSystem);
+		vfuncs::render_view.setup(g_RenderView);
 		vfuncs::bsp_query_hook.setup(g_EngineClient->GetBSPTreeQuery());
 
 		ConVar* sv_cheats_con = g_CVar->FindVar("sv_cheats");
@@ -39,6 +40,7 @@ namespace Hooks {
 		vfuncs::hlclient_hook.hook_index(index::CreateMove, Hooks::Createmove::hkCreateMove_Proxy);
 		vfuncs::vguipanel_hook.hook_index(index::PaintTraverse, Hooks::Painttraverse::hkPaintTraverse);
 		vfuncs::sound_hook.hook_index(index::EmitSound1, Hooks::Emitsound::hkEmitSound1);
+		vfuncs::render_view.hook_index(9, Hooks::SceneEnd::SceneEnd);
 		vfuncs::vguisurf_hook.hook_index(index::LockCursor, Hooks::Lockcursor::hkLockCursor);
 		vfuncs::mdlrender_hook.hook_index(index::DrawModelExecute, Hooks::DME::hkDrawModelExecute);
 		vfuncs::clientmode_hook.hook_index(index::DoPostScreenSpaceEffects, Hooks::Doposteffects::hkDoPostScreenEffects);
@@ -54,12 +56,16 @@ namespace Hooks {
 		vfuncs::hlclient_hook.unhook_all();
 		vfuncs::direct3d_hook.unhook_all();
 		vfuncs::vguipanel_hook.unhook_all();
+		vfuncs::viewrender_hook.unhook_all();
+		vfuncs::clientmode_hook.unhook_all();
+		vfuncs::filesystem_hook.unhook_all();
 		vfuncs::vguisurf_hook.unhook_all();
+		vfuncs::bsp_query_hook.unhook_all();
 		vfuncs::mdlrender_hook.unhook_all();
 		vfuncs::clientmode_hook.unhook_all();
 		vfuncs::sound_hook.unhook_all();
 		vfuncs::sv_cheats.unhook_all();
-
+		vfuncs::render_view.unhook_all();
 		Glow::Get().Shutdown();
 	}
 }

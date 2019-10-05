@@ -45,5 +45,6 @@ namespace Hooks
 		inline vfunc_hook filesystem_hook;
 		inline vfunc_hook bsp_query_hook;
 		inline vfunc_hook sv_cheats;
+		inline vfunc_hook render_view;
 	}
 }

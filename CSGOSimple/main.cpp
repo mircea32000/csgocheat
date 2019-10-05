@@ -9,6 +9,7 @@
 #include "menu.hpp"
 #include "options.hpp"
 #include "render.hpp"
+#include "features/chams.hpp"
 
 DWORD WINAPI OnDllAttach(LPVOID base)
 {
@@ -34,7 +35,6 @@ DWORD WINAPI OnDllAttach(LPVOID base)
         InputSys::Get().Initialize();
 		Render::Get().Initialize();
         Menu::Get().Initialize();
-
         Hooks::Initialize();
         // Register some hotkeys.
         // - Note:  The function that is called when the hotkey is pressed

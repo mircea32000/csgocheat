@@ -5,211 +5,77 @@
 #include "../options.hpp"
 #include "../hooks.hpp"
 #include "../helpers/input.hpp"
-#include "../lagcomp.h"
 #include "../drawmodelexecute.hpp"
-Chams::Chams()
-{
-	std::ofstream("csgo\\materials\\simple_regular.vmt") << R"#("VertexLitGeneric"
-{
-  "$basetexture" "vgui/white_additive"
-  "$ignorez"      "0"
-  "$envmap"       ""
-  "$nofog"        "1"
-  "$model"        "1"
-  "$nocull"       "0"
-  "$selfillum"    "1"
-  "$halflambert"  "1"
-  "$znearer"      "0"
-  "$flat"         "1"
-}
-)#";
-	std::ofstream("csgo\\materials\\glowOverlay.vmt") << R"#("VertexLitGeneric" 
-{
-	"$additive" "1"
-	"$envmap" "models/effects/cube_white"
-	"$envmaptint" "[1 1 1]"
-	"$envmapfresnel" "1"
-	"$envmapfresnelminmaxexp" "[0 1 2]"
-	"$alpha" "0.8"
-}
-)#";
-	std::ofstream("csgo\\materials\\simple_ignorez.vmt") << R"#("VertexLitGeneric"
-{
-  "$basetexture" "vgui/white_additive"
-  "$ignorez"      "1"
-  "$envmap"       ""
-  "$nofog"        "1"
-  "$model"        "1"
-  "$nocull"       "0"
-  "$selfillum"    "1"
-  "$halflambert"  "1"
-  "$znearer"      "0"
-  "$flat"         "1"
-}
-)#";
-	std::ofstream("csgo\\materials\\simple_flat.vmt") << R"#("UnlitGeneric"
-{
-  "$basetexture" "vgui/white_additive"
-  "$ignorez"      "0"
-  "$envmap"       ""
-  "$nofog"        "1"
-  "$model"        "1"
-  "$nocull"       "0"
-  "$selfillum"    "1"
-  "$halflambert"  "1"
-  "$znearer"      "0"
-  "$flat"         "1"
-}
-)#";
+#include "../lagcomp.h"
+#include <string>
 
-	std::ofstream("csgo\\materials\\simple_ignorez_reflective.vmt") << R"#("VertexLitGeneric"
-{
-    "$ignorez"      "1"
-    "$basemapalphaphongmask"    "1"
-    "$basetexture"    "vgui/white"
-    "$halflambert"    "1"
-    "$nocull"    "1"
-    "$phong"    "1"
-    "$forcephong"    "1"
-    "$phongexponent"    "20"
-    "$phongboost"    "1.0"
-    "$rimlight"    "1"
-    "$rimlightboost"    "1"
-    "$rimlightexponent"    "10"
-    "$envmap"    "env_cubemap"
-    "$envmaptint"    "[0 0 0]"
-    "$normalmapalphaenvmask"    "1"
-}
-)#";
-
-	std::ofstream("csgo\\materials\\simple_regular_reflective.vmt") << R"#("VertexLitGeneric"
-{
- "$basetexture" "vgui/white_additive"
- "$ignorez"      "0"
- "$envmap"       "env_cubemap"
- "$normalmapalphaenvmapmask"  "1"
- "$envmapcontrast"             "1"
- "$nofog"        "1"
- "$model"        "1"
- "$nocull"       "0"
- "$selfillum"    "1"
- "$halflambert"  "1"
- "$znearer"      "0"
- "$flat"         "1"
-}
-)#";
-
-	std::ofstream("csgo\\materials\\simple_flat_ignorez.vmt") << R"#("UnlitGeneric"
-{
-  "$basetexture" "vgui/white_additive"
-  "$ignorez"      "1"
-  "$envmap"       ""
-  "$nofog"        "1"
-  "$model"        "1"
-  "$nocull"       "0"
-  "$selfillum"    "1"
-  "$halflambert"  "1"
-  "$znearer"      "0"
-  "$flat"         "1"
-}
-)#";
-	std::ofstream("csgo\\materials\\regular_reflective.vmt") << R"#("VertexLitGeneric" {
-    "$basemapalphaphongmask"    "1"
-    "$basetexture"    "vgui/white_additive"
-    "$halflambert"    "1"
-    "$nocull"    "1"
-    "$phong"    "1"
-    "$forcephong"    "1"
-    "$phongexponent"    "20"
-    "$phongboost"    "1.0"
-    "$rimlight"    "1"
-    "$rimlightboost"    "1"
-    "$rimlightexponent"    "10"
-    "$envmap"    "env_cubemap"
-    "$envmaptint"    "[0 0 0]"
-    "$normalmapalphaenvmask"    "1"
-    "$envmapcontrast"             "1"
-    "$reflectivity" "[1, 1, 1]"
-}
-)#";
-	materialRegular = g_MatSystem->FindMaterial("simple_regular", TEXTURE_GROUP_MODEL);
-	materialGlow = g_MatSystem->FindMaterial("glowOverlay", TEXTURE_GROUP_MODEL);
-	materialRegularIgnoreZ = g_MatSystem->FindMaterial("simple_ignorez", TEXTURE_GROUP_MODEL);
-	materialFlatIgnoreZ = g_MatSystem->FindMaterial("simple_flat_ignorez", TEXTURE_GROUP_MODEL);
-	materialReflective = g_MatSystem->FindMaterial("regular_reflective", TEXTURE_GROUP_MODEL);
-
-	materialFlat = g_MatSystem->FindMaterial("simple_flat", TEXTURE_GROUP_MODEL);
-	materialMetall = g_MatSystem->FindMaterial("simple_ignorez_reflective", TEXTURE_GROUP_MODEL);
-	materialMetallnZ = g_MatSystem->FindMaterial("simple_regular_reflective", TEXTURE_GROUP_MODEL);
+Chams::Chams() {
+	std::ofstream("csgo\\materials\\antion_reflective.vmt") << R"#("VertexLitGeneric" {
+            "$basemapalphaphongmask"    "1"
+            "$basetexture"    "vgui/white"
+            "$halflambert"    "1"
+            "$nocull"    "1"
+            "$phong"    "1"
+            "$forcephong"    "1"
+            "$phongexponent"    "20"
+            "$phongboost"    "1.0"
+            "$rimlight"    "1"
+            "$rimlightboost"    "1"
+            "$rimlightexponent"    "10"
+            "$envmap"    "env_cubemap"
+            "$envmaptint"    "[0 0 0]"
+            "$normalmapalphaenvmask"    "1"
+		})#";
+	std::ofstream("csgo\\materials\\antion_glow.vmt") << R"#("VertexLitGeneric" {
+            "$additive" "1"
+            "$envmap" "models/effects/cube_white"
+            "$envmaptint" "[1 1 1]"
+            "$envmapfresnel" "1"
+            "$envmapfresnelminmaxexp" "[0 1 2]"
+            "$alpha" "0.8"
+		})#";
+	materialRegular = g_MatSystem->FindMaterial("debug/debugambientcube", TEXTURE_GROUP_MODEL);
+	materialFlat = g_MatSystem->FindMaterial("debug/debugdrawflat", TEXTURE_GROUP_MODEL);
+	materialGlass = g_MatSystem->FindMaterial("models/inventory_items/trophy_majors/gloss", TEXTURE_GROUP_MODEL);
+	materialReflective = g_MatSystem->FindMaterial("antion_reflective", TEXTURE_GROUP_MODEL);
+	materialGlow = g_MatSystem->FindMaterial("antion_glow", TEXTURE_GROUP_MODEL);
 }
 
-Chams::~Chams()
-{
-	std::remove("csgo\\materials\\simple_regular.vmt");
-	std::remove("csgo\\materials\\simple_ignorez.vmt");
-	std::remove("csgo\\materials\\glowOverlay.vmt");
-	std::remove("csgo\\materials\\simple_flat.vmt");
-	std::remove("csgo\\materials\\regular_reflective.vmt");
-	std::remove("csgo\\materials\\simple_flat_ignorez.vmt");
-	std::remove("csgo\\materials\\simple_ignorez_reflective.vmt");
-	std::remove("csgo\\materials\\simple_regular_reflective.vmt");
+Chams::~Chams() {
+	std::remove("csgo\\materials\\antion_reflective.vmt");
+	std::remove("csgo\\materials\\antion_glow.vmt");
 }
 
 
-void Chams::OverrideMaterial(bool ignoreZ, int option, const Color& rgba)
-{
+void Chams::OverrideMaterial(bool ignoreZ, int option, const Color& rgba) {
 	IMaterial* material = nullptr;
-
 	bool wireframe = false;
-	bool glass = false;
+
 	switch (option)
 	{
-	case 0://regular
-		if (ignoreZ)
-			material = materialRegularIgnoreZ;
-		else
-			material = materialRegular;
+	case 0:
+		material = materialRegular;
 		break;
-	case 1: //flat
-		if (ignoreZ)
-			material = materialFlatIgnoreZ;
-		else
-			material = materialFlat;
+	case 1:
+		material = materialFlat;
 		break;
-	case 2: // glow
-		material = materialGlow;
+	case 2:
+		material = materialGlass;
 		break;
-	case 3: //metalic
-		if (ignoreZ)
-			material = materialMetall;
-		else
-			material = materialReflective;
+	case 3:
+		material = materialReflective;
 		break;
-	case 4://glass
+	case 4:
 		if (option == 4)
-			glass = true;
-		else
-			glass = false;
-		break;
-	case 5://wireframe
-		if (option == 5)
+		{
+			material = materialRegular;
 			wireframe = true;
+		}
 		else
 			wireframe = false;
 		break;
 	}
-
-	if(ignoreZ)
-		material->SetMaterialVarFlag(MATERIAL_VAR_IGNOREZ, ignoreZ);
-
-	if (glass) {
-		material = materialFlat;
-		material->AlphaModulate(0.45f);
-	}
-	else {
-		material->AlphaModulate(
-			rgba.a() / 255.0f);
-	}
+	material->SetMaterialVarFlag(MATERIAL_VAR_IGNOREZ, ignoreZ);
 
 	material->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, wireframe);
 	material->ColorModulate(
@@ -217,19 +83,7 @@ void Chams::OverrideMaterial(bool ignoreZ, int option, const Color& rgba)
 		rgba.g() / 255.0f,
 		rgba.b() / 255.0f);
 
-	if (g_Options.chams_gloss && g_Options.chams_player_metalic) {
-
-		Color col = g_Options.color_chams_gloss;
-
-		bool bFound = false;
-		auto pVar = materialMetallnZ->FindVar("$envmaptint", &bFound);
-		if (bFound)
-			(*(void(__thiscall * *)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, col.r() / 255.f, col.g() / 255.f, col.b() / 255.f); //tfw no IMaterialVar class
-		g_MdlRender->ForcedMaterialOverride(materialMetallnZ);
-	}
-
 	g_MdlRender->ForcedMaterialOverride(material);
-
 }
 
 
@@ -246,7 +100,8 @@ void Chams::OnDrawModelExecute(
 	bool is_arm = strstr(mdl->szName, "arms") != nullptr;
 	bool is_player = strstr(mdl->szName, "models/player") != nullptr;
 	bool is_sleeve = strstr(mdl->szName, "sleeve") != nullptr;
-	//bool is_weapon = strstr(mdl->szName, "weapons/v_")  != nullptr;
+	std::string model_name = mdl->szName;
+	bool is_weapon = (model_name.find("weapons/v") != std::string::npos && model_name.find("arms") == std::string::npos);
 
 	if (is_player && g_Options.chams_player_enabled) {
 		// 
@@ -260,7 +115,7 @@ void Chams::OnDrawModelExecute(
 				float record_time = std::abs(g_GlobalVars->curtime - records.m_fSimtime) * 5.f;
 				if (records.m_fSimtime && records.m_fSimtime + 1 > g_LocalPlayer->m_flSimulationTime())
 				{
-					
+
 					Color color;
 
 					if (g_Options.chams_backtrack_rainbow)
@@ -292,13 +147,37 @@ void Chams::OnDrawModelExecute(
 
 			if (g_Options.chams_player_ignorez) {
 				OverrideMaterial(true, g_Options.chams_type, clr_back);
-
 				fnDME(g_MdlRender, 0, ctx, state, info, matrix);
-
 				OverrideMaterial(false, g_Options.chams_type, clr_front);
 			}
 			else {
 				OverrideMaterial(false, g_Options.chams_type, clr_front);
+				if (g_Options.chams_type == 3) {
+
+					Color col = g_Options.color_chams_gloss;
+
+					bool bFound = false;
+					if (auto pVar = materialReflective->FindVar("$envmaptint", &bFound); bFound)
+					{
+						(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
+					}
+					g_MdlRender->ForcedMaterialOverride(materialReflective);
+				}
+				fnDME(g_MdlRender, 0, ctx, state, info, matrix);
+				if (g_Options.chams_glowoverlay)
+				{
+					Color col = g_Options.color_chams_glowoverlay;
+					IMaterial* mat = nullptr;
+					if (mat == nullptr)
+						mat = materialGlow;
+
+					bool bFound = false;
+					if (auto pVar = mat->FindVar("$envmaptint", &bFound); bFound)
+					{
+						(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
+					}
+					g_MdlRender->ForcedMaterialOverride(mat);
+				}
 			}
 		}
 	}
@@ -331,7 +210,64 @@ void Chams::OnDrawModelExecute(
 			}
 			else {
 				OverrideMaterial(false, g_Options.chams_type_arms, g_Options.color_chams_arms_visible);
+				if (g_Options.chams_type_arms == 3) {
+
+					Color col = g_Options.color_chams_arms_gloss;
+
+					bool bFound = false;
+					if (auto pVar = materialReflective->FindVar("$envmaptint", &bFound); bFound)
+					{
+						(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
+					}
+					g_MdlRender->ForcedMaterialOverride(materialReflective);
+				}
+				fnDME(g_MdlRender, 0, ctx, state, info, matrix);
+				if (g_Options.chams_glowoverlayarms)
+				{
+					Color col = g_Options.color_chams_arms_glowoverlay;
+					IMaterial* mat = nullptr;
+					if (mat == nullptr)
+						mat = materialGlow;
+
+					bool bFound = false;
+					if (auto pVar = mat->FindVar("$envmaptint", &bFound); bFound)
+					{
+						(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
+					}
+					g_MdlRender->ForcedMaterialOverride(mat);
+				}
+
 			}
+		}
+	}
+	else if (is_weapon && g_Options.chams_weapon_enabled)
+	{
+		OverrideMaterial(false, g_Options.chams_type_weapon, g_Options.color_chams_weapon_visible);
+		if (g_Options.chams_type_weapon == 3) {
+
+			Color col = g_Options.color_chams_weapon_gloss;
+
+			bool bFound = false;
+			if (auto pVar = materialReflective->FindVar("$envmaptint", &bFound); bFound)
+			{
+				(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
+			}
+			g_MdlRender->ForcedMaterialOverride(materialReflective);
+		}
+		fnDME(g_MdlRender, 0, ctx, state, info, matrix);
+		if (g_Options.chams_glowoverlayweapon)
+		{
+			Color col = g_Options.color_chams_weapon_glowoverlay;
+			IMaterial* mat = nullptr;
+			if (mat == nullptr)
+				mat = materialGlow;
+
+			bool bFound = false;
+			if (auto pVar = mat->FindVar("$envmaptint", &bFound); bFound)
+			{
+				(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
+			}
+			g_MdlRender->ForcedMaterialOverride(mat);
 		}
 	}
 }
