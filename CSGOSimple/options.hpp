@@ -122,10 +122,17 @@ public:
 		OPTION(bool, chams_player_wireframe, false);
 		OPTION(bool, chams_player_flat, false);
 		OPTION(bool, chams_player_ignorez, false);
+
+		OPTION(bool, chams_player_vis, true);
+		OPTION(bool, chams_player_invis, true);
+		OPTION(bool, chams_player_teammate_vis, true);
+		OPTION(bool, chams_player_teammate_invis, true);
+
 		OPTION(bool, chams_player_glass, false);
 		OPTION(bool, chams_player_metalic, false);
 		OPTION(bool, chams_player_glow, false);
 		OPTION(bool, chams_arms_enabled, false);
+		OPTION(bool, chams_weapon_enabled, false);
 		OPTION(bool, chams_backtrack_rainbow, false);
 		OPTION(bool, chams_arms_wireframe, false);
 		OPTION(bool, chams_arms_flat, false);
@@ -144,7 +151,9 @@ public:
 		OPTION(bool, misc_no_hands, false);
 		OPTION(bool, misc_thirdperson, false);
 		OPTION(bool, misc_showranks, true);
-		OPTION(bool, chams_gloss, true);
+		OPTION(bool, chams_glowoverlay, true);
+		OPTION(bool, chams_glowoverlayweapon, true);
+		OPTION(bool, chams_glowoverlayarms, true);
 		OPTION(bool, misc_watermark, true);
 		OPTION(float, misc_thirdperson_dist, 50.f);
 		OPTION(int, viewmodel_fov, 68);
@@ -164,6 +173,7 @@ public:
 		// COLORS
 		// 
 		OPTION(Color, color_chams_gloss, Color(0, 128, 255));
+		OPTION(Color, color_chams_glowoverlay, Color(0, 128, 255));
 		OPTION(Color, color_fov_outline, Color(0, 128, 255));
 		OPTION(Color, color_fov_filled, Color(0, 128, 255));
 		OPTION(Color, color_esp_ally_visible, Color(0, 128, 255));
@@ -190,6 +200,15 @@ public:
 		OPTION(Color, color_chams_player_enemy_visible, Color(255, 0, 0));
 		OPTION(Color, color_chams_player_enemy_occluded, Color(255, 128, 0));
 		OPTION(Color, color_chams_arms_visible, Color(0, 128, 255));
+
+		OPTION(Color, color_chams_weapon_visible, Color(0, 128, 255));
+
+		OPTION(Color, color_chams_arms_gloss, Color(0, 128, 255));
+		OPTION(Color, color_chams_arms_glowoverlay, Color(0, 128, 255));
+
+		OPTION(Color, color_chams_weapon_gloss, Color(0, 128, 255));
+		OPTION(Color, color_chams_weapon_glowoverlay, Color(0, 128, 255));
+
 		OPTION(Color, color_chams_arms_occluded, Color(0, 128, 255));
 		OPTION(Color, color_watermark, Color(255, 255, 255)); // no menu config cuz its useless
 

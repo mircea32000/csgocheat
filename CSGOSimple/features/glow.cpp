@@ -84,6 +84,7 @@ void Glow::Run()
                 entity->m_bShouldGlow() = true;
                 color = g_Options.color_glow_chickens;
                 break;
+
             case ClassId_CBaseAnimating:
                 if(!g_Options.glow_defuse_kits)
                     continue;

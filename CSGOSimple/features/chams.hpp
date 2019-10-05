@@ -10,31 +10,26 @@ class IMaterial;
 class Color;
 
 class Chams
-    : public Singleton<Chams>
+	: public Singleton<Chams>
 {
-    friend class Singleton<Chams>;
+	friend class Singleton<Chams>;
 
-    Chams();
-    ~Chams();
-
+	Chams();
+	~Chams();
 
 public:
 	void OnDrawModelExecute(
-        IMatRenderContext* ctx,
-        const DrawModelState_t &state,
-        const ModelRenderInfo_t &pInfo,
-        matrix3x4_t *pCustomBoneToWorld);
+		IMatRenderContext* ctx,
+		const DrawModelState_t& state,
+		const ModelRenderInfo_t& pInfo,
+		matrix3x4_t* pCustomBoneToWorld);
 
 private:
 	void OverrideMaterial(bool ignoreZ, int option, const Color& rgba);
 
-    IMaterial* materialRegular = nullptr;
-    IMaterial* materialRegularIgnoreZ = nullptr;
-    IMaterial* materialFlatIgnoreZ = nullptr;
+	IMaterial* materialRegular = nullptr;
+	IMaterial* materialFlat = nullptr;
 	IMaterial* materialReflective = nullptr;
-
-    IMaterial* materialFlat = nullptr;
-	IMaterial* materialMetall = nullptr;
-	IMaterial* materialMetallnZ = nullptr;
+	IMaterial* materialGlass = nullptr;
 	IMaterial* materialGlow = nullptr;
 };

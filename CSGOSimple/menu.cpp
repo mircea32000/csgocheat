@@ -110,7 +110,7 @@ void RenderEspTab()
     static char* esp_tab_names[] = { "ESP", "GLOW", "CHAMS" };
 	const char* esp_box_types[] = {  "Full", "Corners", "3D" };
 	const char* weaponname_types[] = { "Name", "Icons" };
-	const char* chams_type[] = { "Normal", "Flat", "Glow", "Metallic", "Glass", "Wireframe" };
+	const char* chams_type[] = { "Regular" , "Flat", "Glass", "Reflective", "Wireframe"};
 
     static int   active_esp_tab = 0;
 
@@ -240,11 +240,14 @@ void RenderEspTab()
 				ImGui::Checkbox("Ignore-Z##player", g_Options.chams_player_ignorez);
 
 				ImGui::Combo("Type##cgams", g_Options.chams_type, chams_type, IM_ARRAYSIZE(chams_type));
+				if (g_Options.chams_type == 3) {
+					ImGuiEx::ColorEdit4("Gloss", g_Options.color_chams_gloss);
+				}
+				ImGui::Checkbox("Glow overlay##player", g_Options.chams_glowoverlay); 
+				ImGuiEx::ColorEdit4("Overlay col", g_Options.color_chams_glowoverlay);
 
-				ImGui::Checkbox("Gloss", g_Options.chams_gloss);
                 ImGui::PushItemWidth(110);
                 ImGuiEx::ColorEdit4("Ally (Visible)", g_Options.color_chams_player_ally_visible);
-				ImGuiEx::ColorEdit4("Gloss", g_Options.color_chams_gloss);
                 ImGuiEx::ColorEdit4("Ally (Occluded)", g_Options.color_chams_player_ally_occluded);
                 ImGuiEx::ColorEdit4("Enemy (Visible)", g_Options.color_chams_player_enemy_visible);
                 ImGuiEx::ColorEdit4("Enemy (Occluded)", g_Options.color_chams_player_enemy_occluded);
@@ -256,15 +259,34 @@ void RenderEspTab()
 
             ImGui::BeginGroupBox("Arms");
             {
-                ImGui::Checkbox("Enabled", g_Options.chams_arms_enabled);
+                ImGui::Checkbox("Enabled##weapon", g_Options.chams_arms_enabled);
 				ImGui::Combo("Type##cgamarmss", g_Options.chams_type_arms, chams_type, IM_ARRAYSIZE(chams_type));
-
+				if (g_Options.chams_type_arms == 3) {
+					ImGuiEx::ColorEdit4("Gloss##arms", g_Options.color_chams_arms_gloss);
+				}
+				ImGui::Checkbox("Glow overlay##arms", g_Options.chams_glowoverlayarms);
+				ImGuiEx::ColorEdit4("Overlay col##arms", g_Options.color_chams_arms_glowoverlay);
                 ImGui::PushItemWidth(110);
                 ImGuiEx::ColorEdit4("Color (Visible)", g_Options.color_chams_arms_visible);
                 ImGuiEx::ColorEdit4("Color (Occluded)", g_Options.color_chams_arms_occluded);
                 ImGui::PopItemWidth();
             }
             ImGui::EndGroupBox();
+			ImGui::NextColumn();
+			ImGui::BeginGroupBox("Weapons");
+			{
+				ImGui::Checkbox("Enabled##weapon", g_Options.chams_weapon_enabled);
+				ImGui::Combo("Type##cacamacasada", g_Options.chams_type_weapon, chams_type, IM_ARRAYSIZE(chams_type));
+				if (g_Options.chams_type_weapon == 3) {
+					ImGuiEx::ColorEdit4("Gloss##weapon", g_Options.color_chams_weapon_gloss);
+				}
+				ImGui::Checkbox("Glow overlay##weapon", g_Options.chams_glowoverlayweapon);
+				ImGuiEx::ColorEdit4("Overlay col##weapon", g_Options.color_chams_weapon_glowoverlay);
+				ImGui::PushItemWidth(110);
+				ImGuiEx::ColorEdit4("Color (Visible)", g_Options.color_chams_weapon_visible);
+				ImGui::PopItemWidth();
+			}
+			ImGui::EndGroupBox();
 
             ImGui::Columns(1, nullptr, false);
             ImGui::PopStyleVar();
