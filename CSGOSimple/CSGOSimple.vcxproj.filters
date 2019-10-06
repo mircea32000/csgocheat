@@ -278,6 +278,12 @@
     <ClCompile Include="sceneend.cpp">
       <Filter>Source Files\hooks\SceneEnd</Filter>
     </ClCompile>
+    <ClCompile Include="hitmarker.cc">
+      <Filter>Source Files\features\Visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="valve_sdk\misc\BaseHandle.hpp">
@@ -642,6 +648,18 @@
     </ClInclude>
     <ClInclude Include="sceneend.h">
       <Filter>Source Files\hooks\SceneEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="Hitmarker.h">
+      <Filter>Header Files\features</Filter>
+    </ClInclude>
+    <ClInclude Include="Listener.hpp">
+      <Filter>Header Files\features</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HitmarkerSounds.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

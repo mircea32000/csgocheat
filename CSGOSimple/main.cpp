@@ -8,9 +8,10 @@
 #include "hooks.hpp"
 #include "menu.hpp"
 #include "options.hpp"
+#include "Listener.hpp"
 #include "render.hpp"
 #include "features/chams.hpp"
-
+#include "Hitmarker.h"
 DWORD WINAPI OnDllAttach(LPVOID base)
 {
     // 
@@ -39,8 +40,9 @@ DWORD WINAPI OnDllAttach(LPVOID base)
         // Register some hotkeys.
         // - Note:  The function that is called when the hotkey is pressed
         //          is called from the WndProc thread, not this thread.
-        // 
-
+        //
+		item_purchase::Get().initialize();
+		g_Hitmarker->Init();
         // Panic button
         InputSys::Get().RegisterHotkey(VK_DELETE, [base]() {
             g_Unload = true;
