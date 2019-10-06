@@ -45,10 +45,14 @@ public:
 		void RenderSnapline();
 
 		const bool CalculateBBox(bbox_t& box);
-
-
+	private:
+		struct
+		{
+			int left, top, right, bottom;
+		}Box;
 	};
 	void RenderCrosshair();
+	void RenderHitmarker();
 	void RenderFOV();
 	void RenderScope();
 	void RenderWeapon(C_BaseCombatWeapon* ent);
@@ -60,5 +64,4 @@ public:
 	void AddToDrawList();
 	void Render();
 
-	
 };

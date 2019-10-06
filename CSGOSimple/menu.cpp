@@ -110,6 +110,7 @@ void RenderEspTab()
     static char* esp_tab_names[] = { "ESP", "GLOW", "CHAMS" };
 	const char* esp_box_types[] = {  "Full", "Corners", "3D" };
 	const char* weaponname_types[] = { "Name", "Icons" };
+	const char* sounds_hitmarker[] = { "None", "COD", "Oof", "Penguware", "Skeet" };
 	const char* chams_type[] = { "Regular" , "Flat", "Glass", "Reflective", "Wireframe"};
 
     static int   active_esp_tab = 0;
@@ -171,7 +172,9 @@ void RenderEspTab()
 			ImGui::Checkbox("Spectator list", g_Options.esp_spectator_list);
 			ImGui::Checkbox("Radar", g_Options.esp_radar);
 			ImGui::Checkbox("Remove scope", g_Options.esp_removescope);
-
+			ImGui::Checkbox("Player hitmarkers", g_Options.esp_player_hitmarker);
+			ImGui::SliderInt("Hitmarker size", g_Options.esp_hitmarker_size, 1, 10);
+			ImGui::Combo("Sound", g_Options.esp_hitmarker_sound, sounds_hitmarker, IM_ARRAYSIZE(sounds_hitmarker));
             ImGui::NextColumn();
 
             ImGui::PushItemWidth(100);

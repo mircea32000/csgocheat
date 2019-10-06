@@ -92,6 +92,7 @@ public:
 		OPTION(bool, esp_spectator_list, false);
 		OPTION(bool, esp_player_snaplines, false);
 		OPTION(bool, esp_crosshair, false);
+		OPTION(bool, esp_player_hitmarker, false);
 		OPTION(bool, esp_removescope, false);
 		OPTION(bool, esp_dropped_weapons, false);
 		OPTION(bool, esp_defuse_kit, false);
@@ -101,6 +102,8 @@ public:
 		OPTION(bool, bHideHeader, false);
 		OPTION(int, iZoom, 3000);
 		OPTION(int, iAlpha, 100);
+		OPTION(int, esp_hitmarker_sound, 0);
+		OPTION(int, esp_hitmarker_size, 1);
 		// 
 		// GLOW
 		// 

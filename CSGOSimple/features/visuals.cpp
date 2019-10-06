@@ -7,7 +7,9 @@
 #include "../helpers/utils.hpp"
 #include "../lagcomp.h"
 #include "../spectators.h"
+#include "../Hitmarker.h"
 #include "../nade_bullshit.h"
+#include "../Globals.h"
 RECT GetBBox(C_BaseEntity* ent)
 {
 	RECT rect{};
@@ -188,7 +190,7 @@ void Visuals::Player::RenderBox()
 	case 1:
 		Render::Get().RenderBoxByType(ctx.bbox.left, ctx.bbox.top, ctx.bbox.right, ctx.bbox.bottom, ctx.clr, 1,1);
 		Render::Get().RenderBoxByType(ctx.bbox.left - 1, ctx.bbox.top - 1, ctx.bbox.right + 1, ctx.bbox.bottom + 1, Color::Black, 1, 1);
-		Render::Get().RenderBoxByType(ctx.bbox.left + 1, ctx.bbox.top + 1, ctx.bbox.right - 1, ctx.bbox.bottom - 1, Color::Black, 1, 1);
+	//	Render::Get().RenderBoxByType(ctx.bbox.left + 1, ctx.bbox.top + 1, ctx.bbox.right - 1, ctx.bbox.bottom - 1, Color::Black, 1, 1);
 	break;
 	case 2:
 		ThreeDBox(ctx.pl->GetCollideable()->OBBMins(), ctx.pl->GetCollideable()->OBBMaxs(), ctx.pl->GetRenderOrigin(), ctx.clr);
@@ -209,11 +211,9 @@ void Visuals::Player::RenderHealth()
 {
 	auto  hp = ctx.pl->m_iHealth();
 	float box_h = (float)fabs(ctx.bbox.bottom - ctx.bbox.top);
-	//float off = (box_h / 6.f) + 5;
-	float off = 8;
+	float off = 6;
 
-	int height = (box_h * hp) / 100;
-
+	int height = box_h - (((box_h * hp) / 100));
 	int green = int(hp * 2.55f);
 	int red = 255 - green;
 
@@ -222,8 +222,8 @@ void Visuals::Player::RenderHealth()
 	int w = 4;
 	int h = box_h;
 
-	Render::Get().RenderBox(x, y, x + w, y + h, Color::Black, 1.f, true);
-	Render::Get().RenderBox(x + 1, y + 1, x + w - 1, y + height - 2, Color(red, green, 0, 255), 1.f, true);
+	Render::Get().RenderBoxFilled(x, y - 1, x + w, y + h + 2, Color::Black, 1.f, true);
+	Render::Get().RenderBox(x + 1, y + height, x + w - 1, y + h + 1 , Color(red, green, 0, 255), 1.f, true);
 }
 
 //--------------------------------------------------------------------------------
@@ -353,6 +353,25 @@ void Visuals::RenderCrosshair()
 
 	Render::Get().RenderLine(x - 8, y, x + 8, y, g_Options.color_esp_crosshair);
 	Render::Get().RenderLine(x, y - 8, x, y + 8, g_Options.color_esp_crosshair);
+}
+//--------------------------------------------------------------------------------
+void Visuals::RenderHitmarker()
+{
+	if (G::hitmarkeralpha < 0.f)
+		G::hitmarkeralpha = 0.f;
+	else if (G::hitmarkeralpha > 0.f)
+		G::hitmarkeralpha -= 0.01f;
+
+	int W, H;
+	g_EngineClient->GetScreenSize(W, H);
+
+	if (G::hitmarkeralpha > 0.f)
+	{
+		Render::Get().RenderLine(W / 2 - 10, H / 2 - 10, W / 2 - 5, H / 2 - 5, Color(240, 240, 240, static_cast<int>(G::hitmarkeralpha * 255)));
+		Render::Get().RenderLine(W / 2 - 10, H / 2 + 10, W / 2 - 5, H / 2 + 5, Color(240, 240, 240, static_cast<int>(G::hitmarkeralpha * 255)));
+		Render::Get().RenderLine(W / 2 + 10, H / 2 - 10, W / 2 + 5, H / 2 - 5, Color(240, 240, 240, static_cast<int>(G::hitmarkeralpha * 255)));
+		Render::Get().RenderLine(W / 2 + 10, H / 2 + 10, W / 2 + 5, H / 2 + 5, Color(240, 240, 240, static_cast<int>(G::hitmarkeralpha * 255)));
+	}
 }
 //--------------------------------------------------------------------------------
 void Visuals::RenderScope()
@@ -651,6 +670,12 @@ void Visuals::AddToDrawList() {
 
 	if (g_Options.esp_crosshair)
 		RenderCrosshair();
+
+	if (g_Options.esp_player_hitmarker)
+	{
+		g_Hitmarker->Paint();
+		RenderHitmarker();
+	}
 
 	if (g_Options.esp_draw_fov)
 		RenderFOV();
