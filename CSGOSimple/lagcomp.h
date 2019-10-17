@@ -35,7 +35,8 @@ public:
 	void DoBackTrack(CUserCmd* cmd);
 	bool IsTimeValid(float flTime);
 	void DeleteInvalidRecords();
-	std::array<EntityRecord_Struct, 129> m_Records;
+	//std::array<EntityRecord_Struct, 129> m_Records;
+	std::map<int, EntityRecord_Struct> m_Records;
 	void UpdateRecords(int i);
 
 private:

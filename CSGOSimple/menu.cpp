@@ -302,6 +302,9 @@ void RenderMiscTab()
 {
 	bool placeholder_true = true;
 
+	const char* opt_LagCompType[] = { "None", "Hitchance", "Spread limit" };
+	const char* opt_MultiHitboxes[7] = { "Head", "Neck", "Chest", "Stomach", "Pelvis", "Arms", "Legs" };
+
 	auto& style = ImGui::GetStyle();
 	float group_w = ImGui::GetCurrentWindow()->Size.x - style.WindowPadding.x * 2;
 
@@ -331,7 +334,108 @@ void RenderMiscTab()
 		ImGui::SliderFloat("Red", g_Options.mat_ambient_light_r, 0, 1);
 		ImGui::SliderFloat("Green", g_Options.mat_ambient_light_g, 0, 1);
 		ImGui::SliderFloat("Blue", g_Options.mat_ambient_light_b, 0, 1);
+		ImGui::Checkbox("Enabled##Rage", &g_Options.bAimBotEnabled);
+		ImGui::Checkbox("Auto-Shoot##Rage", &g_Options.bAutoFire);
+		ImGui::Checkbox("Silent Aim##Rage", &g_Options.bSilentAim);
 
+		ImGui::Combo("Hitchance Type##Rage", &g_Options.iHitChanceType, opt_LagCompType, ARRAYSIZE(opt_LagCompType));
+
+		/*
+		A - DEAGLE
+		Y - CT AUTO
+		Z - AWP
+		W - AK47
+		a - SCOUT
+		*/
+
+		/*	int niggertabsfaqiu = 6; //auto, scout, awp, deagle , rifle , other
+			float flWfaqiu = (ImGui::GetContentRegionAvailWidth() / niggertabsfaqiu) - (ImGui::GetStyle().ItemSpacing.x - ImGui::GetStyle().ItemSpacing.x / niggertabsfaqiu);
+			ImGui::PushFont(fontLegitIcons);
+			if (ImGui::Button("Y", ImVec2{ flWfaqiu, 25 }))//auto
+				hitchancetabs = 0;
+			ImGui::SameLine();
+			if (ImGui::Button("a", ImVec2{ flWfaqiu, 25 })) //scout
+				hitchancetabs = 1;
+			ImGui::SameLine();
+			if (ImGui::Button("Z", ImVec2{ flWfaqiu, 25 })) //awp
+				hitchancetabs = 2;
+			ImGui::SameLine();
+			if (ImGui::Button("A", ImVec2{ flWfaqiu, 25 })) //deagle
+				hitchancetabs = 3;
+			ImGui::SameLine();
+			if (ImGui::Button("W", ImVec2{ flWfaqiu, 25 })) //rifles
+				hitchancetabs = 4;
+			ImGui::PopFont();
+			ImGui::SameLine();
+			if (ImGui::Button("Other", ImVec2{ flWfaqiu, 25 }))
+				hitchancetabs = 5;
+
+			if (hitchancetabs == 0) {
+				ImGui::Text("Autos:");
+				ImGui::SliderInt("Hitchance##auto", &g_Options.rage_auto_hitchance, 0, 100);
+				ImGui::SliderInt("Min Damage##auto", &g_Options.rage_auto_mindmg, 1, 100);
+			}
+
+			if (hitchancetabs == 1) {
+				ImGui::Text("Scout:");
+				ImGui::SliderInt("Hitchance##scout", &g_Options.scout_auto_hitchance, 0, 100);
+				ImGui::SliderInt("Min Damage##scout", &g_Options.scout_auto_mindmg, 1, 100);
+			}
+
+			if (hitchancetabs == 2) {
+				ImGui::Text("AWP:");
+				ImGui::SliderInt("Hitchance##awp", &g_Options.awp_auto_hitchance, 0, 100);
+				ImGui::SliderInt("Min Damage##awp", &g_Options.rage_awp_mindmg, 1, 100);
+			}
+
+			if (hitchancetabs == 3) {
+				ImGui::Text("Deagle:");
+				ImGui::SliderInt("Hitchance##deagle", &g_Options.rage_deagle_hitchance, 0, 100);
+				ImGui::SliderInt("Min Damage##deagle", &g_Options.rage_deagle_mindmg, 1, 100);
+			}
+
+			if (hitchancetabs == 4) {
+				ImGui::Text("Rifles:");
+				ImGui::SliderInt("Hitchance##rifles", &g_Options.rage_rifle_hitchance, 0, 100);
+				ImGui::SliderInt("Min Damage##rifles", &g_Options.rage_rifle_mindmg, 1, 100);
+			}
+			*/
+			//	if (hitchancetabs == 5) {
+			//		ImGui::Text("Other:");
+		ImGui::SliderInt("Hitchance##rage", &g_Options.iHitChance, 0, 100);
+		ImGui::SliderInt("Min Damage##rage", &g_Options.iMinDamage, 1, 100);
+		//	}
+
+		ImGui::Text("Hitbox Selection");
+		ImGui::BeginChild("#hitboxselection", ImVec2(0, 120), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+		for (int i = 0; i < ARRAYSIZE(opt_MultiHitboxes); ++i)
+		{
+			ImGui::Selectable(opt_MultiHitboxes[i], &g_Options.bHitboxSelection[i]);
+		}
+		ImGui::EndChild();
+	}
+	ImGui::NextColumn();
+	{
+		ImGui::Text("Multipoint");
+		ImGui::BeginChild("#MULTIPOINT", ImVec2(0, 120), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+		for (int i = 0; i < ARRAYSIZE(opt_MultiHitboxes); ++i)
+		{
+			ImGui::Selectable(opt_MultiHitboxes[i], &g_Options.bMultiPointSelection[i]);
+		}
+		ImGui::EndChild();
+
+		ImGui::SliderInt("Head scale##rage", &g_Options.iHeadScale, 0, 100);
+		ImGui::SliderInt("Neck scale##rage", &g_Options.iNeckScale, 0, 100);
+		ImGui::SliderInt("Chest scale##rage", &g_Options.iChestScale, 0, 100);
+		ImGui::SliderInt("Stomach scale##rage", &g_Options.iStomachScale, 0, 100);
+		ImGui::SliderInt("Pelvis scale##rage", &g_Options.iPelvisScale, 0, 100);
+		ImGui::SliderInt("Arms scale##rage", &g_Options.iArmsScale, 0, 100);
+		ImGui::SliderInt("Legs scale##rage", &g_Options.iLegsScale, 0, 100);
+
+		//	ImGui::Checkbox("Anti-Aim##Rage", &g_Options.bAntiAim);
+		//	ImGui::Combo("Pitch##Rage", &g_Options.iPitch, opt_pitch, 6);
+		//	ImGui::Combo("Yaw##Rage", &g_Options.iYaw, opt_yaw, 3);
+		//	ImGui::Checkbox("At Targets##Rage", &g_Options.bYawAtTargets);
 
 	//	ImGui::BeginGroupBox("##shutyomouf");
 		//{

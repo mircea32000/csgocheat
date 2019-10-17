@@ -90,6 +90,9 @@
     <Filter Include="Source Files\hooks\SceneEnd">
       <UniqueIdentifier>{e758d176-62d9-468c-9404-0170f0ee38e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\features\Ragebot">
+      <UniqueIdentifier>{7a77fd60-75cf-4c9a-a1de-e5ee4ace54fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Helpers\math.cpp">
@@ -283,6 +286,18 @@
     </ClCompile>
     <ClCompile Include="Globals.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rage.cc">
+      <Filter>Source Files\features\Ragebot</Filter>
+    </ClCompile>
+    <ClCompile Include="autowall.cpp">
+      <Filter>Source Files\features\Ragebot</Filter>
+    </ClCompile>
+    <ClCompile Include="antiaim.cpp">
+      <Filter>Source Files\features\Ragebot</Filter>
+    </ClCompile>
+    <ClCompile Include="fixmovement.cpp">
+      <Filter>Source Files\features\Ragebot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -660,6 +675,18 @@
     </ClInclude>
     <ClInclude Include="HitmarkerSounds.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ragebot.h">
+      <Filter>Source Files\features\Ragebot</Filter>
+    </ClInclude>
+    <ClInclude Include="autowall.h">
+      <Filter>Source Files\features\Ragebot</Filter>
+    </ClInclude>
+    <ClInclude Include="antiaim.h">
+      <Filter>Source Files\features\Ragebot</Filter>
+    </ClInclude>
+    <ClInclude Include="fixmovement.h">
+      <Filter>Source Files\features\Ragebot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

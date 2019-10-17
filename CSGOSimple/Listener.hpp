@@ -87,4 +87,4 @@ private:
 	item_purchase_listener  listener;
 };
 
-item_purchase purchase;
+extern item_purchase purchase;

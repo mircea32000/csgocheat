@@ -7,29 +7,77 @@
 #define TICKS_TO_TIME(t) ( g_GlobalVars->interval_per_tick * (t) )
 #define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
 
+void debug_draw_record( LagRecord_Struct* rec)
+{
+
+	static ConVar* sv_showlagcompensation_duration = g_CVar->FindVar("sv_showlagcompensation_duration");
+	static ConVar* sv_showlagcompensation = g_CVar->FindVar("sv_showlagcompensation");
+	if (sv_showlagcompensation->GetInt())
+	{
+		float duration = sv_showlagcompensation_duration->GetFloat();
+
+		if (duration <= 0)
+		{
+			duration = -1.f;
+		}
+		for (auto& e : rec->m_arrHitboxes)
+		{
+			if (e.m_flRadius == -1.0f)
+			{
+				Vector pos;
+				QAngle angle;
+				Math::MatrixAngles(rec->m_Matrix[e.m_iBone], angle, pos);
+
+				g_DebugOverlay->AddBoxOverlay(pos, e.m_vecMins, e.m_vecMaxs, angle, 255, 0, 0, 192, duration);
+			}
+			else
+			{
+				Vector min, max;
+				Math::VectorTransform(e.m_vecMins, rec->m_Matrix[e.m_iBone]);
+				Math::VectorTransform(e.m_vecMaxs, rec->m_Matrix[e.m_iBone]);
+
+				g_DebugOverlay->DrawPill(min, max, e.m_flRadius, 255, 0, 0, 192, duration, 1, 1);
+			}
+		}
+	}
+}
+
 float GetLerpTime()
 {
-	int ud_rate = g_CVar->FindVar("cl_updaterate")->GetInt();
-	ConVar* min_ud_rate = g_CVar->FindVar("sv_minupdaterate");
-	ConVar* max_ud_rate = g_CVar->FindVar("sv_maxupdaterate");
+	static ConVar* cl_interp = g_CVar->FindVar("cl_interp");
+	static ConVar* cl_updaterate = g_CVar->FindVar("cl_updaterate");
+	static ConVar* cl_interp_ratio = g_CVar->FindVar("cl_interp_ratio");
+	static ConVar* sv_maxupdaterate = g_CVar->FindVar("sv_maxupdaterate");
+	static ConVar* sv_minupdaterate = g_CVar->FindVar("sv_minupdaterate");
+	static ConVar* sv_client_min_interp_ratio = g_CVar->FindVar("sv_client_min_interp_ratio");
+	static ConVar* sv_client_max_interp_ratio = g_CVar->FindVar("sv_client_max_interp_ratio");
+	float Interp = cl_interp->GetFloat();
+	float UpdateRate = cl_updaterate->GetFloat();
+	int InterpRatio = static_cast<float>(cl_interp_ratio->GetInt());
+	int MaxUpdateRate = static_cast<float>(sv_maxupdaterate->GetInt());
+	int MinUpdateRate = static_cast<float>(sv_minupdaterate->GetInt());
+	float ClientMinInterpRatio = sv_client_min_interp_ratio->GetFloat();
+	float ClientMaxInterpRatio = sv_client_max_interp_ratio->GetFloat();
 
-	if (min_ud_rate && max_ud_rate)
-		ud_rate = max_ud_rate->GetInt();
+	if (ClientMinInterpRatio > InterpRatio)
+		InterpRatio = ClientMinInterpRatio;
 
-	float ratio = g_CVar->FindVar("cl_interp_ratio")->GetFloat();
+	if (InterpRatio > ClientMaxInterpRatio)
+		InterpRatio = ClientMaxInterpRatio;
 
-	if (ratio == 0)
-		ratio = 1.0f;
+	if (MaxUpdateRate <= UpdateRate)
+		UpdateRate = MaxUpdateRate;
 
-	float lerp = g_CVar->FindVar("cl_interp")->GetFloat();
-	ConVar* c_min_ratio = g_CVar->FindVar("sv_client_min_interp_ratio");
-	ConVar* c_max_ratio = g_CVar->FindVar("sv_client_max_interp_ratio");
+	if (MinUpdateRate > UpdateRate)
+		UpdateRate = MinUpdateRate;
 
-	if (c_min_ratio && c_max_ratio && c_min_ratio->GetFloat() != 1)
-		ratio = std::clamp(ratio, c_min_ratio->GetFloat(), c_max_ratio->GetFloat());
-
-	return max(lerp, (ratio / ud_rate));
+	float v20 = InterpRatio / UpdateRate;
+	if (v20 <= Interp)
+		return Interp;
+	else
+		return v20;
 }
+
 
 void TimeWarp::UpdateRecords(int i)
 {
@@ -185,6 +233,7 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 		return;
 
 	float bestTargetSimTime = -1;
+	LagRecord_Struct* shit;
 	if (bestTargetIndex != -1)
 	{
 		float tempFloat = FLT_MAX;
@@ -203,12 +252,17 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 				if (g_LocalPlayer->CanSeePlayer(static_cast<C_BasePlayer*>(g_EntityList->GetClientEntity(bestTargetIndex)), hitbox))
 				{
 					tempFloat = tempFOVDistance;
-					bestTargetSimTime = records.m_fSimtime;
+					bestTargetSimTime = records.m_fSimtime;	
+					shit = &records;
 				}
 			}
 		}
 
 		if (IsTimeValid(bestTargetSimTime) && cmd->buttons & IN_ATTACK)
-			cmd->tick_count = TIME_TO_TICKS(bestTargetSimTime);
+		{
+			cmd->tick_count = TIME_TO_TICKS(bestTargetSimTime) + TIME_TO_TICKS(GetLerpTime());
+			debug_draw_record(shit);
+		}
+			
 	}
 }

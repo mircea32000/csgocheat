@@ -8,7 +8,9 @@
 #include "menu.hpp"
 #include "fakelatency.h"
 #include "Senddatagram.h"
-
+#include "ragebot.h"
+#include "antiaim.h"
+#include "fixmovement.h"
 namespace Hooks
 {
 	namespace Createmove
@@ -31,15 +33,27 @@ namespace Hooks
 			if (g_Options.misc_bhop)
 				BunnyHop::OnCreateMove(cmd);
 
+			for (int i = 1; i <= g_EngineClient->GetMaxClients(); i++)
+			{
+				if (!g_LocalPlayer)
+				{
+					TimeWarp::Get().m_Records[i].m_Mutex.lock();
+					TimeWarp::Get().m_Records[i].m_vecRecords.clear();
+					TimeWarp::Get().m_Records[i].m_Mutex.unlock();
+				}
+				else
+					TimeWarp::Get().UpdateRecords(i);
+
+			}
+
 			TimeWarp::Get().DeleteInvalidRecords();
 			TimeWarp::Get().StoreRecords(cmd);
 			TimeWarp::Get().DoBackTrack(cmd);
-			Legit::Aimbot::Do(cmd);
 
 			PredictionSystem::Get().Start(cmd, g_LocalPlayer);
 			{
-				Legit::Triggerbot::Do(cmd);
-				//Legit::TriggerbotBacktrack::Do(cmd);
+				Legit::Aimbot::Do(cmd);
+				Legit::Triggerbot::Do(cmd);		
 			}
 			PredictionSystem::Get().End(g_LocalPlayer);
 

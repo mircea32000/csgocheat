@@ -97,6 +97,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="antiaim.cpp" />
+    <ClCompile Include="autowall.cpp" />
     <ClCompile Include="CEconItemDefinition.cpp" />
     <ClCompile Include="CEconPaintKitDefinition.cpp" />
     <ClCompile Include="CEconStickerDefition.cpp" />
@@ -108,6 +110,7 @@
     <ClCompile Include="endscene.cc" />
     <ClCompile Include="EnginePrediction.cpp" />
     <ClCompile Include="filesystemhook.cc" />
+    <ClCompile Include="fixmovement.cpp" />
     <ClCompile Include="framestagenotify.cc" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="hitmarker.cc" />
@@ -119,6 +122,7 @@
     <ClCompile Include="painttraverse.cc" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="radar.cpp" />
+    <ClCompile Include="rage.cc" />
     <ClCompile Include="reset.cc" />
     <ClCompile Include="sceneend.cpp" />
     <ClCompile Include="Senddatagram.cpp" />
@@ -163,6 +167,8 @@
     <ClCompile Include="valve_sdk\netvars.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="antiaim.h" />
+    <ClInclude Include="autowall.h" />
     <ClInclude Include="CEconItemDefinition.h" />
     <ClInclude Include="CEconPaintKitDefinition.h" />
     <ClInclude Include="CEconStickerDefition.h" />
@@ -175,6 +181,7 @@
     <ClInclude Include="endscene.hpp" />
     <ClInclude Include="EnginePrediction.h" />
     <ClInclude Include="Filesystemhook.hpp" />
+    <ClInclude Include="fixmovement.h" />
     <ClInclude Include="framestagenotify.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Hitmarker.h" />
@@ -190,6 +197,7 @@
     <ClInclude Include="painttraverse.hpp" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="radar.h" />
+    <ClInclude Include="ragebot.h" />
     <ClInclude Include="RenderableInfo.h" />
     <ClInclude Include="reset.h" />
     <ClInclude Include="sceneend.h" />
