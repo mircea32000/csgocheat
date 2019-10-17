@@ -5,11 +5,11 @@
 #include "options.hpp"
 #include "HitmarkerSounds.h"
 #pragma comment(lib, "winmm.lib")
-class item_purchase
+class CListener
 
-	: public Singleton<item_purchase>
+	: public Singleton<CListener>
 {
-	class item_purchase_listener
+	class CItemListener
 		: public IGameEventListener2
 	{
 	public:
@@ -34,9 +34,9 @@ class item_purchase
 
 public:
 
-	static item_purchase* singleton()
+	static CListener* singleton()
 	{
-		static item_purchase* instance = new item_purchase;
+		static CListener* instance = new CListener;
 		return instance;
 	}
 
@@ -84,7 +84,7 @@ public:
 
 	}
 private:
-	item_purchase_listener  listener;
+	CItemListener  listener;
 };
 
-extern item_purchase purchase;
+extern CListener purchase;
