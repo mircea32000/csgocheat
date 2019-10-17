@@ -10,4 +10,4 @@ namespace G
 	int            MissedShots[65];
 }
 
-item_purchase purchase;
+CListener purchase;
