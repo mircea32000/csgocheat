@@ -15,6 +15,7 @@ class CHitmarker : IGameEventListener2
 {
 public:
 	void Init();
+	void Stop();
 	void Paint();
 private:
 	void FireGameEvent(IGameEvent *event) override;

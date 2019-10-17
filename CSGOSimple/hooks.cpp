@@ -14,6 +14,9 @@
 #include "Filesystemhook.hpp"
 #include "listleavesinbox.h"
 
+#include "Listener.hpp"
+#include "Hitmarker.h"
+
 #include "features/glow.hpp"
 #include "sceneend.h"
 namespace Hooks {
@@ -67,5 +70,7 @@ namespace Hooks {
 		vfuncs::sv_cheats.unhook_all();
 		vfuncs::render_view.unhook_all();
 		Glow::Get().Shutdown();
+		item_purchase::Get().remove();
+		g_Hitmarker->Stop();
 	}
 }

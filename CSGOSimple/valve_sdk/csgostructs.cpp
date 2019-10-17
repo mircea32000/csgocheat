@@ -61,6 +61,22 @@ bool C_BaseCombatWeapon::HasBullets()
 {
 	return !IsReloading() && m_iClip1() > 0;
 }
+float C_BasePlayer::getMaxDesyncAngle()
+{
+	if (auto animState = GetDeysincAnimstate()) {
+		float yawModifier = (animState->stopToFullRunningFraction * -0.3f - 0.2f) * std::clamp(animState->footSpeed, 0.0f, 1.0f) + 1.0f;
+
+		if (animState->duckAmount > 0.0f)
+			yawModifier += (animState->duckAmount * std::clamp(animState->footSpeed, 0.0f, 1.0f) * (0.5f - yawModifier));
+
+		return animState->velocitySubtractY * yawModifier;
+	}
+	return 0.0f;
+}
+Vector C_BasePlayer::GetPredicted(Vector p0)
+{
+	return Math::ExtrapolateTick(p0, this->m_vecVelocity());
+}
 
 bool C_BaseCombatWeapon::CanFire()
 {
@@ -227,6 +243,11 @@ int C_BasePlayer::GetSequenceActivity(int sequence)
 CCSGOPlayerAnimState *C_BasePlayer::GetPlayerAnimState()
 {
 	return *(CCSGOPlayerAnimState**)((DWORD)this + 0x3900);
+}
+
+AnimState *C_BasePlayer::GetDeysincAnimstate()
+{
+	return *reinterpret_cast<AnimState**>(this + 0x3900);
 }
 
 void C_BasePlayer::UpdateAnimationState(CCSGOPlayerAnimState *state, QAngle angle)
@@ -591,6 +612,17 @@ Vector C_BasePlayer::GetBonePos(int bone)
 		return boneMatrix[bone].at(3);
 	}
 	return Vector{};
+}
+
+matrix3x4_t C_BasePlayer::GetBoneMatrix(int BoneID)
+{
+	matrix3x4_t matrix;
+
+	auto offset = *reinterpret_cast<uintptr_t*>(uintptr_t(this) + 0x26A8);
+	if (offset)
+		matrix = *reinterpret_cast<matrix3x4_t*>(offset + 0x30 * BoneID);
+
+	return matrix;
 }
 
 bool C_BasePlayer::CanSeePlayer(C_BasePlayer* player, int hitbox)

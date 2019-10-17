@@ -11,7 +11,10 @@ void CHitmarker::Init()
 	g_GameEvents->AddListener(this, "player_hurt", false);
 	g_GameEvents->AddListener(this, "bullet_impact", false);
 }
-
+void CHitmarker::Stop()
+{
+	g_GameEvents->RemoveListener(this);
+}
 C_BasePlayer* CHitmarker::GetPlayerFromId(int uid)
 {
 	int index = g_EngineClient->GetPlayerForUserID(uid);

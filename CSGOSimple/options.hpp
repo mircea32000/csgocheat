@@ -145,6 +145,26 @@ public:
 		OPTION(bool, chams_arms_ignorez, false);
 		OPTION(bool, chams_arms_glass, false);
 
+
+		bool bHitboxSelection[7];
+		bool bMultiPointSelection[7];
+
+		int iHeadScale = 90.f;
+		int iNeckScale = 50.f;
+		int iChestScale = 50.f;
+		int iStomachScale = 50.f;
+		int iPelvisScale = 50.f;
+		int iArmsScale = 50.f;
+		int iLegsScale = 50.f;
+		int iHitChanceType = 1;
+		int iHitChance = 60;
+		int iHitScanMode = 1;
+		int iMinDamage = 30;
+		bool bSilentAim = false;
+		bool bAutoFire = false;
+		bool bFriendlyFire = false;
+		bool bAimBotEnabled = false;
+
 		//
 		// MISC
 		//

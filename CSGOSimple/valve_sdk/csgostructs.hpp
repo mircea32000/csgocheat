@@ -238,6 +238,17 @@ public:
 	bool* m_bCustomMaterialInitialized();
 
 };
+struct AnimState {
+	std::byte pad[164];
+	float duckAmount;
+	std::byte pad1[80];
+	float footSpeed;
+	float footSpeed2;
+	std::byte pad2[22];
+	float stopToFullRunningFraction;
+	std::byte pad3[532];
+	float velocitySubtractY;
+};
 
 class C_BasePlayer : public C_BaseEntity
 {
@@ -304,6 +315,8 @@ public:
 
 
 	NETPROP(m_flLowerBodyYawTargetProp, "DT_CSPlayer", "m_flLowerBodyYawTarget");
+	float getMaxDesyncAngle();
+	Vector GetPredicted(Vector p0);
 	CUserCmd*& m_pCurrentCommand();
 
 	/*gladiator v2*/
@@ -325,7 +338,7 @@ public:
 	AnimationLayer *GetAnimOverlay(int i);
 	int GetSequenceActivity(int sequence);
 	CCSGOPlayerAnimState *GetPlayerAnimState();
-
+	AnimState *GetDeysincAnimstate();
 	static void UpdateAnimationState(CCSGOPlayerAnimState *state, QAngle angle);
 	static void ResetAnimationState(CCSGOPlayerAnimState *state);
 	void CreateAnimationState(CCSGOPlayerAnimState *state);
@@ -361,6 +374,7 @@ public:
 	mstudiobbox_t * GetHitbox(int hitbox_id);
 	bool          GetHitboxPos(int hitbox, Vector &output);
 	Vector        GetBonePos(int bone);
+	matrix3x4_t GetBoneMatrix(int BoneID);
 	bool          CanSeePlayer(C_BasePlayer* player, int hitbox);
 	bool          CanSeePlayer(C_BasePlayer* player, const Vector& pos);
 	bool IsBehindSmoke(Vector vEndPos);
