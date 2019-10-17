@@ -70,7 +70,7 @@ namespace Hooks {
 		vfuncs::sv_cheats.unhook_all();
 		vfuncs::render_view.unhook_all();
 		Glow::Get().Shutdown();
-		item_purchase::Get().remove();
+		CListener::Get().remove();
 		g_Hitmarker->Stop();
 	}
 }

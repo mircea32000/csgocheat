@@ -28,15 +28,15 @@ void debug_draw_record( LagRecord_Struct* rec)
 				QAngle angle;
 				Math::MatrixAngles(rec->m_Matrix[e.m_iBone], angle, pos);
 
-				g_DebugOverlay->AddBoxOverlay(pos, e.m_vecMins, e.m_vecMaxs, angle, 255, 0, 0, 192, duration);
+				g_DebugOverlay->AddBoxBullshit(pos, e.m_vecMins, e.m_vecMaxs, angle, 255, 0, 0, 192, duration);
 			}
 			else
 			{
-				Vector min, max;
-				Math::VectorTransform(e.m_vecMins, rec->m_Matrix[e.m_iBone]);
-				Math::VectorTransform(e.m_vecMaxs, rec->m_Matrix[e.m_iBone]);
+				Vector 
+					min{ Math::VectorTransform(e.m_vecMins, rec->m_Matrix[e.m_iBone]) },
+			      	max { Math::VectorTransform(e.m_vecMaxs, rec->m_Matrix[e.m_iBone]) };
 
-				g_DebugOverlay->DrawPill(min, max, e.m_flRadius, 255, 0, 0, 192, duration, 1, 1);
+				g_DebugOverlay->DrawPillBullshit(min, max, e.m_flRadius, 255, 0, 0, 192, duration, 1, 1);
 			}
 		}
 	}
@@ -261,7 +261,10 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 		if (IsTimeValid(bestTargetSimTime) && cmd->buttons & IN_ATTACK)
 		{
 			cmd->tick_count = TIME_TO_TICKS(bestTargetSimTime) + TIME_TO_TICKS(GetLerpTime());
-			debug_draw_record(shit);
+			if (shit)
+			{
+				debug_draw_record(shit);
+			}
 		}
 			
 	}

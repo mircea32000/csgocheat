@@ -11,15 +11,7 @@ bool C_BaseEntity::IsPlayer()
 }
 
 bool C_BaseEntity::IsLoot() {
-	return GetClientClass()->m_ClassID == ClassId_CPhysPropAmmoBox ||
-		GetClientClass()->m_ClassID == ClassId_CPhysPropLootCrate ||
-		GetClientClass()->m_ClassID == ClassId_CPhysPropRadarJammer ||
-		GetClientClass()->m_ClassID == ClassId_CPhysPropWeaponUpgrade ||
-		GetClientClass()->m_ClassID == ClassId_CDrone ||
-		GetClientClass()->m_ClassID == ClassId_CDronegun ||
-		GetClientClass()->m_ClassID == ClassId_CItem_Healthshot ||
-		GetClientClass()->m_ClassID == ClassId_CItemCash || 
-		GetClientClass()->m_ClassID == ClassId_CBumpMine;
+	return CallVFunction<bool(__thiscall*)(C_BaseEntity*)>(this, 165)(this);
 }
 
 bool C_BaseEntity::IsWeapon()
@@ -700,7 +692,7 @@ bool C_BasePlayer::IsBehindSmoke(Vector vEndPos = Vector())
 
 void C_BasePlayer::UpdateClientSideAnimation()
 {
-	return CallVFunction<void(__thiscall*)(void*)>(this, 221)(this);
+	return CallVFunction<void(__thiscall*)(void*)>(this, 223)(this);
 }
 
 void C_BasePlayer::InvalidateBoneCache()
@@ -763,7 +755,7 @@ void C_BaseAttributableItem::SetGloveModelIndex(int modelIndex)
 
 void C_BaseViewModel::SendViewModelMatchingSequence(int sequence)
 {
-	return CallVFunction<void(__thiscall*)(void*, int)>(this, 244)(this, sequence);
+	return CallVFunction<void(__thiscall*)(void*, int)>(this, 246)(this, sequence);
 }
 
 float_t C_BasePlayer::m_flSpawnTime()

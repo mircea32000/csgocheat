@@ -41,7 +41,7 @@ DWORD WINAPI OnDllAttach(LPVOID base)
         // - Note:  The function that is called when the hotkey is pressed
         //          is called from the WndProc thread, not this thread.
         //
-		item_purchase::Get().initialize();
+		CListener::Get().initialize();
 		g_Hitmarker->Init();
         // Panic button
         InputSys::Get().RegisterHotkey(VK_DELETE, [base]() {
