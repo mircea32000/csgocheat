@@ -11,12 +11,15 @@
 #include "ragebot.h"
 #include "antiaim.h"
 #include "fixmovement.h"
+#include "C_CSPlayer.h"
 namespace Hooks
 {
 	namespace Createmove
 	{
 		void __stdcall hkCreateMove(int sequence_number, float input_sample_frametime, bool active, bool& bSendPacket)
 		{
+			CCSPlayer::Get().Initialise();
+
 			static auto oCreateMove = vfuncs::hlclient_hook.get_original<decltype(&hkCreateMove_Proxy)>(index::CreateMove);
 
 			oCreateMove(g_CHLClient, 0, sequence_number, input_sample_frametime, active);

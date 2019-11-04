@@ -13,7 +13,7 @@
 #include "svcheats.hpp"
 #include "Filesystemhook.hpp"
 #include "listleavesinbox.h"
-
+#include "C_CSPlayer.h"
 #include "Listener.hpp"
 #include "Hitmarker.h"
 
@@ -71,6 +71,7 @@ namespace Hooks {
 		vfuncs::render_view.unhook_all();
 		Glow::Get().Shutdown();
 		CListener::Get().remove();
+		CCSPlayer::Get().Shutdown();
 		g_Hitmarker->Stop();
 	}
 }

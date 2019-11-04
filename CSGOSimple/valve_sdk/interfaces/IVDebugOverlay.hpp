@@ -39,7 +39,11 @@ public:
     	typedef void(__thiscall* oCalFrumos)(void*, const Vector*, const Vector*, const float*, int, int, int, int, float, int, int);
 		return CallVFunction<oCalFrumos>(this, 23)(this, &mins, &max, &diameter, r , g , b , a, duration, unk1, unk2);
 	}
-
+	inline int ScreenPositionxD(const Vector& point, Vector& screen)
+	{
+		typedef int(__thiscall* oCalFrumos)(void*, const Vector*, const Vector*);
+		return CallVFunction<oCalFrumos>(this, 12)(this, &point, &screen);
+	}
 	inline void AddBoxBullshit(const Vector& origin, const Vector& mins, const Vector& max, const QAngle& orientation, int r, int g, int b, int a, float duration)
 	{
 		typedef void(__thiscall* oCalFrumos)(void*, const Vector*, const Vector* , const Vector* , const QAngle* , int, int, int , int , float );

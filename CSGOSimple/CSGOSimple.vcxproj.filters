@@ -93,6 +93,9 @@
     <Filter Include="Source Files\features\Ragebot">
       <UniqueIdentifier>{7a77fd60-75cf-4c9a-a1de-e5ee4ace54fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooks\CCSPlayer">
+      <UniqueIdentifier>{e12d10c1-11c0-4bf9-b07d-1fc9b2ac147e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Helpers\math.cpp">
@@ -298,6 +301,15 @@
     </ClCompile>
     <ClCompile Include="fixmovement.cpp">
       <Filter>Source Files\features\Ragebot</Filter>
+    </ClCompile>
+    <ClCompile Include="doextrabonesprocessing.cpp">
+      <Filter>Source Files\hooks\CCSPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="shouldinterpolate.cpp">
+      <Filter>Source Files\hooks\CCSPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="C_CSPlayer.cpp">
+      <Filter>Source Files\hooks\CCSPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -687,6 +699,9 @@
     </ClInclude>
     <ClInclude Include="fixmovement.h">
       <Filter>Source Files\features\Ragebot</Filter>
+    </ClInclude>
+    <ClInclude Include="C_CSPlayer.h">
+      <Filter>Source Files\hooks\CCSPlayer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

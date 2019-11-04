@@ -65,10 +65,7 @@ float C_BasePlayer::getMaxDesyncAngle()
 	}
 	return 0.0f;
 }
-Vector C_BasePlayer::GetPredicted(Vector p0)
-{
-	return Math::ExtrapolateTick(p0, this->m_vecVelocity());
-}
+
 
 bool C_BaseCombatWeapon::CanFire()
 {

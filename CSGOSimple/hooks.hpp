@@ -46,5 +46,7 @@ namespace Hooks
 		inline vfunc_hook bsp_query_hook;
 		inline vfunc_hook sv_cheats;
 		inline vfunc_hook render_view;
+		inline vfunc_hook player_hook;
+		inline vfunc_hook iclientrenderable_hook;
 	}
 }

@@ -23,7 +23,7 @@ namespace detail
 		}
 
 	private:
-		void*         _base;
+		void* _base;
 		size_t        _length;
 		std::uint32_t _old;
 	};
@@ -41,6 +41,8 @@ public:
 	template<typename T>
 	void hook_index(int index, T fun)
 	{
+		if (bInitFinished)
+			return;
 		assert(index >= 0 && index <= (int)vftbl_len);
 		new_vftbl[index + 1] = reinterpret_cast<std::uintptr_t>(fun);
 	}
@@ -66,12 +68,14 @@ public:
 	{
 		return (T)old_vftbl[index];
 	}
+	bool bInitFinished = false;
 
-private:
-	static inline std::size_t estimate_vftbl_length(std::uintptr_t* vftbl_start);
-
-	void*           class_base;
+	void* class_base;
 	std::size_t     vftbl_len;
 	std::uintptr_t* new_vftbl;
 	std::uintptr_t* old_vftbl;
+private:
+	static inline std::size_t estimate_vftbl_length(std::uintptr_t* vftbl_start);
+
+
 };

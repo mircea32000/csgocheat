@@ -12,10 +12,6 @@
 
 namespace Math
 {
-	inline Vector ExtrapolateTick(Vector p0, Vector v0)
-	{
-		return p0 + (v0 * g_GlobalVars->interval_per_tick);
-	}
 	inline float FASTSQRT(float x)
 	{
 		unsigned int i = *(unsigned int*)&x;

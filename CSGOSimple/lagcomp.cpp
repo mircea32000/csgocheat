@@ -209,11 +209,16 @@ void TimeWarp::StoreRecords(CUserCmd* cmd)
 
 			continue;
 		}
-		Vector HitboxPos = pEntity->GetHitboxPos(0);
+		auto record = m_Records[pEntity->EntIndex()].m_vecRecords.back();
+
+		auto hitbox = Math::CalculateHitboxFromMatrix(record.m_Matrix,
+			record.m_arrHitboxes[HITBOX_HEAD].m_vecMins,
+			record.m_arrHitboxes[HITBOX_HEAD].m_vecMaxs,
+			record.m_arrHitboxes[HITBOX_HEAD].m_iBone);
 
 		Vector ViewDir;
 		Math::AngleVectors(cmd->viewangles + (g_LocalPlayer->m_aimPunchAngle() * 2.f), ViewDir);
-		float FOVDistance = Math::DistancePointToLine(HitboxPos, g_LocalPlayer->GetEyePos(), ViewDir);
+		float FOVDistance = Math::DistancePointToLine(hitbox, g_LocalPlayer->GetEyePos(), ViewDir);
 
 		if (bestFov > FOVDistance)
 		{
@@ -247,7 +252,7 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 				records.m_arrHitboxes[HITBOX_HEAD].m_iBone);
 
 			float tempFOVDistance = Math::DistancePointToLine(hitbox, g_LocalPlayer->GetEyePos(), ViewDir);
-			if (tempFloat > tempFOVDistance && records.m_fSimtime > g_LocalPlayer->m_flSimulationTime() - 1)
+			if (tempFloat > tempFOVDistance)// && records.m_fSimtime > g_LocalPlayer->m_flSimulationTime() - 1)
 			{
 				if (g_LocalPlayer->CanSeePlayer(static_cast<C_BasePlayer*>(g_EntityList->GetClientEntity(bestTargetIndex)), hitbox))
 				{
@@ -263,7 +268,14 @@ void TimeWarp::DoBackTrack(CUserCmd* cmd)
 			cmd->tick_count = TIME_TO_TICKS(bestTargetSimTime) + TIME_TO_TICKS(GetLerpTime());
 			if (shit)
 			{
+				if (!g_LocalPlayer || !g_LocalPlayer->IsAlive())
+					return;
+
+				if (g_LocalPlayer->m_flNextAttack() > g_GlobalVars->curtime)
+					return;
+
 				debug_draw_record(shit);
+
 			}
 		}
 			

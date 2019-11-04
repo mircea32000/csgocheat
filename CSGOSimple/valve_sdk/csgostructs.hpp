@@ -316,7 +316,6 @@ public:
 
 	NETPROP(m_flLowerBodyYawTargetProp, "DT_CSPlayer", "m_flLowerBodyYawTarget");
 	float getMaxDesyncAngle();
-	Vector GetPredicted(Vector p0);
 	CUserCmd*& m_pCurrentCommand();
 
 	/*gladiator v2*/
