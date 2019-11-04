@@ -104,6 +104,8 @@
     <ClCompile Include="CEconStickerDefition.cpp" />
     <ClCompile Include="createmove.cc" />
     <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="C_CSPlayer.cpp" />
+    <ClCompile Include="doextrabonesprocessing.cpp" />
     <ClCompile Include="doposteffects.cc" />
     <ClCompile Include="drawmodelexecute.cc" />
     <ClCompile Include="emitsound.cc" />
@@ -126,6 +128,7 @@
     <ClCompile Include="reset.cc" />
     <ClCompile Include="sceneend.cpp" />
     <ClCompile Include="Senddatagram.cpp" />
+    <ClCompile Include="shouldinterpolate.cpp" />
     <ClCompile Include="skinchanger.cpp" />
     <ClCompile Include="spectators.cpp" />
     <ClCompile Include="fakelatency.cpp" />
@@ -175,6 +178,7 @@
     <ClInclude Include="config.hpp" />
     <ClInclude Include="createmove.hpp" />
     <ClInclude Include="CTimer.h" />
+    <ClInclude Include="C_CSPlayer.h" />
     <ClInclude Include="doposteffects.hpp" />
     <ClInclude Include="drawmodelexecute.hpp" />
     <ClInclude Include="emitsound.hpp" />

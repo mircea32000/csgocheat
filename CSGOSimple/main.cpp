@@ -4,10 +4,10 @@
 #include "valve_sdk/sdk.hpp"
 #include "helpers/utils.hpp"
 #include "helpers/input.hpp"
-
 #include "hooks.hpp"
 #include "menu.hpp"
 #include "options.hpp"
+
 #include "Listener.hpp"
 #include "render.hpp"
 #include "features/chams.hpp"
@@ -31,8 +31,9 @@ DWORD WINAPI OnDllAttach(LPVOID base)
 
         Interfaces::Initialize();
         Interfaces::Dump();
-
         NetvarSys::Get().Initialize();
+
+		//g_anim.init();
         InputSys::Get().Initialize();
 		Render::Get().Initialize();
         Menu::Get().Initialize();
@@ -44,6 +45,7 @@ DWORD WINAPI OnDllAttach(LPVOID base)
 		CListener::Get().initialize();
 		g_Hitmarker->Init();
         // Panic button
+		
         InputSys::Get().RegisterHotkey(VK_DELETE, [base]() {
             g_Unload = true;
         });
